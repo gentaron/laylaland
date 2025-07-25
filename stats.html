@@ -14,16 +14,16 @@
         }
 
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --primary-gradient: linear-gradient(135deg, #2a1a4a 0%, #1a0f2e 100%);
             --accent-gradient: linear-gradient(135deg, #ff6b9d 0%, #c471ed 50%, #12c2e9 100%);
-            --glass-bg: rgba(255, 255, 255, 0.12);
-            --glass-border: rgba(255, 255, 255, 0.25);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
             --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.9);
+            --text-secondary: #f0f0f0;
             --neon-pink: #ff3d8a;
             --neon-cyan: #00e6ff;
-            --shadow-glow: 0 8px 32px rgba(31, 38, 135, 0.37);
-            --nav-active-bg: rgba(255, 61, 138, 0.2);
+            --shadow-glow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --nav-active-bg: rgba(255, 61, 138, 0.25);
             --nav-hover-shadow: 0 4px 20px rgba(255, 61, 138, 0.4);
         }
 
@@ -44,9 +44,9 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 20% 50%, rgba(255, 16, 240, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 30%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(196, 113, 237, 0.1) 0%, transparent 50%);
+                radial-gradient(circle at 20% 50%, rgba(255, 16, 240, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 30%, rgba(0, 212, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(196, 113, 237, 0.05) 0%, transparent 50%);
             pointer-events: none;
             z-index: -1;
         }
@@ -124,7 +124,8 @@
 
         .page-header p {
             font-size: 1.1rem;
-            opacity: 0.9;
+            color: var(--text-secondary);
+            font-weight: 400;
         }
 
         .stats-grid {
@@ -157,14 +158,16 @@
 
         .stat-label {
             font-size: 1.1rem;
-            opacity: 0.9;
+            color: var(--text-secondary);
             margin-bottom: 10px;
+            font-weight: 500;
         }
 
         .stat-description {
             font-size: 0.9rem;
-            opacity: 0.7;
+            color: #e0e0e0;
             line-height: 1.4;
+            font-weight: 400;
         }
 
         .info-section {
@@ -191,8 +194,9 @@
 
         .info-card p {
             line-height: 1.6;
-            opacity: 0.9;
+            color: var(--text-secondary);
             margin-bottom: 15px;
+            font-weight: 400;
         }
 
         .skills-grid {

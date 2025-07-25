@@ -270,11 +270,29 @@
             max-height: 90vh;
             border-radius: 20px;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .modal-image-container {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            cursor: grab;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 20px;
+            position: relative;
+        }
+
+        .modal-image-container:active {
+            cursor: grabbing;
+        }
+
+        .modal-image-container.zoomed {
+            cursor: move;
         }
 
         .modal-content img {
@@ -287,6 +305,56 @@
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             display: block;
+            transition: transform 0.3s ease;
+            cursor: zoom-in;
+        }
+
+        .modal-content img.zoomed {
+            cursor: move;
+        }
+
+        .zoom-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 10px 15px;
+        }
+
+        .zoom-btn {
+            background: var(--accent-gradient);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .zoom-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(255, 61, 138, 0.4);
+        }
+
+        .zoom-info {
+            color: white;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            font-weight: 500;
         }
 
         .modal-close {
@@ -778,7 +846,15 @@
     <div id="artModal" class="modal">
         <button class="modal-close" onclick="closeModal()">&times;</button>
         <div class="modal-content">
-            <img id="modalImage" src="" alt="Fullscreen Artwork">
+            <div class="modal-image-container" id="imageContainer">
+                <img id="modalImage" src="" alt="Fullscreen Artwork">
+            </div>
+            <div class="zoom-controls">
+                <button class="zoom-btn" onclick="zoomOut()" title="Zoom Out">−</button>
+                <div class="zoom-info"><span id="zoomLevel">100%</span></div>
+                <button class="zoom-btn" onclick="zoomIn()" title="Zoom In">+</button>
+                <button class="zoom-btn" onclick="resetZoom()" title="Reset">⌂</button>
+            </div>
         </div>
     </div>
 
@@ -818,6 +894,9 @@
             modalImg.src = imgSrc;
             modalImg.alt = altText;
             document.body.style.overflow = 'hidden';
+            
+            // Reset zoom when opening new image
+            resetZoom();
         }
 
         function closeModal() {
@@ -840,6 +919,122 @@
             }
         });
 
+        // Zoom functionality variables
+        let currentZoom = 1;
+        let isDragging = false;
+        let dragStart = { x: 0, y: 0 };
+        let imageOffset = { x: 0, y: 0 };
+
+        function zoomIn() {
+            currentZoom = Math.min(currentZoom * 1.25, 5);
+            updateZoom();
+        }
+
+        function zoomOut() {
+            currentZoom = Math.max(currentZoom / 1.25, 0.5);
+            updateZoom();
+        }
+
+        function resetZoom() {
+            currentZoom = 1;
+            imageOffset = { x: 0, y: 0 };
+            updateZoom();
+        }
+
+        function updateZoom() {
+            const modalImg = document.getElementById('modalImage');
+            const container = document.getElementById('imageContainer');
+            const zoomLevel = document.getElementById('zoomLevel');
+            
+            modalImg.style.transform = `scale(${currentZoom}) translate(${imageOffset.x}px, ${imageOffset.y}px)`;
+            zoomLevel.textContent = Math.round(currentZoom * 100) + '%';
+            
+            // Update cursor based on zoom level
+            if (currentZoom > 1) {
+                modalImg.classList.add('zoomed');
+                container.classList.add('zoomed');
+            } else {
+                modalImg.classList.remove('zoomed');
+                container.classList.remove('zoomed');
+            }
+        }
+
+        // Mouse drag functionality for panning
+        function handleMouseDown(e) {
+            if (currentZoom > 1) {
+                isDragging = true;
+                dragStart.x = e.clientX - imageOffset.x;
+                dragStart.y = e.clientY - imageOffset.y;
+                document.getElementById('imageContainer').style.cursor = 'grabbing';
+            }
+        }
+
+        function handleMouseMove(e) {
+            if (isDragging && currentZoom > 1) {
+                imageOffset.x = e.clientX - dragStart.x;
+                imageOffset.y = e.clientY - dragStart.y;
+                updateZoom();
+            }
+        }
+
+        function handleMouseUp() {
+            isDragging = false;
+            const container = document.getElementById('imageContainer');
+            if (currentZoom > 1) {
+                container.style.cursor = 'grab';
+            } else {
+                container.style.cursor = 'grab';
+            }
+        }
+
+        // Touch support for mobile
+        let lastTouchDistance = 0;
+
+        function handleTouchStart(e) {
+            if (e.touches.length === 1 && currentZoom > 1) {
+                isDragging = true;
+                dragStart.x = e.touches[0].clientX - imageOffset.x;
+                dragStart.y = e.touches[0].clientY - imageOffset.y;
+            } else if (e.touches.length === 2) {
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                lastTouchDistance = Math.sqrt(
+                    Math.pow(touch2.clientX - touch1.clientX, 2) +
+                    Math.pow(touch2.clientY - touch1.clientY, 2)
+                );
+            }
+        }
+
+        function handleTouchMove(e) {
+            e.preventDefault();
+            
+            if (e.touches.length === 1 && isDragging && currentZoom > 1) {
+                imageOffset.x = e.touches[0].clientX - dragStart.x;
+                imageOffset.y = e.touches[0].clientY - dragStart.y;
+                updateZoom();
+            } else if (e.touches.length === 2) {
+                const touch1 = e.touches[0];
+                const touch2 = e.touches[1];
+                const currentDistance = Math.sqrt(
+                    Math.pow(touch2.clientX - touch1.clientX, 2) +
+                    Math.pow(touch2.clientY - touch1.clientY, 2)
+                );
+                
+                if (lastTouchDistance > 0) {
+                    const scale = currentDistance / lastTouchDistance;
+                    currentZoom = Math.min(Math.max(currentZoom * scale, 0.5), 5);
+                    updateZoom();
+                }
+                
+                lastTouchDistance = currentDistance;
+            }
+        }
+
+        function handleTouchEnd() {
+            isDragging = false;
+            lastTouchDistance = 0;
+        }
+
         // Add click events to gallery images
         document.addEventListener('DOMContentLoaded', function() {
             const galleryItems = document.querySelectorAll('.gallery-item');
@@ -852,6 +1047,41 @@
                 });
                 // Add cursor pointer to indicate clickability
                 item.style.cursor = 'pointer';
+            });
+
+            // Add zoom event listeners to modal
+            const imageContainer = document.getElementById('imageContainer');
+            const modalImg = document.getElementById('modalImage');
+
+            // Mouse events
+            imageContainer.addEventListener('mousedown', handleMouseDown);
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+
+            // Touch events
+            imageContainer.addEventListener('touchstart', handleTouchStart, { passive: false });
+            imageContainer.addEventListener('touchmove', handleTouchMove, { passive: false });
+            imageContainer.addEventListener('touchend', handleTouchEnd);
+
+            // Wheel zoom
+            imageContainer.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                if (e.deltaY < 0) {
+                    zoomIn();
+                } else {
+                    zoomOut();
+                }
+            });
+
+            // Double-click to zoom
+            modalImg.addEventListener('dblclick', function(e) {
+                e.preventDefault();
+                if (currentZoom === 1) {
+                    currentZoom = 2;
+                } else {
+                    resetZoom();
+                }
+                updateZoom();
             });
         });
 

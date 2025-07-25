@@ -16,13 +16,15 @@
         :root {
             --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --accent-gradient: linear-gradient(135deg, #ff6b9d 0%, #c471ed 50%, #12c2e9 100%);
-            --glass-bg: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-bg: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.25);
             --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.8);
-            --neon-pink: #ff10f0;
-            --neon-cyan: #00d4ff;
+            --text-secondary: rgba(255, 255, 255, 0.9);
+            --neon-pink: #ff3d8a;
+            --neon-cyan: #00e6ff;
             --shadow-glow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            --nav-active-bg: rgba(255, 61, 138, 0.2);
+            --nav-hover-shadow: 0 4px 20px rgba(255, 61, 138, 0.4);
         }
 
         body {
@@ -101,7 +103,12 @@
 
         nav a:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(255, 107, 157, 0.3);
+            box-shadow: var(--nav-hover-shadow);
+        }
+
+        nav a.active {
+            background: var(--nav-active-bg);
+            box-shadow: var(--nav-hover-shadow);
         }
 
         .hero {
@@ -426,7 +433,7 @@
     <div class="container">
         <nav>
             <ul>
-                <li><a href="layla.html">Home</a></li>
+                <li><a href="layla.html" class="active">Home</a></li>
                 <li><a href="stats.html">Stats</a></li>
                 <li><a href="rank.html">Rankings</a></li>
             </ul>

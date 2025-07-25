@@ -1,7 +1,17 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
+const fs = require('fs');
+const path = require('path');
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
+  // Enable CORS
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Handle preflight request
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -15,9 +25,9 @@ export default async function handler(req, res) {
 
   try {
     // Read knowledge base files
-    const laylaContent = readFileSync(join(process.cwd(), 'layla.txt'), 'utf-8');
-    const statsContent = readFileSync(join(process.cwd(), 'stats.csv'), 'utf-8');
-    const rankContent = readFileSync(join(process.cwd(), 'rank.csv'), 'utf-8');
+    const laylaContent = fs.readFileSync(path.join(process.cwd(), 'layla.txt'), 'utf-8');
+    const statsContent = fs.readFileSync(path.join(process.cwd(), 'stats.csv'), 'utf-8');
+    const rankContent = fs.readFileSync(path.join(process.cwd(), 'rank.csv'), 'utf-8');
 
     // Create context from files
     const context = `
@@ -63,7 +73,8 @@ ${context}`
     });
 
     if (!groqResponse.ok) {
-      throw new Error(`Groq API error: ${groqResponse.statusText}`);
+      const errorText = await groqResponse.text();
+      throw new Error(`Groq API error: ${groqResponse.status} ${errorText}`);
     }
 
     const groqData = await groqResponse.json();
@@ -78,4 +89,4 @@ ${context}`
       details: error.message 
     });
   }
-}
+};

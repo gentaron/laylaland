@@ -3,262 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Layla Virel Nova</title>
+    <title>Layla Virel Nova — Pink Voltage</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --primary-gradient: linear-gradient(135deg, #2a1a4a 0%, #1a0f2e 100%);
-            --accent-gradient: linear-gradient(135deg, #ff6b9d 0%, #c471ed 50%, #12c2e9 100%);
-            --glass-bg: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.15);
-            --text-primary: #ffffff;
-            --text-secondary: #f0f0f0;
-            --neon-pink: #ff3d8a;
-            --neon-cyan: #00e6ff;
-            --shadow-glow: 0 8px 32px rgba(0, 0, 0, 0.5);
-            --nav-active-bg: rgba(255, 61, 138, 0.25);
-            --nav-hover-shadow: 0 4px 20px rgba(255, 61, 138, 0.4);
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--primary-gradient);
-            background-attachment: fixed;
-            min-height: 100vh;
-            color: var(--text-primary);
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(255, 16, 240, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 30%, rgba(0, 212, 255, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(196, 113, 237, 0.05) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        nav {
-            background: var(--glass-bg);
-            padding: 20px 0;
-            border-radius: 20px;
-            margin-bottom: 40px;
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--shadow-glow);
-        }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-        }
-
-        nav a {
-            color: var(--text-primary);
-            text-decoration: none;
-            font-weight: 600;
-            padding: 12px 24px;
-            border-radius: 12px;
-            transition: background 0.3s ease;
-        }
-
-        nav a:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        nav a.active {
-            background: var(--nav-active-bg);
-        }
-
+        /* ─── Hero ──────────────────────────────────────────────── */
         .hero {
             text-align: center;
-            padding: 50px 0;
+            padding: 64px 0 72px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 61, 138, 0.12);
+            border: 1px solid rgba(255, 61, 138, 0.3);
+            border-radius: 999px;
+            padding: 6px 16px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--pink);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
         }
 
         .hero h1 {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 4.5rem;
+            font-size: clamp(2.8rem, 8vw, 5rem);
             font-weight: 800;
+            letter-spacing: -0.04em;
+            line-height: 1.05;
             margin-bottom: 20px;
-            background: var(--accent-gradient);
+            background: var(--accent);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            position: relative;
-            animation: sparkleEdge 3s ease-in-out infinite;
-        }
-
-        @keyframes sparkleEdge {
-            0%, 100% {
-                filter: drop-shadow(0 0 5px rgba(255, 61, 138, 0.3)) drop-shadow(0 0 10px rgba(196, 113, 237, 0.2));
-            }
-            25% {
-                filter: drop-shadow(2px 0 8px rgba(255, 61, 138, 0.5)) drop-shadow(-2px 0 8px rgba(18, 194, 233, 0.4));
-            }
-            50% {
-                filter: drop-shadow(0 2px 12px rgba(196, 113, 237, 0.6)) drop-shadow(0 -2px 12px rgba(255, 61, 138, 0.4));
-            }
-            75% {
-                filter: drop-shadow(-2px 0 8px rgba(18, 194, 233, 0.5)) drop-shadow(2px 0 8px rgba(255, 61, 138, 0.3));
-            }
+            animation: glowPulse 3s ease-in-out infinite;
         }
 
         .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            color: var(--text-secondary);
-            font-weight: 400;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 520px;
+            margin: 0 auto;
         }
 
+        /* ─── Gallery ────────────────────────────────────────────── */
         .gallery-section {
-            margin-top: 50px;
-        }
-
-        .gallery-section h2 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 30px;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: sparkleEdge 3.5s ease-in-out infinite;
+            margin-top: 80px;
         }
 
         .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
-            align-items: start;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+            margin-top: 8px;
         }
 
         .gallery-item {
-            background: var(--glass-bg);
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
             cursor: pointer;
             position: relative;
-            overflow: hidden;
-        }
-
-        .gallery-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--accent-gradient);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: -1;
+            transition: transform 0.35s ease, border-color 0.3s ease, box-shadow 0.35s ease;
         }
 
         .gallery-item:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(255, 107, 157, 0.2);
-        }
-
-        .gallery-item:hover::before {
-            opacity: 0.1;
+            transform: translateY(-6px);
+            border-color: var(--border-hover);
+            box-shadow: 0 20px 48px rgba(255, 61, 138, 0.15);
         }
 
         .gallery-item img {
             width: 100%;
-            height: auto;
-            max-height: 300px;
-            object-fit: contain;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            transition: all 0.3s ease;
+            height: 240px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease, filter 0.3s ease;
         }
 
         .gallery-item:hover img {
-            transform: scale(1.05);
-            filter: brightness(1.1);
+            transform: scale(1.06);
+            filter: brightness(1.08);
         }
 
-        .placeholder-img {
-            width: 100%;
-            height: 200px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            margin-bottom: 10px;
+        .gallery-item-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10, 3, 20, 0.7) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
             display: flex;
-            align-items: center;
+            align-items: flex-end;
+            padding: 16px;
+        }
+
+        .gallery-item:hover .gallery-item-overlay {
+            opacity: 1;
+        }
+
+        .gallery-item-overlay span {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: rgba(255,255,255,0.8);
+            letter-spacing: 0.03em;
+        }
+
+        /* ─── Quotes ─────────────────────────────────────────────── */
+        .quotes-section {
+            margin: 80px 0 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 56px 48px;
+        }
+
+        .quote-carousel {
+            position: relative;
+            overflow: hidden;
+            height: 200px;
+        }
+
+        .quote-item {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
             justify-content: center;
-            font-size: 0.9rem;
-            opacity: 0.7;
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
-        }
-
-        .feature-card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            border-radius: 15px;
+            align-items: center;
             text-align: center;
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s;
+            padding: 0 24px;
+            opacity: 0;
+            transform: translateX(40px);
+            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .feature-card:hover {
-            transform: translateY(-5px);
+        .quote-item.active {
+            opacity: 1;
+            transform: translateX(0);
         }
 
-        .feature-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-        }
-
-        .feature-card p {
-            color: var(--text-secondary);
-            line-height: 1.6;
+        .quote-text {
+            font-size: 1.2rem;
+            line-height: 1.75;
+            font-style: italic;
+            margin-bottom: 16px;
+            color: var(--text);
+            max-width: 720px;
             font-weight: 400;
         }
 
-        /* Fullscreen Modal */
+        .quote-author {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--pink);
+        }
+
+        .quote-nav {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 32px;
+        }
+
+        .quote-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quote-dot.active {
+            background: var(--pink);
+            box-shadow: 0 0 10px rgba(255, 61, 138, 0.5);
+            transform: scale(1.3);
+        }
+
+        /* ─── Feature Cards ──────────────────────────────────────── */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 80px;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 32px 28px;
+            text-align: center;
+            backdrop-filter: blur(16px);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-hover);
+            box-shadow: 0 16px 40px rgba(255, 61, 138, 0.1);
+        }
+
+        .feature-card-icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
+        }
+
+        .feature-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.65;
+        }
+
+        /* ─── Modal ──────────────────────────────────────────────── */
         .modal {
             display: none;
             position: fixed;
+            inset: 0;
             z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(5, 2, 15, 0.96);
+            backdrop-filter: blur(12px);
         }
 
         .modal-content {
@@ -268,12 +244,11 @@
             transform: translate(-50%, -50%);
             max-width: 90vw;
             max-height: 90vh;
-            border-radius: 20px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
-            background: rgba(0, 0, 0, 0.3);
-            padding: 20px;
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            padding: 16px;
             overflow: hidden;
-            position: relative;
         }
 
         .modal-image-container {
@@ -284,567 +259,281 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
         }
 
-        .modal-image-container:active {
-            cursor: grabbing;
-        }
-
-        .modal-image-container.zoomed {
-            cursor: move;
-        }
+        .modal-image-container:active { cursor: grabbing; }
 
         .modal-content img {
             max-width: 100%;
-            max-height: 100%;
+            max-height: 80vh;
             width: auto;
             height: auto;
             object-fit: contain;
-            object-position: center;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border-radius: var(--radius-sm);
             display: block;
-            transition: transform 0.3s ease;
+            transition: transform 0.25s ease;
             cursor: zoom-in;
         }
 
-        .modal-content img.zoomed {
-            cursor: move;
-        }
+        .modal-content img.zoomed { cursor: move; }
 
         .zoom-controls {
             position: absolute;
-            bottom: 20px;
+            bottom: 16px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 10px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 25px;
-            padding: 10px 15px;
+            align-items: center;
+            gap: 8px;
+            background: rgba(15, 7, 32, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 8px 12px;
         }
 
         .zoom-btn {
-            background: var(--accent-gradient);
-            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border);
             color: white;
-            width: 40px;
-            height: 40px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: bold;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: background 0.2s ease;
         }
 
-        .zoom-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 15px rgba(255, 61, 138, 0.4);
-        }
+        .zoom-btn:hover { background: rgba(255, 61, 138, 0.25); }
 
         .zoom-info {
-            color: white;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            padding: 0 10px;
+            color: var(--text-muted);
+            font-size: 0.82rem;
             font-weight: 500;
+            padding: 0 8px;
+            min-width: 44px;
+            text-align: center;
         }
 
         .modal-close {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            background: var(--glass-bg);
-            border: none;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border);
             color: white;
-            font-size: 2rem;
-            padding: 10px 15px;
-            border-radius: 50%;
-            cursor: pointer;
-            backdrop-filter: blur(20px);
-            transition: all 0.3s ease;
-        }
-
-        .modal-close:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.1);
-        }
-
-        /* Quotes Section */
-        .quotes-section {
-            margin: 80px 0;
-            padding: 60px 0;
-            position: relative;
-        }
-
-        .quotes-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--glass-bg);
-            border-radius: 30px;
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-        }
-
-        .quotes-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .quotes-section h2 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 3rem;
-            text-align: center;
-            margin-bottom: 50px;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: sparkleEdge 4s ease-in-out infinite;
-        }
-
-        .quote-carousel {
-            position: relative;
-            overflow: hidden;
-            height: 300px;
-        }
-
-        .quote-item {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 40px;
-            opacity: 0;
-            transform: translateX(100%);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .quote-item.active {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .quote-text {
-            font-size: 1.4rem;
-            line-height: 1.8;
-            font-style: italic;
-            margin-bottom: 20px;
-            color: #f8f8f8;
-            max-width: 800px;
-            font-weight: 400;
-        }
-
-        .quote-author {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #ff5aa3;
-            text-shadow: 0 0 15px rgba(255, 90, 163, 0.6);
-        }
-
-        .quote-nav {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 30px;
-        }
-
-        .quote-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .quote-dot.active {
-            background: var(--neon-pink);
-            box-shadow: 0 0 15px rgba(255, 16, 240, 0.5);
-        }
-
-        /* Chatbot Styles */
-        .chatbot-toggle {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background: var(--accent-gradient);
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(255, 61, 138, 0.4);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             font-size: 1.5rem;
-            color: white;
-            transition: all 0.3s ease;
-        }
-
-        .chatbot-toggle:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(255, 61, 138, 0.6);
-        }
-
-        .chatbot-container {
-            position: fixed;
-            bottom: 100px;
-            right: 30px;
-            width: 350px;
-            height: 500px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            box-shadow: var(--shadow-glow);
-            z-index: 999;
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .chatbot-header {
-            background: var(--accent-gradient);
-            padding: 15px 20px;
-            color: white;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .chatbot-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .message {
-            max-width: 80%;
-            padding: 12px 16px;
-            border-radius: 15px;
-            font-size: 0.9rem;
-            line-height: 1.4;
-        }
-
-        .message.user {
-            background: var(--accent-gradient);
-            color: white;
-            align-self: flex-end;
-            margin-left: auto;
-        }
-
-        .message.ai {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
-            align-self: flex-start;
-        }
-
-        .chatbot-input {
-            display: flex;
-            padding: 15px 20px;
-            gap: 10px;
-            border-top: 1px solid var(--glass-border);
-        }
-
-        .chatbot-input input {
-            flex: 1;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--glass-border);
-            border-radius: 25px;
-            padding: 12px 16px;
-            color: white;
-            outline: none;
-            font-size: 0.9rem;
-        }
-
-        .chatbot-input input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .chatbot-input button {
-            background: var(--accent-gradient);
-            border: none;
-            border-radius: 50%;
             width: 40px;
             height: 40px;
+            border-radius: 50%;
             cursor: pointer;
-            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: background 0.2s ease;
         }
 
-        .chatbot-input button:hover {
-            transform: scale(1.1);
-        }
+        .modal-close:hover { background: rgba(255, 255, 255, 0.18); }
 
-        .typing-indicator {
-            display: none;
-            align-items: center;
-            gap: 5px;
-            color: var(--text-secondary);
-            font-style: italic;
-            padding: 12px 16px;
-        }
-
-        .typing-dots {
-            display: flex;
-            gap: 3px;
-        }
-
-        .typing-dots span {
-            width: 6px;
-            height: 6px;
-            background: var(--neon-pink);
-            border-radius: 50%;
-            animation: typing 1.4s infinite;
-        }
-
-        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes typing {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-10px); }
-        }
-
+        /* ─── Responsive ─────────────────────────────────────────── */
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 3rem;
-            }
-            
-            nav ul {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .gallery {
-                grid-template-columns: 1fr;
-            }
-
-            .quotes-section h2 {
-                font-size: 2rem;
-            }
-
-            .quote-text {
-                font-size: 1.1rem;
-            }
-
-            .modal-content {
-                max-width: 95vw;
-                max-height: 95vh;
-            }
-
-            .chatbot-container {
-                width: 300px;
-                height: 400px;
-                bottom: 90px;
-                right: 20px;
-            }
-
-            .chatbot-toggle {
-                bottom: 20px;
-                right: 20px;
-                width: 50px;
-                height: 50px;
-                font-size: 1.2rem;
-            }
+            .hero { padding: 40px 0 48px; }
+            .gallery { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .gallery-item img { height: 160px; }
+            .quotes-section { padding: 36px 24px; }
+            .quote-text { font-size: 1rem; }
+            .quote-carousel { height: 220px; }
+            .modal-content { max-width: 96vw; max-height: 96vh; padding: 10px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <nav>
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand">
+                <span class="nav-brand-icon">⚡</span>
+                <span>Laylaland</span>
+            </a>
             <ul>
                 <li><a href="index.html" class="active">Home</a></li>
                 <li><a href="stats.html">Stats</a></li>
                 <li><a href="rank.html">Rankings</a></li>
             </ul>
-        </nav>
+        </div>
+    </nav>
 
+    <div class="container">
         <div class="hero">
+            <div class="hero-badge">⚡ Pink Voltage</div>
             <h1>Layla Virel Nova</h1>
-            <p>Welcome to the official website dedicated to Layla Virel Nova</p>
+            <p>Official fan site dedicated to the legendary fighter of Gigapolis</p>
         </div>
 
         <div class="gallery-section">
-            <h2>Leila's Illustrations</h2>
+            <h2 class="section-title">Illustrations</h2>
             <div class="gallery">
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (1).png" alt="Layla Artwork 1">
-                    <h4>Artwork 1</h4>
+                    <img src="gallery/imagelayla (1).png" alt="Layla Artwork 1" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (2).png" alt="Layla Artwork 2">
-                    <h4>Artwork 2</h4>
+                    <img src="gallery/imagelayla (2).png" alt="Layla Artwork 2" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (3).png" alt="Layla Artwork 3">
-                    <h4>Artwork 3</h4>
+                    <img src="gallery/imagelayla (3).png" alt="Layla Artwork 3" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (4).png" alt="Layla Artwork 4">
-                    <h4>Artwork 4</h4>
+                    <img src="gallery/imagelayla (4).png" alt="Layla Artwork 4" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (5).png" alt="Layla Artwork 5">
-                    <h4>Artwork 5</h4>
+                    <img src="gallery/imagelayla (5).png" alt="Layla Artwork 5" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (6).png" alt="Layla Artwork 6">
-                    <h4>Artwork 6</h4>
+                    <img src="gallery/imagelayla (6).png" alt="Layla Artwork 6" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (7).png" alt="Layla Artwork 7">
-                    <h4>Artwork 7</h4>
+                    <img src="gallery/imagelayla (7).png" alt="Layla Artwork 7" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (8).png" alt="Layla Artwork 8">
-                    <h4>Artwork 8</h4>
+                    <img src="gallery/imagelayla (8).png" alt="Layla Artwork 8" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (9).png" alt="Layla Artwork 9">
-                    <h4>Artwork 9</h4>
+                    <img src="gallery/imagelayla (9).png" alt="Layla Artwork 9" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (10).png" alt="Layla Artwork 10">
-                    <h4>Artwork 10</h4>
+                    <img src="gallery/imagelayla (10).png" alt="Layla Artwork 10" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (11).png" alt="Layla Artwork 11">
-                    <h4>Artwork 11</h4>
+                    <img src="gallery/imagelayla (11).png" alt="Layla Artwork 11" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (12).png" alt="Layla Artwork 12">
-                    <h4>Artwork 12</h4>
+                    <img src="gallery/imagelayla (12).png" alt="Layla Artwork 12" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (13).png" alt="Layla Artwork 13">
-                    <h4>Artwork 13</h4>
+                    <img src="gallery/imagelayla (13).png" alt="Layla Artwork 13" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (14).png" alt="Layla Artwork 14">
-                    <h4>Artwork 14</h4>
+                    <img src="gallery/imagelayla (14).png" alt="Layla Artwork 14" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (15).png" alt="Layla Artwork 15">
-                    <h4>Artwork 15</h4>
+                    <img src="gallery/imagelayla (15).png" alt="Layla Artwork 15" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (16).png" alt="Layla Artwork 16">
-                    <h4>Artwork 16</h4>
+                    <img src="gallery/imagelayla (16).png" alt="Layla Artwork 16" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (17).png" alt="Layla Artwork 17">
-                    <h4>Artwork 17</h4>
+                    <img src="gallery/imagelayla (17).png" alt="Layla Artwork 17" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (18).png" alt="Layla Artwork 18">
-                    <h4>Artwork 18</h4>
+                    <img src="gallery/imagelayla (18).png" alt="Layla Artwork 18" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (19).png" alt="Layla Artwork 19">
-                    <h4>Artwork 19</h4>
+                    <img src="gallery/imagelayla (19).png" alt="Layla Artwork 19" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (20).png" alt="Layla Artwork 20">
-                    <h4>Artwork 20</h4>
+                    <img src="gallery/imagelayla (20).png" alt="Layla Artwork 20" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (21).png" alt="Layla Artwork 21">
-                    <h4>Artwork 21</h4>
+                    <img src="gallery/imagelayla (21).png" alt="Layla Artwork 21" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (22).png" alt="Layla Artwork 22">
-                    <h4>Artwork 22</h4>
+                    <img src="gallery/imagelayla (22).png" alt="Layla Artwork 22" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (23).png" alt="Layla Artwork 23">
-                    <h4>Artwork 23</h4>
+                    <img src="gallery/imagelayla (23).png" alt="Layla Artwork 23" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (24).png" alt="Layla Artwork 24">
-                    <h4>Artwork 24</h4>
+                    <img src="gallery/imagelayla (24).png" alt="Layla Artwork 24" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
                 <div class="gallery-item">
-                    <img src="gallery/imagelayla (25).png" alt="Layla Artwork 25">
-                    <h4>Artwork 25</h4>
+                    <img src="gallery/imagelayla (25).png" alt="Layla Artwork 25" loading="lazy">
+                    <div class="gallery-item-overlay"><span>View full size</span></div>
                 </div>
             </div>
         </div>
 
         <div class="quotes-section">
-            <div class="quotes-content">
-                <h2>Words of Pink Voltage</h2>
-                <div class="quote-carousel">
-                    <div class="quote-item active">
-                        <div class="quote-text">"People of Gigapolis! Every one of you here has the power to overcome any challenge. I'm proof of that!"</div>
-                        <div class="quote-author">— Layla Virel Nova</div>
-                    </div>
-                    <div class="quote-item">
-                        <div class="quote-text">"Strength isn't in your body or appearance—it's in your heart. Want to give it a try?"</div>
-                        <div class="quote-author">— Pink Voltage</div>
-                    </div>
-                    <div class="quote-item">
-                        <div class="quote-text">"I was once just human, too. But I never gave up. I'm here now because I took that first step. You can, too."</div>
-                        <div class="quote-author">— Layla Virel Nova</div>
-                    </div>
-                    <div class="quote-item">
-                        <div class="quote-text">"Below the endless night sky woven with the neon of Gigapolis, Layla Virel Nova streaks like a comet bursting from a rift in the digital world."</div>
-                        <div class="quote-author">— Chronicles of Pink Voltage</div>
-                    </div>
+            <h2 class="section-title">Words of Pink Voltage</h2>
+            <div class="quote-carousel">
+                <div class="quote-item active">
+                    <div class="quote-text">"People of Gigapolis! Every one of you here has the power to overcome any challenge. I'm proof of that!"</div>
+                    <div class="quote-author">— Layla Virel Nova</div>
                 </div>
-                <div class="quote-nav">
-                    <div class="quote-dot active" onclick="showQuote(0)"></div>
-                    <div class="quote-dot" onclick="showQuote(1)"></div>
-                    <div class="quote-dot" onclick="showQuote(2)"></div>
-                    <div class="quote-dot" onclick="showQuote(3)"></div>
+                <div class="quote-item">
+                    <div class="quote-text">"Strength isn't in your body or appearance—it's in your heart. Want to give it a try?"</div>
+                    <div class="quote-author">— Pink Voltage</div>
                 </div>
+                <div class="quote-item">
+                    <div class="quote-text">"I was once just human, too. But I never gave up. I'm here now because I took that first step. You can, too."</div>
+                    <div class="quote-author">— Layla Virel Nova</div>
+                </div>
+                <div class="quote-item">
+                    <div class="quote-text">"Below the endless night sky woven with the neon of Gigapolis, Layla Virel Nova streaks like a comet bursting from a rift in the digital world."</div>
+                    <div class="quote-author">— Chronicles of Pink Voltage</div>
+                </div>
+            </div>
+            <div class="quote-nav">
+                <div class="quote-dot active" onclick="showQuote(0)"></div>
+                <div class="quote-dot" onclick="showQuote(1)"></div>
+                <div class="quote-dot" onclick="showQuote(2)"></div>
+                <div class="quote-dot" onclick="showQuote(3)"></div>
             </div>
         </div>
 
         <div class="features">
             <div class="feature-card">
+                <div class="feature-card-icon">⚡</div>
                 <h3>About Layla</h3>
-                <p>Discover the story and background of Layla Virel Nova through detailed information and insights.</p>
+                <p>Discover the story and background of Layla Virel Nova — cybernetically enhanced vigilante of Gigapolis.</p>
             </div>
             <div class="feature-card">
+                <div class="feature-card-icon">🎨</div>
                 <h3>Artistic Journey</h3>
-                <p>Explore Leila's artistic evolution through her stunning collection of illustrations and creative works.</p>
+                <p>Explore the artistic evolution through her stunning collection of illustrations and creative works.</p>
             </div>
             <div class="feature-card">
+                <div class="feature-card-icon">🏆</div>
                 <h3>Achievements</h3>
-                <p>Learn about accomplishments, rankings, and milestones in Layla's journey.</p>
+                <p>Learn about accomplishments, rankings, and milestones in Layla's legendary journey.</p>
             </div>
         </div>
+
+        <footer>
+            <div class="footer-brand">⚡ Laylaland</div>
+            <div>Fan site dedicated to Layla Virel Nova · Pink Voltage</div>
+        </footer>
     </div>
 
     <!-- Fullscreen Modal -->
     <div id="artModal" class="modal">
-        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
         <div class="modal-content">
             <div class="modal-image-container" id="imageContainer">
                 <img id="modalImage" src="" alt="Fullscreen Artwork">
@@ -859,34 +548,27 @@
     </div>
 
     <!-- Chatbot -->
-    <button class="chatbot-toggle" onclick="toggleChatbot()">💬</button>
-    
+    <button class="chatbot-toggle" onclick="toggleChatbot()" aria-label="Open chat">💬</button>
     <div id="chatbot" class="chatbot-container">
         <div class="chatbot-header">
             <span>⚡</span>
             <span>Chat with Pink Voltage AI</span>
         </div>
         <div class="chatbot-messages" id="chatMessages">
-            <div class="message ai">
-                Hi! I'm an AI with extensive knowledge about Layla Virel Nova (Pink Voltage). Ask me anything about her battles, rankings, or story!
-            </div>
+            <div class="message ai">Hi! I'm an AI with extensive knowledge about Layla Virel Nova (Pink Voltage). Ask me anything about her battles, rankings, or story!</div>
         </div>
         <div class="typing-indicator" id="typingIndicator">
             <span>Pink Voltage AI is typing</span>
-            <div class="typing-dots">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+            <div class="typing-dots"><span></span><span></span><span></span></div>
         </div>
         <div class="chatbot-input">
-            <input type="text" id="chatInput" placeholder="Ask about Layla's adventures..." maxlength="500">
+            <input type="text" id="chatInput" placeholder="Ask about Layla's adventures…" maxlength="500">
             <button onclick="sendMessage()">➤</button>
         </div>
     </div>
 
     <script>
-        // Fullscreen Modal Functionality
+        // ── Modal ──────────────────────────────────────────────────
         function openModal(imgSrc, altText) {
             const modal = document.getElementById('artModal');
             const modalImg = document.getElementById('modalImage');
@@ -894,46 +576,30 @@
             modalImg.src = imgSrc;
             modalImg.alt = altText;
             document.body.style.overflow = 'hidden';
-            
-            // Reset zoom when opening new image
             resetZoom();
         }
 
         function closeModal() {
-            const modal = document.getElementById('artModal');
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
+            document.getElementById('artModal').style.display = 'none';
+            document.body.style.overflow = '';
         }
 
-        // Close modal when clicking outside the image
         document.getElementById('artModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
-            }
+            if (e.target === this) closeModal();
         });
 
-        // Close modal with Escape key
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeModal();
-            }
+            if (e.key === 'Escape') closeModal();
         });
 
-        // Zoom functionality variables
+        // ── Zoom ──────────────────────────────────────────────────
         let currentZoom = 1;
         let isDragging = false;
         let dragStart = { x: 0, y: 0 };
         let imageOffset = { x: 0, y: 0 };
 
-        function zoomIn() {
-            currentZoom = Math.min(currentZoom * 1.25, 5);
-            updateZoom();
-        }
-
-        function zoomOut() {
-            currentZoom = Math.max(currentZoom / 1.25, 0.5);
-            updateZoom();
-        }
+        function zoomIn()  { currentZoom = Math.min(currentZoom * 1.25, 5); updateZoom(); }
+        function zoomOut() { currentZoom = Math.max(currentZoom / 1.25, 0.5); updateZoom(); }
 
         function resetZoom() {
             currentZoom = 1;
@@ -942,30 +608,19 @@
         }
 
         function updateZoom() {
-            const modalImg = document.getElementById('modalImage');
+            const img = document.getElementById('modalImage');
             const container = document.getElementById('imageContainer');
-            const zoomLevel = document.getElementById('zoomLevel');
-            
-            modalImg.style.transform = `scale(${currentZoom}) translate(${imageOffset.x}px, ${imageOffset.y}px)`;
-            zoomLevel.textContent = Math.round(currentZoom * 100) + '%';
-            
-            // Update cursor based on zoom level
-            if (currentZoom > 1) {
-                modalImg.classList.add('zoomed');
-                container.classList.add('zoomed');
-            } else {
-                modalImg.classList.remove('zoomed');
-                container.classList.remove('zoomed');
-            }
+            img.style.transform = `scale(${currentZoom}) translate(${imageOffset.x}px, ${imageOffset.y}px)`;
+            document.getElementById('zoomLevel').textContent = Math.round(currentZoom * 100) + '%';
+            img.classList.toggle('zoomed', currentZoom > 1);
+            container.classList.toggle('zoomed', currentZoom > 1);
         }
 
-        // Mouse drag functionality for panning
         function handleMouseDown(e) {
             if (currentZoom > 1) {
                 e.preventDefault();
                 isDragging = true;
-                dragStart.x = e.clientX - imageOffset.x;
-                dragStart.y = e.clientY - imageOffset.y;
+                dragStart = { x: e.clientX - imageOffset.x, y: e.clientY - imageOffset.y };
                 document.getElementById('imageContainer').style.cursor = 'grabbing';
             }
         }
@@ -973,65 +628,43 @@
         function handleMouseMove(e) {
             if (isDragging && currentZoom > 1) {
                 e.preventDefault();
-                imageOffset.x = e.clientX - dragStart.x;
-                imageOffset.y = e.clientY - dragStart.y;
+                imageOffset = { x: e.clientX - dragStart.x, y: e.clientY - dragStart.y };
                 updateZoom();
             }
         }
 
         function handleMouseUp(e) {
             if (isDragging) {
-                e.preventDefault();
                 isDragging = false;
-                const container = document.getElementById('imageContainer');
-                if (currentZoom > 1) {
-                    container.style.cursor = 'grab';
-                } else {
-                    container.style.cursor = 'grab';
-                }
+                document.getElementById('imageContainer').style.cursor = currentZoom > 1 ? 'grab' : 'default';
             }
         }
 
-        // Touch support for mobile
         let lastTouchDistance = 0;
 
         function handleTouchStart(e) {
             if (e.touches.length === 1 && currentZoom > 1) {
                 isDragging = true;
-                dragStart.x = e.touches[0].clientX - imageOffset.x;
-                dragStart.y = e.touches[0].clientY - imageOffset.y;
+                dragStart = { x: e.touches[0].clientX - imageOffset.x, y: e.touches[0].clientY - imageOffset.y };
             } else if (e.touches.length === 2) {
-                const touch1 = e.touches[0];
-                const touch2 = e.touches[1];
-                lastTouchDistance = Math.sqrt(
-                    Math.pow(touch2.clientX - touch1.clientX, 2) +
-                    Math.pow(touch2.clientY - touch1.clientY, 2)
-                );
+                const [t1, t2] = [e.touches[0], e.touches[1]];
+                lastTouchDistance = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
             }
         }
 
         function handleTouchMove(e) {
             e.preventDefault();
-            
             if (e.touches.length === 1 && isDragging && currentZoom > 1) {
-                imageOffset.x = e.touches[0].clientX - dragStart.x;
-                imageOffset.y = e.touches[0].clientY - dragStart.y;
+                imageOffset = { x: e.touches[0].clientX - dragStart.x, y: e.touches[0].clientY - dragStart.y };
                 updateZoom();
             } else if (e.touches.length === 2) {
-                const touch1 = e.touches[0];
-                const touch2 = e.touches[1];
-                const currentDistance = Math.sqrt(
-                    Math.pow(touch2.clientX - touch1.clientX, 2) +
-                    Math.pow(touch2.clientY - touch1.clientY, 2)
-                );
-                
+                const [t1, t2] = [e.touches[0], e.touches[1]];
+                const dist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
                 if (lastTouchDistance > 0) {
-                    const scale = currentDistance / lastTouchDistance;
-                    currentZoom = Math.min(Math.max(currentZoom * scale, 0.5), 5);
+                    currentZoom = Math.min(Math.max(currentZoom * (dist / lastTouchDistance), 0.5), 5);
                     updateZoom();
                 }
-                
-                lastTouchDistance = currentDistance;
+                lastTouchDistance = dist;
             }
         }
 
@@ -1040,146 +673,88 @@
             lastTouchDistance = 0;
         }
 
-        // Add click events to gallery images
         document.addEventListener('DOMContentLoaded', function() {
-            const galleryItems = document.querySelectorAll('.gallery-item');
-            galleryItems.forEach(item => {
+            // Gallery click handlers
+            document.querySelectorAll('.gallery-item').forEach(item => {
                 item.addEventListener('click', function() {
                     const img = item.querySelector('img');
-                    if (img) {
-                        openModal(img.src, img.alt);
-                    }
+                    if (img) openModal(img.src, img.alt);
                 });
-                // Add cursor pointer to indicate clickability
-                item.style.cursor = 'pointer';
             });
 
-            // Add zoom event listeners to modal
-            const imageContainer = document.getElementById('imageContainer');
+            // Modal zoom events
+            const container = document.getElementById('imageContainer');
             const modalImg = document.getElementById('modalImage');
-
-            // Mouse events - only for the image container
-            imageContainer.addEventListener('mousedown', handleMouseDown);
-            imageContainer.addEventListener('mousemove', handleMouseMove);
-            imageContainer.addEventListener('mouseup', handleMouseUp);
-            imageContainer.addEventListener('mouseleave', handleMouseUp);
-
-            // Touch events
-            imageContainer.addEventListener('touchstart', handleTouchStart, { passive: false });
-            imageContainer.addEventListener('touchmove', handleTouchMove, { passive: false });
-            imageContainer.addEventListener('touchend', handleTouchEnd);
-
-            // Wheel zoom
-            imageContainer.addEventListener('wheel', function(e) {
+            container.addEventListener('mousedown', handleMouseDown);
+            container.addEventListener('mousemove', handleMouseMove);
+            container.addEventListener('mouseup', handleMouseUp);
+            container.addEventListener('mouseleave', handleMouseUp);
+            container.addEventListener('touchstart', handleTouchStart, { passive: false });
+            container.addEventListener('touchmove', handleTouchMove, { passive: false });
+            container.addEventListener('touchend', handleTouchEnd);
+            container.addEventListener('wheel', function(e) {
                 e.preventDefault();
-                if (e.deltaY < 0) {
-                    zoomIn();
-                } else {
-                    zoomOut();
-                }
+                e.deltaY < 0 ? zoomIn() : zoomOut();
             });
-
-            // Double-click to zoom
             modalImg.addEventListener('dblclick', function(e) {
                 e.preventDefault();
-                if (currentZoom === 1) {
-                    currentZoom = 2;
-                } else {
-                    resetZoom();
-                }
+                currentZoom === 1 ? (currentZoom = 2) : resetZoom();
                 updateZoom();
             });
-        });
 
-        // Quote Carousel Functionality
-        let currentQuote = 0;
-        const quotes = document.querySelectorAll('.quote-item');
-        const dots = document.querySelectorAll('.quote-dot');
-
-        function showQuote(index) {
-            quotes[currentQuote].classList.remove('active');
-            dots[currentQuote].classList.remove('active');
-            
-            currentQuote = index;
-            
-            quotes[currentQuote].classList.add('active');
-            dots[currentQuote].classList.add('active');
-        }
-
-        // Auto-rotate quotes
-        setInterval(() => {
-            const nextQuote = (currentQuote + 1) % quotes.length;
-            showQuote(nextQuote);
-        }, 5000);
-
-        // Smooth scrolling for navigation
-        document.querySelectorAll('nav a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                if (this.getAttribute('href').startsWith('#')) {
-                    e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
+            // Fade-in observer
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                        observer.unobserve(entry.target);
                     }
-                }
-            });
-        });
+                });
+            }, { threshold: 0.08 });
 
-        // Add parallax effect to background
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const parallax = document.querySelector('body::before');
-            const speed = scrolled * 0.5;
-        });
-
-        // Add intersection observer for fade-in animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Observe gallery items and feature cards
-        document.addEventListener('DOMContentLoaded', function() {
-            const animatedElements = document.querySelectorAll('.gallery-item, .feature-card, .quotes-section');
-            animatedElements.forEach(el => {
+            document.querySelectorAll('.gallery-item, .feature-card, .quotes-section').forEach(el => {
                 el.style.opacity = '0';
-                el.style.transform = 'translateY(30px)';
-                el.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
                 observer.observe(el);
             });
         });
 
-        // Chatbot Functionality
+        // ── Quotes ─────────────────────────────────────────────────
+        let currentQuote = 0;
+        const quotes = document.querySelectorAll('.quote-item');
+        const dots   = document.querySelectorAll('.quote-dot');
+
+        function showQuote(index) {
+            quotes[currentQuote].classList.remove('active');
+            dots[currentQuote].classList.remove('active');
+            currentQuote = index;
+            quotes[currentQuote].classList.add('active');
+            dots[currentQuote].classList.add('active');
+        }
+
+        setInterval(() => showQuote((currentQuote + 1) % quotes.length), 5000);
+
+        // ── Chatbot ────────────────────────────────────────────────
         function toggleChatbot() {
             const chatbot = document.getElementById('chatbot');
             chatbot.style.display = chatbot.style.display === 'flex' ? 'none' : 'flex';
         }
 
         function addMessage(content, isUser = false) {
-            const messagesContainer = document.getElementById('chatMessages');
-            const message = document.createElement('div');
-            message.className = `message ${isUser ? 'user' : 'ai'}`;
-            message.textContent = content;
-            messagesContainer.appendChild(message);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            const container = document.getElementById('chatMessages');
+            const msg = document.createElement('div');
+            msg.className = `message ${isUser ? 'user' : 'ai'}`;
+            msg.textContent = content;
+            container.appendChild(msg);
+            container.scrollTop = container.scrollHeight;
         }
 
         function showTypingIndicator() {
-            document.getElementById('typingIndicator').style.display = 'flex';
-            const messagesContainer = document.getElementById('chatMessages');
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            const el = document.getElementById('typingIndicator');
+            el.style.display = 'flex';
+            document.getElementById('chatMessages').scrollTop = 99999;
         }
 
         function hideTypingIndicator() {
@@ -1189,46 +764,27 @@
         async function sendMessage() {
             const input = document.getElementById('chatInput');
             const message = input.value.trim();
-            
             if (!message) return;
-
-            // Add user message
             addMessage(message, true);
             input.value = '';
-
-            // Show typing indicator
             showTypingIndicator();
-
             try {
-                const response = await fetch('/api/chat', {
+                const res = await fetch('/api/chat', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message }),
                 });
-
-                const data = await response.json();
-                
-                // Hide typing indicator
+                const data = await res.json();
                 hideTypingIndicator();
-
-                if (response.ok) {
-                    addMessage(data.response);
-                } else {
-                    addMessage('Sorry, I encountered an error. Please try again later.');
-                }
-            } catch (error) {
+                addMessage(res.ok ? data.response : 'Sorry, I encountered an error. Please try again later.');
+            } catch {
                 hideTypingIndicator();
                 addMessage('Sorry, I could not connect to the AI. Please check your connection and try again.');
             }
         }
 
-        // Allow Enter key to send message
         document.getElementById('chatInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
+            if (e.key === 'Enter') sendMessage();
         });
     </script>
 </body>

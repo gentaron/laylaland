@@ -1,79 +1,125 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stats — Layla Virel Nova</title>
+    <title>Universe - Layla Virel Nova | AURALIS</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* ─── Stats Grid ─────────────────────────────────────────── */
-        .stats-grid {
+        /* ─── World Card ─────────────────────────────────────────── */
+        .world-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
             margin-top: 8px;
         }
 
-        .stat-card {
+        .world-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 28px 24px;
-            text-align: center;
+            padding: 32px 28px;
             backdrop-filter: blur(16px);
             transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .stat-card:hover {
+        .world-card:hover {
             transform: translateY(-4px);
             border-color: var(--border-hover);
             box-shadow: 0 16px 40px rgba(255, 61, 138, 0.1);
         }
 
-        .stat-number {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 2.4rem;
-            font-weight: 700;
-            letter-spacing: -0.03em;
-            margin-bottom: 6px;
-            color: var(--cyan);
-            text-shadow: var(--glow-cyan);
+        .world-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
         }
 
-        .stat-label {
-            font-size: 0.875rem;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 6px;
+        .world-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--pink);
+        }
+
+        .world-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* ─── Comparison Section ─────────────────────────────────── */
+        .comparison-section {
+            margin-top: 64px;
+        }
+
+        .comparison-table {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .comparison-row:last-child {
+            border-bottom: none;
+        }
+
+        .comparison-header {
+            background: rgba(255, 61, 138, 0.1);
+        }
+
+        .comparison-cell {
+            padding: 18px 24px;
+            font-size: 0.9rem;
+        }
+
+        .comparison-header .comparison-cell {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            color: var(--pink);
         }
 
-        .stat-description {
-            font-size: 0.825rem;
+        .comparison-cell:first-child {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .comparison-cell:not(:first-child) {
             color: var(--text-muted);
-            line-height: 1.5;
+            border-left: 1px solid var(--border);
         }
 
-        /* ─── Info Cards ─────────────────────────────────────────── */
-        .info-section {
+        /* ─── Setting Cards ──────────────────────────────────────── */
+        .setting-section {
             margin-top: 64px;
+        }
+
+        .setting-cards {
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
 
-        .info-card {
+        .setting-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 36px 40px;
+            padding: 32px;
             backdrop-filter: blur(16px);
         }
 
-        .info-card h2 {
+        .setting-card h3 {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: 700;
             margin-bottom: 16px;
             background: var(--accent);
@@ -82,69 +128,89 @@
             background-clip: text;
         }
 
-        .info-card p {
+        .setting-card p {
             font-size: 0.95rem;
-            line-height: 1.75;
+            line-height: 1.8;
             color: var(--text-muted);
             margin-bottom: 12px;
         }
 
-        .info-card p:last-child { margin-bottom: 0; }
+        .setting-card p:last-child {
+            margin-bottom: 0;
+        }
 
-        /* ─── Skills ─────────────────────────────────────────────── */
-        .skills-grid {
+        .setting-highlight {
+            background: rgba(255, 61, 138, 0.08);
+            border-left: 3px solid var(--pink);
+            padding: 16px 20px;
+            margin: 16px 0;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        }
+
+        .setting-highlight strong {
+            color: var(--cyan);
+        }
+
+        /* ─── Attribute Grid ─────────────────────────────────────── */
+        .attribute-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 16px;
             margin-top: 24px;
         }
 
-        .skill-item {
+        .attribute-item {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
-            padding: 18px 20px;
+            padding: 20px;
+            text-align: center;
         }
 
-        .skill-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .attribute-icon {
+            font-size: 1.8rem;
             margin-bottom: 10px;
         }
 
-        .skill-name {
-            font-size: 0.88rem;
+        .attribute-label {
+            font-size: 0.75rem;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .attribute-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
             color: var(--text);
         }
 
-        .skill-pct {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-
-        .skill-bar {
-            background: rgba(255, 255, 255, 0.1);
-            height: 6px;
-            border-radius: 999px;
-            overflow: hidden;
-        }
-
-        .skill-progress {
-            height: 100%;
-            background: var(--accent);
-            border-radius: 999px;
-            width: 0;
-            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+        .attribute-value.pink { color: var(--pink); }
+        .attribute-value.cyan { color: var(--cyan); }
 
         /* ─── Responsive ─────────────────────────────────────────── */
         @media (max-width: 768px) {
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .info-card { padding: 24px 20px; }
-            .skills-grid { grid-template-columns: 1fr; }
+            .world-grid { grid-template-columns: 1fr; }
+            
+            .comparison-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-cell {
+                border-left: none !important;
+                padding: 14px 20px;
+            }
+            
+            .comparison-cell:first-child {
+                background: rgba(255, 255, 255, 0.03);
+            }
+
+            .attribute-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
@@ -152,169 +218,206 @@
     <nav>
         <div class="nav-inner">
             <a href="index.html" class="nav-brand">
-                <span class="nav-brand-icon">⚡</span>
-                <span>Laylaland</span>
+                <span class="nav-brand-icon">&#x2728;</span>
+                <span>Layla Land</span>
             </a>
             <ul>
                 <li><a href="index.html">Home</a></li>
-                <li><a href="stats.html" class="active">Stats</a></li>
-                <li><a href="rank.html">Rankings</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="stats.html" class="active">Universe</a></li>
+                <li><a href="rank.html">Links</a></li>
             </ul>
         </div>
     </nav>
 
     <div class="container">
         <div class="page-header">
-            <h1>Statistics & Information</h1>
-            <p>Detailed insights into Layla Virel Nova's profile and achievements</p>
+            <h1>Layla's Universe</h1>
+            <p>AURALISの世界観とレイラの設定を深掘り</p>
         </div>
 
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number">127</div>
-                <div class="stat-label">Artworks Created</div>
-                <div class="stat-description">Total illustrations and creative pieces</div>
+        <!-- World Overview -->
+        <div class="world-grid">
+            <div class="world-card">
+                <div class="world-card-icon">&#x2728;</div>
+                <h3>AURALIS</h3>
+                <p>ChiralArt氏がDeviantArt上で創作した架空の芸術家・ファッション・コレクティブ。複数のメンバーで構成され、それぞれ独自のコンセプトカラーとシンボルを持つ。</p>
             </div>
-            <div class="stat-card">
-                <div class="stat-number">3.2k</div>
-                <div class="stat-label">Followers</div>
-                <div class="stat-description">Community members following the journey</div>
+            <div class="world-card">
+                <div class="world-card-icon">&#x1F339;</div>
+                <h3>The Pulse of Love</h3>
+                <p>レイラのAURALISでの役割。集団の「radiant heart（輝く心臓部）」として、コズミックエネルギーを司り、リズミカルで情熱的な存在として位置づけられている。</p>
             </div>
-            <div class="stat-card">
-                <div class="stat-number">89%</div>
-                <div class="stat-label">Completion Rate</div>
-                <div class="stat-description">Projects successfully completed</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">24</div>
-                <div class="stat-label">Exhibitions</div>
-                <div class="stat-description">Art shows and gallery presentations</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">4.8</div>
-                <div class="stat-label">Avg. Rating</div>
-                <div class="stat-description">Community feedback score out of 5.0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">156</div>
-                <div class="stat-label">Hours Practiced</div>
-                <div class="stat-description">This month's dedication to craft</div>
+            <div class="world-card">
+                <div class="world-card-icon">&#x1F320;</div>
+                <h3>Stellar Obsessions</h3>
+                <p>2025年9月リリースの拡張版。かつての「純粋な星の航海士」から「宇宙の守護者」へと変貌したレイラの深い物語を体験できるJanitor AIチャットボット。</p>
             </div>
         </div>
 
-        <div class="info-section">
-            <div class="info-card">
-                <h2>Biography</h2>
-                <p>Layla Virel Nova is a talented artist known for her distinctive illustration style that blends traditional techniques with modern digital artistry. Born with a natural inclination towards visual storytelling, Layla has developed a unique voice in the contemporary art scene.</p>
-                <p>Her work spans various mediums, from digital illustrations to mixed media pieces, each carrying her signature aesthetic that resonates with audiences worldwide. Layla's artistic journey began at an early age and has evolved through years of dedicated practice and exploration.</p>
+        <!-- Comparison -->
+        <div class="comparison-section">
+            <h2 class="section-title">設定の比較: 基本版 vs Stellar Obsessions</h2>
+            <div class="comparison-table">
+                <div class="comparison-row comparison-header">
+                    <div class="comparison-cell">項目</div>
+                    <div class="comparison-cell">基本設定 (AURALIS)</div>
+                    <div class="comparison-cell">Stellar Obsessions版</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell">役割</div>
+                    <div class="comparison-cell">The Pulse of Love（愛の鼓動）</div>
+                    <div class="comparison-cell">Cosmic Guardian（宇宙の守護者）</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell">性格</div>
+                    <div class="comparison-cell">磁力的で情熱的、ミューズ的存在</div>
+                    <div class="comparison-cell">むっつりタイプ、執着心のある知的情熱</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell">衣装</div>
+                    <div class="comparison-cell">ピンクのコズミックオーラ</div>
+                    <div class="comparison-cell">白ラテックススーツ + 赤マント + 青グローブ</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell">舞台</div>
+                    <div class="comparison-cell">AURALIS世界観</div>
+                    <div class="comparison-cell">輝く天文台、星雲シミュレーション</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-cell">コンテンツ</div>
+                    <div class="comparison-cell">AI生成アート</div>
+                    <div class="comparison-cell">インタラクティブチャットボット（成人向け）</div>
+                </div>
             </div>
+        </div>
 
-            <div class="info-card">
-                <h2>Artistic Skills</h2>
-                <div class="skills-grid">
-                    <div class="skill-item">
-                        <div class="skill-header">
-                            <div class="skill-name">Digital Illustration</div>
-                            <div class="skill-pct">95%</div>
-                        </div>
-                        <div class="skill-bar"><div class="skill-progress" data-width="95"></div></div>
+        <!-- Detailed Settings -->
+        <div class="setting-section">
+            <h2 class="section-title">詳細設定</h2>
+            <div class="setting-cards">
+                <div class="setting-card">
+                    <h3>レイラの本質</h3>
+                    <p>
+                        公式設定によると、レイラは<strong>「energy incarnate（エネルギーの化身）」</strong>として描かれています。
+                        その存在は単なるキャラクターを超え、AURALISというコレクティブ全体の活力と情熱を象徴しています。
+                    </p>
+                    <div class="setting-highlight">
+                        <strong>原文:</strong> "For Auralis, she is the heartbeat: rhythmic, passionate, endlessly vibrant."
                     </div>
-                    <div class="skill-item">
-                        <div class="skill-header">
-                            <div class="skill-name">Character Design</div>
-                            <div class="skill-pct">88%</div>
-                        </div>
-                        <div class="skill-bar"><div class="skill-progress" data-width="88"></div></div>
+                    <p>
+                        彼女のピンクの輝きは「控えめではない」と明記されており、不眠の街のネオンサインのように人々の注目を集める存在として設計されています。
+                    </p>
+                </div>
+
+                <div class="setting-card">
+                    <h3>Stellar Obsessionsの世界</h3>
+                    <p>
+                        拡張版では、レイラは<strong>星図の端にある「shimmering observatory（輝く天文台）」</strong>を拠点としています。
+                        この場所では<strong>「nebula-lit simulation（星雲に照らされたシミュレーション）」</strong>内でトレーニングや対話が行われます。
+                    </p>
+                    <div class="setting-highlight">
+                        <strong>キーワード:</strong> witty banter（機知に富んだ冗談）、playful challenges（遊び心のある挑戦）、veiled flirtations（ベールに包まれた誘惑）
                     </div>
-                    <div class="skill-item">
-                        <div class="skill-header">
-                            <div class="skill-name">Color Theory</div>
-                            <div class="skill-pct">92%</div>
+                    <p>
+                        この版でのレイラは、表面上は知的で落ち着いた印象を与えながら、内面には深い執着と情熱を秘めた「むっつり」タイプとして再解釈されています。
+                    </p>
+                </div>
+
+                <div class="setting-card">
+                    <h3>キャラクター属性</h3>
+                    <div class="attribute-grid">
+                        <div class="attribute-item">
+                            <div class="attribute-icon">&#x1F3A8;</div>
+                            <div class="attribute-label">作品媒体</div>
+                            <div class="attribute-value">AI生成アート</div>
                         </div>
-                        <div class="skill-bar"><div class="skill-progress" data-width="92"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-header">
-                            <div class="skill-name">Composition</div>
-                            <div class="skill-pct">90%</div>
+                        <div class="attribute-item">
+                            <div class="attribute-icon">&#x1F4CD;</div>
+                            <div class="attribute-label">活動拠点</div>
+                            <div class="attribute-value cyan">DeviantArt</div>
                         </div>
-                        <div class="skill-bar"><div class="skill-progress" data-width="90"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-header">
-                            <div class="skill-name">Traditional Drawing</div>
-                            <div class="skill-pct">85%</div>
+                        <div class="attribute-item">
+                            <div class="attribute-icon">&#x1F308;</div>
+                            <div class="attribute-label">カラー</div>
+                            <div class="attribute-value pink">Pink Spectrum</div>
                         </div>
-                        <div class="skill-bar"><div class="skill-progress" data-width="85"></div></div>
-                    </div>
-                    <div class="skill-item">
-                        <div class="skill-header">
-                            <div class="skill-name">Concept Art</div>
-                            <div class="skill-pct">87%</div>
+                        <div class="attribute-item">
+                            <div class="attribute-icon">&#x1F339;</div>
+                            <div class="attribute-label">シンボル</div>
+                            <div class="attribute-value">月下のバラ</div>
                         </div>
-                        <div class="skill-bar"><div class="skill-progress" data-width="87"></div></div>
+                        <div class="attribute-item">
+                            <div class="attribute-icon">&#x2764;</div>
+                            <div class="attribute-label">役割</div>
+                            <div class="attribute-value pink">Pulse of Love</div>
+                        </div>
+                        <div class="attribute-item">
+                            <div class="attribute-icon">&#x1F464;</div>
+                            <div class="attribute-label">クリエイター</div>
+                            <div class="attribute-value">ChiralArt</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Important Note -->
+        <div class="setting-card" style="margin-top: 40px; background: rgba(255, 61, 138, 0.05); border-color: rgba(255, 61, 138, 0.2);">
+            <h3>重要な注意事項</h3>
+            <p>
+                レイラ・ヴィレル・ノヴァは<strong>完全に架空のキャラクター</strong>です。
+                実在の人物、アイドル、アーティストではありません。
+            </p>
+            <p>
+                すべてのコンテンツはChiralArt氏によるAI生成アートと独自の世界観設定によって作成されています。
+                AURALISプロジェクト全体も架空のアートコレクティブであり、将来的にアルバムやファッション展開の可能性は示唆されていますが、現時点での活動はDeviantArtとJanitor AIに限定されています。
+            </p>
+        </div>
+
         <footer>
-            <div class="footer-brand">⚡ Laylaland</div>
-            <div>Fan site dedicated to Layla Virel Nova · Pink Voltage</div>
+            <div class="footer-brand">&#x2728; Layla Land</div>
+            <div>Unofficial fan site dedicated to Layla Virel Nova - AURALIS</div>
         </footer>
     </div>
 
     <!-- Chatbot -->
-    <button class="chatbot-toggle" onclick="toggleChatbot()" aria-label="Open chat">💬</button>
+    <button class="chatbot-toggle" onclick="toggleChatbot()" aria-label="Open chat">&#x1F4AC;</button>
     <div id="chatbot" class="chatbot-container">
         <div class="chatbot-header">
-            <span>⚡</span>
-            <span>Chat with Pink Voltage AI</span>
+            <span>&#x2728;</span>
+            <span>Layla AI Chat</span>
         </div>
         <div class="chatbot-messages" id="chatMessages">
-            <div class="message ai">Hi! I'm an AI with extensive knowledge about Layla Virel Nova (Pink Voltage). Ask me anything about her battles, rankings, or story!</div>
+            <div class="message ai">Hi! I'm an AI assistant with knowledge about Layla Virel Nova from AURALIS. Ask me about her character settings, Stellar Obsessions, or the AURALIS universe!</div>
         </div>
         <div class="typing-indicator" id="typingIndicator">
-            <span>Pink Voltage AI is typing</span>
+            <span>Layla AI is typing</span>
             <div class="typing-dots"><span></span><span></span><span></span></div>
         </div>
         <div class="chatbot-input">
-            <input type="text" id="chatInput" placeholder="Ask about Layla's adventures…" maxlength="500">
-            <button onclick="sendMessage()">➤</button>
+            <input type="text" id="chatInput" placeholder="Ask about Layla's universe..." maxlength="500">
+            <button onclick="sendMessage()">&#x27A4;</button>
         </div>
     </div>
 
     <script>
-        // Animate skill bars on scroll
         document.addEventListener('DOMContentLoaded', function() {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        const bar = entry.target;
-                        bar.style.width = bar.dataset.width + '%';
-                        observer.unobserve(bar);
-                    }
-                });
-            }, { threshold: 0.3 });
-
-            document.querySelectorAll('.skill-progress').forEach(bar => observer.observe(bar));
-
-            // Fade-in cards
-            const fadeObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
                         entry.target.style.opacity = '1';
                         entry.target.style.transform = 'translateY(0)';
-                        fadeObserver.unobserve(entry.target);
+                        observer.unobserve(entry.target);
                     }
                 });
             }, { threshold: 0.08 });
 
-            document.querySelectorAll('.stat-card, .info-card').forEach(el => {
+            document.querySelectorAll('.world-card, .setting-card, .comparison-table').forEach(el => {
                 el.style.opacity = '0';
                 el.style.transform = 'translateY(20px)';
                 el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                fadeObserver.observe(el);
+                observer.observe(el);
             });
         });
 

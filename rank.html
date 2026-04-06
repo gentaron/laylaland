@@ -1,195 +1,282 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rankings — Layla Virel Nova</title>
+    <title>Links - Layla Virel Nova | AURALIS</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* ─── Achievement Cards ──────────────────────────────────── */
-        .achievements-section {
+        /* ─── Links Grid ─────────────────────────────────────────── */
+        .links-section {
             margin-top: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
         }
 
-        .achievement-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 28px 32px;
-            backdrop-filter: blur(16px);
-            display: flex;
-            align-items: center;
-            gap: 28px;
-            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .achievement-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--border-hover);
-            box-shadow: 0 12px 36px rgba(255, 61, 138, 0.1);
-        }
-
-        .achievement-rank {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 800;
-            letter-spacing: -0.04em;
-            color: var(--cyan);
-            text-shadow: var(--glow-cyan);
-            min-width: 72px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        .achievement-divider {
-            width: 1px;
-            height: 64px;
-            background: var(--border);
-            flex-shrink: 0;
-        }
-
-        .achievement-content { flex: 1; min-width: 0; }
-
-        .achievement-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-            color: var(--pink);
-        }
-
-        .achievement-description {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            line-height: 1.6;
-            margin-bottom: 8px;
-        }
-
-        .achievement-date {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.78rem;
-            color: var(--text-muted);
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            padding: 3px 10px;
-        }
-
-        /* ─── Ranking Categories ─────────────────────────────────── */
-        .ranking-categories {
+        .links-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 16px;
-            margin-top: 64px;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
         }
 
-        .category-card {
+        .link-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
-            padding: 32px 28px;
+            padding: 32px;
             backdrop-filter: blur(16px);
-            text-align: center;
+            text-decoration: none;
+            display: block;
             transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .category-card:hover {
-            transform: translateY(-4px);
+        .link-card:hover {
+            transform: translateY(-6px);
             border-color: var(--border-hover);
-            box-shadow: 0 16px 40px rgba(255, 61, 138, 0.1);
+            box-shadow: 0 20px 48px rgba(255, 61, 138, 0.15);
         }
 
-        .category-title {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--text-muted);
+        .link-card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
             margin-bottom: 16px;
         }
 
-        .category-rank {
+        .link-card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            background: rgba(255, 61, 138, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            flex-shrink: 0;
+        }
+
+        .link-card-icon.deviantart { background: rgba(0, 232, 155, 0.12); }
+        .link-card-icon.janitor { background: rgba(138, 103, 255, 0.12); }
+        .link-card-icon.auralis { background: rgba(255, 61, 138, 0.12); }
+
+        .link-card-title {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 3.5rem;
-            font-weight: 800;
-            letter-spacing: -0.05em;
-            margin-bottom: 12px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .link-card-subtitle {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .link-card-description {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+
+        .link-card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .link-tag {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 5px 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .link-tag.primary {
+            background: rgba(255, 61, 138, 0.15);
+            border-color: rgba(255, 61, 138, 0.3);
+            color: var(--pink);
+        }
+
+        .link-tag.warning {
+            background: rgba(255, 171, 0, 0.15);
+            border-color: rgba(255, 171, 0, 0.3);
+            color: #ffab00;
+        }
+
+        /* ─── Info Section ───────────────────────────────────────── */
+        .info-section {
+            margin-top: 64px;
+        }
+
+        .info-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 32px;
+            margin-bottom: 20px;
+        }
+
+        .info-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 16px;
             background: var(--accent);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            line-height: 1;
         }
 
-        .category-description {
-            font-size: 0.85rem;
+        .info-card p {
+            font-size: 0.95rem;
+            line-height: 1.8;
             color: var(--text-muted);
-            line-height: 1.55;
-        }
-
-        /* ─── Medals ─────────────────────────────────────────────── */
-        .medals-section {
-            margin-top: 64px;
-        }
-
-        .medals-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 16px;
-            margin-top: 8px;
-        }
-
-        .medal-item {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 28px 20px;
-            text-align: center;
-            backdrop-filter: blur(16px);
-            transition: transform 0.3s ease, border-color 0.3s ease;
-        }
-
-        .medal-item:hover {
-            transform: translateY(-4px) scale(1.02);
-            border-color: var(--border-hover);
-        }
-
-        .medal-icon {
-            font-size: 2.5rem;
             margin-bottom: 12px;
-            display: block;
         }
 
-        .medal-title {
-            font-size: 0.875rem;
-            font-weight: 700;
-            margin-bottom: 6px;
+        .info-card p:last-child { margin-bottom: 0; }
+
+        .info-card ul {
+            list-style: none;
+            margin: 16px 0;
+        }
+
+        .info-card li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .info-card li::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            color: var(--pink);
+            font-weight: bold;
+        }
+
+        .info-card strong {
             color: var(--text);
         }
 
-        .medal-description {
-            font-size: 0.8rem;
+        /* ─── Not Available Section ──────────────────────────────── */
+        .not-available {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed var(--border);
+            border-radius: var(--radius-md);
+            padding: 32px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .not-available-icon {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .not-available h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
             color: var(--text-muted);
-            line-height: 1.45;
+            margin-bottom: 12px;
+        }
+
+        .not-available p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .not-available-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .not-available-item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 8px 16px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        /* ─── Credits ────────────────────────────────────────────── */
+        .credits-section {
+            margin-top: 64px;
+        }
+
+        .credits-card {
+            background: linear-gradient(135deg, rgba(255, 61, 138, 0.08) 0%, rgba(196, 113, 237, 0.08) 50%, rgba(0, 230, 255, 0.08) 100%);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            text-align: center;
+        }
+
+        .credits-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: var(--accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .credits-card p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+
+        .credits-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .credits-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 61, 138, 0.4);
         }
 
         /* ─── Responsive ─────────────────────────────────────────── */
         @media (max-width: 768px) {
-            .achievement-card {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 16px;
+            .links-grid {
+                grid-template-columns: 1fr;
             }
-            .achievement-divider { display: none; }
-            .achievement-rank { font-size: 2rem; min-width: auto; }
-            .ranking-categories { grid-template-columns: repeat(2, 1fr); }
-            .medals-grid { grid-template-columns: repeat(2, 1fr); }
+
+            .link-card {
+                padding: 24px;
+            }
+
+            .credits-card {
+                padding: 28px 20px;
+            }
         }
     </style>
 </head>
@@ -197,147 +284,175 @@
     <nav>
         <div class="nav-inner">
             <a href="index.html" class="nav-brand">
-                <span class="nav-brand-icon">⚡</span>
-                <span>Laylaland</span>
+                <span class="nav-brand-icon">&#x2728;</span>
+                <span>Layla Land</span>
             </a>
             <ul>
                 <li><a href="index.html">Home</a></li>
-                <li><a href="stats.html">Stats</a></li>
-                <li><a href="rank.html" class="active">Rankings</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="stats.html">Universe</a></li>
+                <li><a href="rank.html" class="active">Links</a></li>
             </ul>
         </div>
     </nav>
 
     <div class="container">
         <div class="page-header">
-            <h1>Rankings & Achievements</h1>
-            <p>Celebrating Layla Virel Nova's accomplishments and recognition in the art community</p>
+            <h1>Official Links</h1>
+            <p>レイラ・ヴィレル・ノヴァに関する公式コンテンツへのリンク集</p>
         </div>
 
-        <div class="achievements-section">
-            <div class="achievement-card">
-                <div class="achievement-rank">#1</div>
-                <div class="achievement-divider"></div>
-                <div class="achievement-content">
-                    <div class="achievement-title">Best Digital Illustration</div>
-                    <div class="achievement-description">Awarded first place in the International Digital Art Competition for outstanding creativity and technical skill in digital illustration.</div>
-                    <span class="achievement-date">📅 December 2024</span>
-                </div>
-            </div>
+        <!-- Main Links -->
+        <div class="links-section">
+            <div class="links-grid">
+                <a href="https://www.deviantart.com/chiralart" target="_blank" rel="noopener noreferrer" class="link-card">
+                    <div class="link-card-header">
+                        <div class="link-card-icon deviantart">&#x1F3A8;</div>
+                        <div>
+                            <div class="link-card-title">DeviantArt - ChiralArt</div>
+                            <div class="link-card-subtitle">deviantart.com/chiralart</div>
+                        </div>
+                    </div>
+                    <p class="link-card-description">
+                        レイラのメイン活動拠点。AI生成による美しいイラストが多数公開されています。
+                        AURALISの他のメンバーのアートも見ることができます。
+                    </p>
+                    <div class="link-card-tags">
+                        <span class="link-tag primary">Main Source</span>
+                        <span class="link-tag">AI Art</span>
+                        <span class="link-tag">AURALIS</span>
+                    </div>
+                </a>
 
-            <div class="achievement-card">
-                <div class="achievement-rank">#3</div>
-                <div class="achievement-divider"></div>
-                <div class="achievement-content">
-                    <div class="achievement-title">Rising Artist of the Year</div>
-                    <div class="achievement-description">Recognized as one of the top three emerging artists in the contemporary art scene, showcasing exceptional growth and innovation.</div>
-                    <span class="achievement-date">📅 November 2024</span>
-                </div>
-            </div>
+                <a href="https://janitorai.com/characters/3e87a276-e2ca-48b8-ac9f-d77a527ea4c0_character-layla-virel-nova-dramatically-perverted-version" target="_blank" rel="noopener noreferrer" class="link-card">
+                    <div class="link-card-header">
+                        <div class="link-card-icon janitor">&#x1F4AC;</div>
+                        <div>
+                            <div class="link-card-title">Janitor AI - Stellar Obsessions</div>
+                            <div class="link-card-subtitle">janitorai.com</div>
+                        </div>
+                    </div>
+                    <p class="link-card-description">
+                        2025年9月リリースの拡張版「Stellar Obsessions」。
+                        インタラクティブなチャットボット体験でレイラと対話できます。
+                    </p>
+                    <div class="link-card-tags">
+                        <span class="link-tag primary">Interactive</span>
+                        <span class="link-tag warning">18+</span>
+                        <span class="link-tag">Chatbot</span>
+                    </div>
+                </a>
 
-            <div class="achievement-card">
-                <div class="achievement-rank">#2</div>
-                <div class="achievement-divider"></div>
-                <div class="achievement-content">
-                    <div class="achievement-title">Character Design Excellence</div>
-                    <div class="achievement-description">Second place in the Global Character Design Challenge, praised for unique character concepts and visual storytelling abilities.</div>
-                    <span class="achievement-date">📅 October 2024</span>
-                </div>
-            </div>
-
-            <div class="achievement-card">
-                <div class="achievement-rank">#5</div>
-                <div class="achievement-divider"></div>
-                <div class="achievement-content">
-                    <div class="achievement-title">Community Choice Award</div>
-                    <div class="achievement-description">Selected by the art community as a top 5 favorite artist, based on public voting and peer recognition.</div>
-                    <span class="achievement-date">📅 September 2024</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="ranking-categories">
-            <div class="category-card">
-                <div class="category-title">Overall Ranking</div>
-                <div class="category-rank">#7</div>
-                <div class="category-description">Current position among all registered artists in the global art community platform</div>
-            </div>
-            <div class="category-card">
-                <div class="category-title">Digital Art</div>
-                <div class="category-rank">#3</div>
-                <div class="category-description">Specialized ranking within digital illustration and concept art</div>
-            </div>
-            <div class="category-card">
-                <div class="category-title">Emerging Artists</div>
-                <div class="category-rank">#2</div>
-                <div class="category-description">Position among artists with less than 5 years of professional experience</div>
-            </div>
-            <div class="category-card">
-                <div class="category-title">Fan Favorites</div>
-                <div class="category-rank">#4</div>
-                <div class="category-description">Ranking based on community engagement, likes, and follower interaction</div>
+                <a href="https://auralis-eternal-light.lovable.app" target="_blank" rel="noopener noreferrer" class="link-card">
+                    <div class="link-card-header">
+                        <div class="link-card-icon auralis">&#x2728;</div>
+                        <div>
+                            <div class="link-card-title">AURALIS Official Site</div>
+                            <div class="link-card-subtitle">auralis-eternal-light.lovable.app</div>
+                        </div>
+                    </div>
+                    <p class="link-card-description">
+                        AURALISコレクティブの公式サイト。レイラを含むメンバーのビジュアルが公開されていますが、
+                        詳細ページはまだ開発中のようです。
+                    </p>
+                    <div class="link-card-tags">
+                        <span class="link-tag">Official</span>
+                        <span class="link-tag">AURALIS</span>
+                        <span class="link-tag">WIP</span>
+                    </div>
+                </a>
             </div>
         </div>
 
-        <div class="medals-section">
-            <h2 class="section-title">Medals & Honors</h2>
-            <div class="medals-grid">
-                <div class="medal-item">
-                    <span class="medal-icon">🥇</span>
-                    <div class="medal-title">Excellence in Innovation</div>
-                    <div class="medal-description">For pioneering new techniques in digital art</div>
-                </div>
-                <div class="medal-item">
-                    <span class="medal-icon">🥇</span>
-                    <div class="medal-title">Best Portfolio</div>
-                    <div class="medal-description">Outstanding collection of diverse artwork</div>
-                </div>
-                <div class="medal-item">
-                    <span class="medal-icon">🥈</span>
-                    <div class="medal-title">Technical Mastery</div>
-                    <div class="medal-description">Advanced skill in multiple mediums</div>
-                </div>
-                <div class="medal-item">
-                    <span class="medal-icon">🥈</span>
-                    <div class="medal-title">Artistic Vision</div>
-                    <div class="medal-description">Unique perspective and creative storytelling</div>
-                </div>
-                <div class="medal-item">
-                    <span class="medal-icon">🥉</span>
-                    <div class="medal-title">Community Impact</div>
-                    <div class="medal-description">Positive influence on fellow artists</div>
-                </div>
-                <div class="medal-item">
-                    <span class="medal-icon">🥉</span>
-                    <div class="medal-title">Consistent Quality</div>
-                    <div class="medal-description">Maintaining high standards across all works</div>
-                </div>
+        <!-- Activity Info -->
+        <div class="info-section">
+            <div class="info-card">
+                <h3>活動状況まとめ</h3>
+                <p>
+                    レイラ・ヴィレル・ノヴァの公式コンテンツは、現時点で以下のプラットフォームに限定されています:
+                </p>
+                <ul>
+                    <li><strong>DeviantArt (ChiralArt)</strong> - メインの活動拠点。AI生成アートが複数枚公開。一部は成熟指定（mature）コンテンツ。</li>
+                    <li><strong>Janitor AI</strong> - Stellar Obsessions版のインタラクティブチャットボット。成人向けコンテンツを含む。</li>
+                    <li><strong>AURALIS公式サイト</strong> - 画像中心で詳細ページは開発中。</li>
+                </ul>
+                <p>
+                    これ以上の公式活動・個人ブログ・実在プロフィールは確認されていません。
+                    将来的にAURALIS全体のアルバムやファッション展開の可能性はありますが、現時点では上記が全貌です。
+                </p>
             </div>
+        </div>
+
+        <!-- Not Available -->
+        <div class="not-available">
+            <div class="not-available-icon">&#x1F50D;</div>
+            <h3>現時点で存在が確認されていないプラットフォーム</h3>
+            <p>
+                以下のプラットフォームでのレイラの公式活動は、調査の結果確認されていません。
+            </p>
+            <div class="not-available-list">
+                <span class="not-available-item">Pixiv</span>
+                <span class="not-available-item">Instagram</span>
+                <span class="not-available-item">Twitter/X</span>
+                <span class="not-available-item">YouTube</span>
+                <span class="not-available-item">TikTok</span>
+                <span class="not-available-item">note</span>
+                <span class="not-available-item">個人ブログ</span>
+                <span class="not-available-item">Audius（Minaのみ）</span>
+            </div>
+        </div>
+
+        <!-- Credits -->
+        <div class="credits-section">
+            <div class="credits-card">
+                <h3>Creator Credits</h3>
+                <p>
+                    レイラ・ヴィレル・ノヴァおよびAURALISは、<strong>ChiralArt</strong>氏によって創作されたオリジナルキャラクターです。
+                    すべての権利は原作者に帰属します。
+                    最新かつ最も正確な情報を得るには、ChiralArt氏のDeviantArtを直接確認することをお勧めします。
+                </p>
+                <a href="https://www.deviantart.com/chiralart" target="_blank" rel="noopener noreferrer" class="credits-link">
+                    <span>&#x1F3A8;</span>
+                    <span>ChiralArt on DeviantArt</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Disclaimer -->
+        <div class="info-card" style="margin-top: 40px; background: rgba(255, 61, 138, 0.05); border-color: rgba(255, 61, 138, 0.2);">
+            <h3>Disclaimer</h3>
+            <p>
+                本サイト「Layla Land」は非公式のファンサイトです。ChiralArt氏およびAURALISとは無関係です。
+            </p>
+            <p>
+                レイラ・ヴィレル・ノヴァは完全に架空のキャラクターであり、実在の人物・アイドル・アーティストではありません。
+                すべてのコンテンツはAI生成アートと独自の世界観設定による仮想キャラクターとして楽しむものです。
+            </p>
         </div>
 
         <footer>
-            <div class="footer-brand">⚡ Laylaland</div>
-            <div>Fan site dedicated to Layla Virel Nova · Pink Voltage</div>
+            <div class="footer-brand">&#x2728; Layla Land</div>
+            <div>Unofficial fan site dedicated to Layla Virel Nova - AURALIS</div>
         </footer>
     </div>
 
     <!-- Chatbot -->
-    <button class="chatbot-toggle" onclick="toggleChatbot()" aria-label="Open chat">💬</button>
+    <button class="chatbot-toggle" onclick="toggleChatbot()" aria-label="Open chat">&#x1F4AC;</button>
     <div id="chatbot" class="chatbot-container">
         <div class="chatbot-header">
-            <span>⚡</span>
-            <span>Chat with Pink Voltage AI</span>
+            <span>&#x2728;</span>
+            <span>Layla AI Chat</span>
         </div>
         <div class="chatbot-messages" id="chatMessages">
-            <div class="message ai">Hi! I'm an AI with extensive knowledge about Layla Virel Nova (Pink Voltage). Ask me anything about her battles, rankings, or story!</div>
+            <div class="message ai">Hi! I'm an AI assistant with knowledge about Layla Virel Nova from AURALIS. Ask me about official links or where to find more content!</div>
         </div>
         <div class="typing-indicator" id="typingIndicator">
-            <span>Pink Voltage AI is typing</span>
+            <span>Layla AI is typing</span>
             <div class="typing-dots"><span></span><span></span><span></span></div>
         </div>
         <div class="chatbot-input">
-            <input type="text" id="chatInput" placeholder="Ask about Layla's adventures…" maxlength="500">
-            <button onclick="sendMessage()">➤</button>
+            <input type="text" id="chatInput" placeholder="Ask about Layla..." maxlength="500">
+            <button onclick="sendMessage()">&#x27A4;</button>
         </div>
     </div>
 
@@ -353,7 +468,7 @@
                 });
             }, { threshold: 0.08 });
 
-            document.querySelectorAll('.achievement-card, .category-card, .medal-item').forEach(el => {
+            document.querySelectorAll('.link-card, .info-card, .not-available, .credits-card').forEach(el => {
                 el.style.opacity = '0';
                 el.style.transform = 'translateY(20px)';
                 el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';

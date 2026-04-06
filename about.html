@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Layla - AURALIS</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ─── Profile Hero ───────────────────────────────────────── */
+        .profile-hero {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 40px;
+            margin-top: 24px;
+            align-items: start;
+        }
+
+        .profile-image-wrapper {
+            position: relative;
+        }
+
+        .profile-image {
+            width: 100%;
+            aspect-ratio: 3/4;
+            object-fit: cover;
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--border);
+            box-shadow: 0 20px 60px rgba(255, 61, 138, 0.2);
+        }
+
+        .profile-badge {
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            padding: 8px 20px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: white;
+            white-space: nowrap;
+            box-shadow: 0 4px 20px rgba(255, 61, 138, 0.4);
+        }
+
+        .profile-content {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .profile-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            background: var(--accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .profile-subtitle {
+            font-size: 1.1rem;
+            color: var(--pink);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .profile-description {
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        .profile-description em {
+            color: var(--cyan);
+            font-style: normal;
+            font-weight: 500;
+        }
+
+        /* ─── Quick Facts ────────────────────────────────────────── */
+        .quick-facts {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .fact-item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 14px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .fact-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+        }
+
+        .fact-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .fact-value.pink { color: var(--pink); }
+        .fact-value.cyan { color: var(--cyan); }
+
+        /* ─── Tabs ───────────────────────────────────────────────── */
+        .tabs-section {
+            margin-top: 72px;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 4px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 6px;
+            margin-bottom: 32px;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-sm);
+            color: var(--text-muted);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .tab-btn.active {
+            color: white;
+            background: var(--accent);
+            box-shadow: 0 4px 16px rgba(255, 61, 138, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ─── Info Block ─────────────────────────────────────────── */
+        .info-block {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 32px;
+            margin-bottom: 20px;
+        }
+
+        .info-block h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--pink);
+        }
+
+        .info-block p {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .info-block p:last-child { margin-bottom: 0; }
+
+        .info-block blockquote {
+            background: rgba(255, 61, 138, 0.08);
+            border-left: 3px solid var(--pink);
+            padding: 16px 20px;
+            margin: 16px 0;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            font-style: italic;
+            color: var(--text);
+        }
+
+        /* ─── Timeline ───────────────────────────────────────────── */
+        .timeline {
+            position: relative;
+            padding-left: 32px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--pink), var(--cyan), var(--purple));
+            border-radius: 999px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 32px;
+        }
+
+        .timeline-item:last-child { padding-bottom: 0; }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -36px;
+            top: 4px;
+            width: 10px;
+            height: 10px;
+            background: var(--pink);
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--pink);
+        }
+
+        .timeline-date {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 6px;
+        }
+
+        .timeline-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .timeline-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* ─── Quiz Section ───────────────────────────────────────── */
+        .quiz-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            text-align: center;
+        }
+
+        .quiz-header {
+            margin-bottom: 32px;
+        }
+
+        .quiz-header h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .quiz-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .quiz-progress {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 32px;
+        }
+
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: var(--pink);
+            box-shadow: 0 0 10px var(--pink);
+        }
+
+        .progress-dot.correct {
+            background: #22c55e;
+            box-shadow: 0 0 10px #22c55e;
+        }
+
+        .progress-dot.incorrect {
+            background: #ef4444;
+            box-shadow: 0 0 10px #ef4444;
+        }
+
+        .quiz-question {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 28px;
+            line-height: 1.6;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 14px 20px;
+            text-align: left;
+            color: var(--text);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .quiz-option:hover:not(.disabled) {
+            background: rgba(255, 61, 138, 0.12);
+            border-color: var(--border-hover);
+            transform: translateX(4px);
+        }
+
+        .quiz-option.correct {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: #22c55e;
+            color: #22c55e;
+        }
+
+        .quiz-option.incorrect {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        .quiz-option.disabled {
+            cursor: default;
+            opacity: 0.6;
+        }
+
+        .quiz-result {
+            display: none;
+            text-align: center;
+        }
+
+        .quiz-result h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: var(--accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .quiz-score {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--cyan);
+            text-shadow: var(--glow-cyan);
+            margin: 24px 0;
+        }
+
+        .quiz-message {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 24px;
+        }
+
+        .quiz-restart {
+            background: var(--accent);
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 12px 28px;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .quiz-restart:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 61, 138, 0.4);
+        }
+
+        /* ─── External Links ─────────────────────────────────────── */
+        .external-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .external-link {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .external-link:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-hover);
+            box-shadow: 0 16px 40px rgba(255, 61, 138, 0.15);
+        }
+
+        .external-link-icon {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+
+        .external-link-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .external-link-desc {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* ─── Disclaimer ─────────────────────────────────────────── */
+        .disclaimer {
+            background: rgba(255, 61, 138, 0.08);
+            border: 1px solid rgba(255, 61, 138, 0.2);
+            border-radius: var(--radius-md);
+            padding: 20px 24px;
+            margin-top: 40px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .disclaimer strong {
+            color: var(--pink);
+        }
+
+        /* ─── Responsive ─────────────────────────────────────────── */
+        @media (max-width: 900px) {
+            .profile-hero {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .profile-image-wrapper {
+                max-width: 280px;
+                margin: 0 auto;
+            }
+
+            .quick-facts {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .tabs-nav {
+                flex-wrap: nowrap;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .tab-btn {
+                min-width: 100px;
+                padding: 10px 16px;
+                font-size: 0.82rem;
+            }
+
+            .info-block {
+                padding: 24px 20px;
+            }
+
+            .quiz-container {
+                padding: 28px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand">
+                <span class="nav-brand-icon">&#x2728;</span>
+                <span>Layla Land</span>
+            </a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+                <li><a href="stats.html">Universe</a></li>
+                <li><a href="rank.html">Links</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Profile Hero -->
+        <div class="profile-hero">
+            <div class="profile-image-wrapper">
+                <img src="gallery/imagelayla (1).png" alt="Layla Virel Nova" class="profile-image">
+                <div class="profile-badge">The Pulse of Love</div>
+            </div>
+            <div class="profile-content">
+                <div>
+                    <div class="profile-subtitle">AURALIS Member</div>
+                    <h1 class="profile-title">Layla Virel Nova</h1>
+                    <p class="profile-description">
+                        レイラ・ヴィレル・ノヴァは、<em>ChiralArt</em>氏がDeviantArtで展開する架空のアーティスト集団<em>「AURALIS」</em>のメンバーです。
+                        実在の人物やアイドルではなく、AI生成アートと独自の世界観設定によって生み出された<em>仮想キャラクター</em>。
+                        AURALISの「輝く心臓部」として、コズミックエネルギーを司り、集団に情熱と活力をもたらす存在として描かれています。
+                    </p>
+                </div>
+
+                <div class="quick-facts">
+                    <div class="fact-item">
+                        <span class="fact-label">役割</span>
+                        <span class="fact-value pink">The Pulse of Love</span>
+                    </div>
+                    <div class="fact-item">
+                        <span class="fact-label">コンセプトカラー</span>
+                        <span class="fact-value pink">Pink Spectrum</span>
+                    </div>
+                    <div class="fact-item">
+                        <span class="fact-label">シンボル</span>
+                        <span class="fact-value">月明かりの下で咲くバラ</span>
+                    </div>
+                    <div class="fact-item">
+                        <span class="fact-label">所属</span>
+                        <span class="fact-value cyan">AURALIS</span>
+                    </div>
+                    <div class="fact-item">
+                        <span class="fact-label">クリエイター</span>
+                        <span class="fact-value">ChiralArt</span>
+                    </div>
+                    <div class="fact-item">
+                        <span class="fact-label">活動拠点</span>
+                        <span class="fact-value">DeviantArt</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Section -->
+        <div class="tabs-section">
+            <div class="tabs-nav">
+                <button class="tab-btn active" data-tab="profile">Profile</button>
+                <button class="tab-btn" data-tab="stellar">Stellar Obsessions</button>
+                <button class="tab-btn" data-tab="history">History</button>
+                <button class="tab-btn" data-tab="quiz">Quiz</button>
+            </div>
+
+            <!-- Profile Tab -->
+            <div id="tab-profile" class="tab-content active">
+                <div class="info-block">
+                    <h3>公式キャラクター紹介</h3>
+                    <blockquote>
+                        "Layla is energy incarnate. Her silhouette is curvaceous yet agile, the balance of strength and femininity. 
+                        The pink hues she radiates are not shy—they command attention, shimmering like neon signs in a sleepless city. 
+                        She is both muse and performer, drawing people in with the magnetic warmth of her smile. 
+                        For Auralis, she is the heartbeat: rhythmic, passionate, endlessly vibrant."
+                    </blockquote>
+                    <p>
+                        <strong>日本語訳:</strong><br>
+                        レイラはエネルギーそのもの。曲線的でありながら敏捷なシルエットは、強さと女性らしさの完璧なバランス。
+                        彼女が放つピンクの輝きは控えめではなく、注意を強く引きつけるもの。
+                        不眠の街のネオンサインのように輝き、笑顔の磁力で人を引き寄せるミューズでありパフォーマー。
+                        AURALISにとって彼女は心臓部そのもの。リズミカルで、情熱的で、果てしなく活気にあふれている。
+                    </p>
+                </div>
+
+                <div class="info-block">
+                    <h3>外見の特徴</h3>
+                    <p>
+                        公式設定に基づくレイラの外見的特徴は以下の通りです:
+                    </p>
+                    <p>
+                        <strong>体型:</strong> 曲線的（curvaceous）でありながら敏捷（agile）なボディライン。強さと女性らしさのバランスを体現。
+                    </p>
+                    <p>
+                        <strong>オーラ:</strong> ピンクを基調とした輝き。ネオン調の未来的・コズミックな雰囲気を持ち、控えめではなく存在感を放つ。
+                    </p>
+                    <p>
+                        <strong>印象:</strong> 磁力的な笑顔で人を引き寄せる、ミューズ（芸術の女神）でありパフォーマー。
+                    </p>
+                </div>
+
+                <div class="info-block">
+                    <h3>AURALISとは</h3>
+                    <p>
+                        AURALISは、ChiralArt氏がDeviantArt上で創作した<strong>架空の芸術家・ファッション・コレクティブ</strong>です。
+                        レイラを含む複数のメンバーで構成され、それぞれが独自のコンセプトカラーとシンボルを持っています。
+                    </p>
+                    <p>
+                        公式サイト（auralis-eternal-light.lovable.app）も存在しますが、現時点では画像中心で詳細ページはほぼ空欄となっています。
+                        すべてのコンテンツはAI生成アートで作成されており、架空の世界観として楽しむものです。
+                    </p>
+                </div>
+            </div>
+
+            <!-- Stellar Obsessions Tab -->
+            <div id="tab-stellar" class="tab-content">
+                <div class="info-block">
+                    <h3>Stellar Obsessions とは</h3>
+                    <p>
+                        2025年9月21日にDeviantArtジャーナルで発表された、レイラの<strong>大幅リメイク版</strong>です。
+                        <strong>Janitor AI専用インタラクティブチャットボット</strong>として公開され、より深いロールプレイ体験を提供します。
+                    </p>
+                </div>
+
+                <div class="info-block">
+                    <h3>衣装設定</h3>
+                    <p>
+                        <strong>Iconic White Latex Bodysuit</strong>（白いラテックスボディスーツ）を基調に、
+                        <strong>Red Cape</strong>（赤いマント）、<strong>Blue Gloves</strong>（青いグローブ）、
+                        <strong>Red Boots</strong>（赤いブーツ）を組み合わせた衣装で登場します。
+                    </p>
+                </div>
+
+                <div class="info-block">
+                    <h3>バックストーリー</h3>
+                    <p>
+                        かつては<em>「pure-hearted star navigator（純粋な星の航海士）」</em>だったレイラ。
+                        現在は<em>「cosmic guardian（宇宙の守護者）」</em>へと変貌を遂げています。
+                    </p>
+                    <p>
+                        その内面には隠された<strong>「obsessive, intellectual passion（執着心のある知的情熱）」</strong>を抱えています。
+                    </p>
+                </div>
+
+                <div class="info-block">
+                    <h3>性格設定</h3>
+                    <p>
+                        <strong>「むっつり」タイプ</strong>として設定されています。
+                        内気で秘めているが、内面には深い情熱を持つ性格。
+                    </p>
+                    <p>
+                        <strong>witty banter</strong>（機知に富んだ冗談）、<strong>playful challenges</strong>（遊び心のある挑戦）、
+                        <strong>veiled flirtations</strong>（ベールに包まれた誘惑）を通じて、
+                        会話の奥に<em>「universe of desire（欲望の宇宙）」</em>を隠します。
+                    </p>
+                </div>
+
+                <div class="info-block">
+                    <h3>世界観</h3>
+                    <p>
+                        星図の端にある<strong>「shimmering observatory（輝く天文台）」</strong>が舞台。
+                        <strong>nebula-lit simulation（星雲に照らされたシミュレーション）</strong>内でトレーニングや対話が可能です。
+                    </p>
+                    <p>
+                        目的は<em>「align with her orbit and unlock the depths of her stellar obsessions（彼女の軌道に沿って、星の執着の深淵を解き放つ）」</em>という没入型RP体験。
+                    </p>
+                </div>
+            </div>
+
+            <!-- History Tab -->
+            <div id="tab-history" class="tab-content">
+                <div class="info-block">
+                    <h3>レイラの軌跡</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">Origin</div>
+                            <div class="timeline-title">AURALIS デビュー</div>
+                            <div class="timeline-desc">
+                                ChiralArt氏によるDeviantArt Debut Blogで初めて公開。
+                                「The Pulse of Love（愛の鼓動）」としてAURALISの中核メンバーに。
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">Development</div>
+                            <div class="timeline-title">キャラクター展開</div>
+                            <div class="timeline-desc">
+                                DeviantArtで複数のアートワークが公開。
+                                AI生成による成熟指定（mature）作品も含む多様な作品群。
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">2025年9月21日</div>
+                            <div class="timeline-title">Stellar Obsessions リリース</div>
+                            <div class="timeline-desc">
+                                Janitor AI専用チャットボットとして大幅リメイク版が公開。
+                                「dramatically perverted version」として成人向け再解釈が追加。
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">Present</div>
+                            <div class="timeline-title">現在の活動</div>
+                            <div class="timeline-desc">
+                                DeviantArtでのアート公開とJanitor AIチャットボットが主な活動。
+                                音楽やPixiv、Instagram等での展開は現時点ではなし。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-block">
+                    <h3>活動拠点まとめ</h3>
+                    <p><strong>メイン:</strong> DeviantArt（ChiralArt）- レイラ単独のアート複数枚公開</p>
+                    <p><strong>インタラクティブ:</strong> Janitor AI チャットボット - Stellar Obsessions版</p>
+                    <p><strong>未展開:</strong> 音楽（Audiusには別メンバーMinaのみ）、Pixiv、Instagram、個人ブログ、note等は一切なし</p>
+                </div>
+            </div>
+
+            <!-- Quiz Tab -->
+            <div id="tab-quiz" class="tab-content">
+                <div class="quiz-container">
+                    <div id="quizArea">
+                        <div class="quiz-header">
+                            <h3>Layla Knowledge Quiz</h3>
+                            <p>レイラについてどれだけ知っていますか?</p>
+                        </div>
+
+                        <div class="quiz-progress" id="quizProgress"></div>
+
+                        <div id="quizQuestion" class="quiz-question"></div>
+
+                        <div id="quizOptions" class="quiz-options"></div>
+                    </div>
+
+                    <div id="quizResult" class="quiz-result">
+                        <h3>Quiz Complete!</h3>
+                        <div class="quiz-score" id="scoreDisplay">0/5</div>
+                        <p class="quiz-message" id="resultMessage"></p>
+                        <button class="quiz-restart" onclick="startQuiz()">もう一度挑戦</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- External Links -->
+        <div class="info-block" style="margin-top: 48px;">
+            <h3>公式リンク</h3>
+            <div class="external-links">
+                <a href="https://www.deviantart.com/chiralart" target="_blank" rel="noopener noreferrer" class="external-link">
+                    <div class="external-link-icon">&#x1F3A8;</div>
+                    <div class="external-link-title">DeviantArt (ChiralArt)</div>
+                    <div class="external-link-desc">レイラのメイン活動拠点。AI生成アートが多数公開されています。</div>
+                </a>
+                <a href="https://janitorai.com/characters/3e87a276-e2ca-48b8-ac9f-d77a527ea4c0_character-layla-virel-nova-dramatically-perverted-version" target="_blank" rel="noopener noreferrer" class="external-link">
+                    <div class="external-link-icon">&#x1F4AC;</div>
+                    <div class="external-link-title">Janitor AI - Stellar Obsessions</div>
+                    <div class="external-link-desc">インタラクティブチャットボット版。成人向けコンテンツ含む。</div>
+                </a>
+            </div>
+        </div>
+
+        <div class="disclaimer">
+            <strong>重要:</strong> レイラ・ヴィレル・ノヴァは完全にChiralArt氏がDeviantArt上で創作した架空のキャラクターです。
+            実在の人物・アイドル・アーティストではありません。すべてのコンテンツはAI生成アートと独自の世界観設定による仮想キャラクターとして楽しむものです。
+            本サイトはファンサイトであり、公式とは無関係です。
+        </div>
+
+        <footer>
+            <div class="footer-brand">&#x2728; Layla Land</div>
+            <div>Unofficial fan site dedicated to Layla Virel Nova - AURALIS</div>
+        </footer>
+    </div>
+
+    <!-- Chatbot -->
+    <button class="chatbot-toggle" onclick="toggleChatbot()" aria-label="Open chat">&#x1F4AC;</button>
+    <div id="chatbot" class="chatbot-container">
+        <div class="chatbot-header">
+            <span>&#x2728;</span>
+            <span>Layla AI Chat</span>
+        </div>
+        <div class="chatbot-messages" id="chatMessages">
+            <div class="message ai">Hi! I'm an AI assistant with knowledge about Layla Virel Nova from AURALIS. Ask me anything!</div>
+        </div>
+        <div class="typing-indicator" id="typingIndicator">
+            <span>Layla AI is typing</span>
+            <div class="typing-dots"><span></span><span></span><span></span></div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatInput" placeholder="Ask about Layla..." maxlength="500">
+            <button onclick="sendMessage()">&#x27A4;</button>
+        </div>
+    </div>
+
+    <script>
+        // ── Tabs ───────────────────────────────────────────────────
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+
+                if (btn.dataset.tab === 'quiz' && !quizStarted) {
+                    startQuiz();
+                }
+            });
+        });
+
+        // ── Quiz ───────────────────────────────────────────────────
+        const quizData = [
+            {
+                question: "レイラのAURALISでの役割は何と呼ばれていますか?",
+                options: ["The Star Navigator", "The Pulse of Love", "The Cosmic Guardian", "The Pink Voltage"],
+                correct: 1
+            },
+            {
+                question: "レイラのコンセプトカラーは?",
+                options: ["Cyan Spectrum", "Purple Aura", "Pink Spectrum", "Golden Light"],
+                correct: 2
+            },
+            {
+                question: "レイラを創作したアーティストは誰ですか?",
+                options: ["NovaArt", "ChiralArt", "AuralisCreator", "StarMaker"],
+                correct: 1
+            },
+            {
+                question: "Stellar Obsessions版のレイラの衣装に含まれないものは?",
+                options: ["白いラテックスボディスーツ", "赤いマント", "緑のスカート", "青いグローブ"],
+                correct: 2
+            },
+            {
+                question: "レイラのシンボルアイコンは?",
+                options: ["太陽の下で咲くひまわり", "月明かりの下で咲くバラ", "星空に浮かぶ蝶", "宇宙を漂う羽"],
+                correct: 1
+            },
+            {
+                question: "Stellar Obsessions版がリリースされたプラットフォームは?",
+                options: ["Character AI", "Janitor AI", "Replika", "Chai"],
+                correct: 1
+            },
+            {
+                question: "レイラは元々何として描かれていましたか?",
+                options: ["宇宙海賊", "純粋な星の航海士", "銀河帝国の女王", "時空の旅人"],
+                correct: 1
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let quizStarted = false;
+        let selectedQuestions = [];
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function startQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            quizStarted = true;
+            selectedQuestions = shuffleArray(quizData).slice(0, 5);
+
+            document.getElementById('quizArea').style.display = 'block';
+            document.getElementById('quizResult').style.display = 'none';
+
+            renderProgress();
+            renderQuestion();
+        }
+
+        function renderProgress() {
+            const container = document.getElementById('quizProgress');
+            container.innerHTML = selectedQuestions.map((_, i) => 
+                `<div class="progress-dot ${i === currentQuestion ? 'active' : ''}" id="dot-${i}"></div>`
+            ).join('');
+        }
+
+        function renderQuestion() {
+            const q = selectedQuestions[currentQuestion];
+            document.getElementById('quizQuestion').textContent = q.question;
+            
+            const optionsHtml = q.options.map((opt, i) => 
+                `<button class="quiz-option" onclick="selectAnswer(${i})">${opt}</button>`
+            ).join('');
+            document.getElementById('quizOptions').innerHTML = optionsHtml;
+        }
+
+        function selectAnswer(index) {
+            const q = selectedQuestions[currentQuestion];
+            const options = document.querySelectorAll('.quiz-option');
+            const dot = document.getElementById('dot-' + currentQuestion);
+
+            options.forEach((opt, i) => {
+                opt.classList.add('disabled');
+                if (i === q.correct) opt.classList.add('correct');
+                else if (i === index && i !== q.correct) opt.classList.add('incorrect');
+            });
+
+            if (index === q.correct) {
+                score++;
+                dot.classList.add('correct');
+            } else {
+                dot.classList.add('incorrect');
+            }
+
+            setTimeout(() => {
+                currentQuestion++;
+                if (currentQuestion < selectedQuestions.length) {
+                    renderProgress();
+                    renderQuestion();
+                } else {
+                    showResult();
+                }
+            }, 1200);
+        }
+
+        function showResult() {
+            document.getElementById('quizArea').style.display = 'none';
+            document.getElementById('quizResult').style.display = 'block';
+            document.getElementById('scoreDisplay').textContent = `${score}/${selectedQuestions.length}`;
+
+            const messages = [
+                { min: 0, max: 1, text: "まだまだこれから!Aboutタブで情報をチェックしてみてね。" },
+                { min: 2, max: 3, text: "いい感じ!もう少しでレイラ通になれるよ。" },
+                { min: 4, max: 4, text: "すごい!かなりのレイラ通だね。" },
+                { min: 5, max: 5, text: "完璧!あなたは真のレイラマスターです!" }
+            ];
+
+            const msg = messages.find(m => score >= m.min && score <= m.max);
+            document.getElementById('resultMessage').textContent = msg.text;
+        }
+
+        // ── Chatbot ────────────────────────────────────────────────
+        function toggleChatbot() {
+            const chatbot = document.getElementById('chatbot');
+            chatbot.style.display = chatbot.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function addMessage(content, isUser = false) {
+            const container = document.getElementById('chatMessages');
+            const msg = document.createElement('div');
+            msg.className = `message ${isUser ? 'user' : 'ai'}`;
+            msg.textContent = content;
+            container.appendChild(msg);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            document.getElementById('typingIndicator').style.display = 'flex';
+            document.getElementById('chatMessages').scrollTop = 99999;
+        }
+
+        function hideTypingIndicator() {
+            document.getElementById('typingIndicator').style.display = 'none';
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+            addMessage(message, true);
+            input.value = '';
+            showTypingIndicator();
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message }),
+                });
+                const data = await res.json();
+                hideTypingIndicator();
+                addMessage(res.ok ? data.response : 'Sorry, I encountered an error. Please try again later.');
+            } catch {
+                hideTypingIndicator();
+                addMessage('Sorry, I could not connect to the AI. Please check your connection and try again.');
+            }
+        }
+
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // ── Fade In Animation ──────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.08 });
+
+            document.querySelectorAll('.info-block, .profile-hero, .external-link').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -285,10 +285,37 @@ function PaywallGate({ paid, onPaid }) {
   );
 }
 
+// ── Hero CTA Button ──────────────────────────────────────────
+
+function HeroCTA() {
+  const { ready, authenticated, login, user } = usePrivy();
+
+  if (!ready) return null;
+
+  if (authenticated) {
+    const address = user?.wallet?.address;
+    const short = address ? address.slice(0, 6) + '...' + address.slice(-4) : '';
+    return React.createElement('div', { className: 'hero-cta-connected' },
+      React.createElement('span', { className: 'hero-cta-dot' }),
+      React.createElement('span', null, 'Wallet Connected'),
+      short && React.createElement('span', { className: 'hero-cta-addr' }, short)
+    );
+  }
+
+  return React.createElement('button', {
+    onClick: login,
+    className: 'hero-cta-btn',
+  },
+    React.createElement('span', { className: 'hero-cta-icon' }, '\uD83E\uDD8A'),
+    ' Connect Wallet'
+  );
+}
+
 // ── App Root ─────────────────────────────────────────────────
 
 function App() {
   const paywallEl = document.getElementById('privy-paywall-root');
+  const heroCtaEl = document.getElementById('privy-hero-cta');
   const [paid, setPaid] = useState(false);
 
   return React.createElement(PrivyProvider, {
@@ -307,6 +334,9 @@ function App() {
   },
     React.createElement(AuthStateManager, { onPaidChange: setPaid }),
     React.createElement(AuthButton, null),
+    heroCtaEl
+      ? createPortal(React.createElement(HeroCTA, null), heroCtaEl)
+      : null,
     paywallEl
       ? createPortal(
           React.createElement(PaywallGate, { paid, onPaid: () => setPaid(true) }),

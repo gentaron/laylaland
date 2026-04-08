@@ -376,6 +376,89 @@ footer .footer-brand {
     width: 80px;
 }
 
+/* ─── Hero CTA ─────────────────────────────────────────────── */
+#privy-hero-cta {
+    margin-top: 32px;
+    display: flex;
+    justify-content: center;
+}
+
+.hero-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 999px;
+    padding: 16px 40px;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    box-shadow: 0 6px 32px rgba(255, 61, 138, 0.45);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hero-cta-btn:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 10px 48px rgba(255, 61, 138, 0.6);
+}
+
+.hero-cta-btn:active {
+    transform: translateY(-1px) scale(1.01);
+}
+
+.hero-cta-icon {
+    font-size: 1.2rem;
+}
+
+.hero-cta-connected {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 230, 255, 0.08);
+    border: 1px solid rgba(0, 230, 255, 0.25);
+    border-radius: 999px;
+    padding: 12px 28px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--cyan);
+}
+
+.hero-cta-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #00e676;
+    box-shadow: 0 0 8px rgba(0, 230, 118, 0.6);
+    flex-shrink: 0;
+}
+
+.hero-cta-addr {
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.82rem;
+    font-weight: 500;
+    opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+    .hero-cta-btn {
+        padding: 14px 32px;
+        font-size: 0.95rem;
+    }
+
+    .hero-cta-connected {
+        padding: 10px 20px;
+        font-size: 0.85rem;
+    }
+
+    .hero-cta-addr {
+        display: none;
+    }
+}
+
 .privy-btn {
     font-family: 'Inter', sans-serif;
     font-weight: 600;

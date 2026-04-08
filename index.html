@@ -364,6 +364,7 @@
                 <li><a href="stats.html">Universe</a></li>
                 <li><a href="rank.html">Links</a></li>
             </ul>
+            <div id="privy-auth-root"></div>
         </div>
     </nav>
 
@@ -374,8 +375,9 @@
             <p>The Pulse of Love - AURALISの輝く心臓部、コズミックエネルギーを司る存在</p>
         </div>
 
-        <div class="gallery-section">
+        <div class="gallery-section paywall-protected">
             <h2 class="section-title">Illustrations</h2>
+            <div id="privy-paywall-root"></div>
             <div class="gallery">
                 <div class="gallery-item">
                     <img src="gallery/imagelayla (1).png" alt="Layla Artwork 1" loading="lazy">
@@ -568,6 +570,7 @@
         </div>
     </div>
 
+    <script src="privy-auth.bundle.js"></script>
     <script>
         // ── Modal ──────────────────────────────────────────────────
         function openModal(imgSrc, altText) {
@@ -678,6 +681,7 @@
             // Gallery click handlers
             document.querySelectorAll('.gallery-item').forEach(item => {
                 item.addEventListener('click', function() {
+                    if (!window.__privyAuthenticated) return;
                     const img = item.querySelector('img');
                     if (img) openModal(img.src, img.alt);
                 });

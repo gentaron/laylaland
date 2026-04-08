@@ -3,9 +3,15 @@
   "version": "1.0.0",
   "description": "Official website dedicated to Layla Virel Nova - Pink Voltage",
   "main": "index.html",
-  "scripts": {},
-  "dependencies": {},
-  "devDependencies": {},
+  "scripts": {
+    "build": "esbuild src/privy-auth.jsx --bundle --outfile=privy-auth.bundle.js --format=iife --minify --target=es2020 --define:process.env.NODE_ENV=\\\"production\\\" --loader:.jsx=jsx"
+  },
+  "dependencies": {
+    "@privy-io/react-auth": "^3.19.1",
+    "jose": "^6.2.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
   "keywords": [
     "layla",
     "pink-voltage",
@@ -13,5 +19,8 @@
     "ai-chatbot"
   ],
   "author": "gentaron",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.28.0"
+  }
 }

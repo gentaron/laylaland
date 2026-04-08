@@ -681,7 +681,7 @@
             // Gallery click handlers
             document.querySelectorAll('.gallery-item').forEach(item => {
                 item.addEventListener('click', function() {
-                    if (!window.__privyAuthenticated) return;
+                    if (!window.__privyPaid) return;
                     const img = item.querySelector('img');
                     if (img) openModal(img.src, img.alt);
                 });

@@ -366,6 +366,184 @@ footer .footer-brand {
     font-size: 1rem;
 }
 
+/* ─── Privy Auth ───────────────────────────────────────────── */
+#privy-auth-root {
+    display: flex;
+    align-items: center;
+}
+
+.privy-loading {
+    width: 80px;
+}
+
+.privy-btn {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    letter-spacing: 0.02em;
+}
+
+.privy-btn:hover {
+    transform: translateY(-1px);
+}
+
+.privy-btn:active {
+    transform: translateY(0);
+}
+
+.privy-btn-connect {
+    background: var(--accent);
+    color: white;
+    padding: 8px 18px;
+    box-shadow: 0 2px 12px rgba(255, 61, 138, 0.35);
+}
+
+.privy-btn-connect:hover {
+    box-shadow: 0 4px 20px rgba(255, 61, 138, 0.5);
+}
+
+.privy-auth-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.privy-wallet-address {
+    font-family: 'Space Grotesk', monospace;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--cyan);
+    background: rgba(0, 230, 255, 0.08);
+    border: 1px solid rgba(0, 230, 255, 0.2);
+    padding: 6px 12px;
+    border-radius: 999px;
+    letter-spacing: 0.02em;
+}
+
+.privy-btn-disconnect {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 6px 14px;
+    font-size: 0.8rem;
+}
+
+.privy-btn-disconnect:hover {
+    background: rgba(255, 255, 255, 0.14);
+    color: var(--text);
+}
+
+/* ─── Paywall ──────────────────────────────────────────────── */
+.paywall-protected {
+    position: relative;
+}
+
+.paywall-protected .gallery {
+    filter: blur(16px) saturate(0.4);
+    pointer-events: none;
+    user-select: none;
+    transition: filter 0.6s ease;
+}
+
+body.privy-authenticated .paywall-protected .gallery {
+    filter: none;
+    pointer-events: auto;
+    user-select: auto;
+}
+
+.paywall-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(15, 7, 32, 0.5);
+    backdrop-filter: blur(4px);
+    border-radius: var(--radius-md);
+}
+
+body.privy-authenticated .paywall-overlay {
+    display: none;
+}
+
+.paywall-content {
+    text-align: center;
+    padding: 48px 32px;
+    background: rgba(15, 7, 32, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+}
+
+.paywall-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    animation: glowPulse 3s ease-in-out infinite;
+}
+
+.paywall-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    background: var(--accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.paywall-desc {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 28px;
+}
+
+.privy-btn-unlock {
+    background: var(--accent);
+    color: white;
+    padding: 14px 32px;
+    font-size: 0.95rem;
+    border-radius: 999px;
+    box-shadow: 0 4px 24px rgba(255, 61, 138, 0.4);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.privy-btn-unlock:hover {
+    box-shadow: 0 6px 32px rgba(255, 61, 138, 0.6);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .privy-wallet-address {
+        display: none;
+    }
+
+    .privy-btn-connect,
+    .privy-btn-disconnect {
+        padding: 6px 12px;
+        font-size: 0.78rem;
+    }
+
+    .paywall-content {
+        padding: 36px 24px;
+    }
+
+    .paywall-title {
+        font-size: 1.25rem;
+    }
+}
+
 /* ─── Animations ────────────────────────────────────────────── */
 @keyframes glowPulse {
     0%, 100% { filter: drop-shadow(0 0 6px rgba(255, 61, 138, 0.25)); }

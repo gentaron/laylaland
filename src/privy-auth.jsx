@@ -290,7 +290,17 @@ function PaywallGate({ paid, onPaid }) {
 function HeroCTA() {
   const { ready, authenticated, login, user } = usePrivy();
 
-  if (!ready) return null;
+  useEffect(() => {
+    const fallback = document.getElementById('hero-cta-fallback');
+    if (fallback) fallback.remove();
+  }, []);
+
+  if (!ready) {
+    return React.createElement('button', {
+      className: 'hero-cta-btn',
+      disabled: true,
+    }, 'Connect Wallet');
+  }
 
   if (authenticated) {
     const address = user?.wallet?.address;

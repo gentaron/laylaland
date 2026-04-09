@@ -72,11 +72,12 @@ nav {
 .nav-inner {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 16px;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 12px;
 }
 
 .nav-brand {
@@ -102,17 +103,19 @@ nav {
 nav ul {
     list-style: none;
     display: flex;
-    gap: 4px;
+    gap: 2px;
+    flex-shrink: 0;
 }
 
 nav a {
     color: var(--text-muted);
     text-decoration: none;
     font-weight: 500;
-    font-size: 0.925rem;
-    padding: 8px 18px;
+    font-size: 0.85rem;
+    padding: 6px 12px;
     border-radius: var(--radius-sm);
     transition: color 0.2s ease, background 0.2s ease;
+    white-space: nowrap;
 }
 
 nav a:hover {
@@ -370,10 +373,12 @@ footer .footer-brand {
 #privy-auth-root {
     display: flex;
     align-items: center;
+    flex-shrink: 0;
+    margin-left: auto;
 }
 
 .privy-loading {
-    width: 80px;
+    width: 60px;
 }
 
 /* ─── Hero CTA ─────────────────────────────────────────────── */
@@ -481,7 +486,8 @@ footer .footer-brand {
 .privy-btn-connect {
     background: var(--accent);
     color: white;
-    padding: 8px 18px;
+    padding: 6px 14px;
+    font-size: 0.8rem;
     box-shadow: 0 2px 12px rgba(255, 61, 138, 0.35);
 }
 
@@ -492,17 +498,17 @@ footer .footer-brand {
 .privy-auth-info {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 6px;
 }
 
 .privy-wallet-address {
     font-family: 'Space Grotesk', monospace;
-    font-size: 0.82rem;
+    font-size: 0.75rem;
     font-weight: 500;
     color: var(--cyan);
     background: rgba(0, 230, 255, 0.08);
     border: 1px solid rgba(0, 230, 255, 0.2);
-    padding: 6px 12px;
+    padding: 4px 10px;
     border-radius: 999px;
     letter-spacing: 0.02em;
 }
@@ -511,8 +517,8 @@ footer .footer-brand {
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid var(--border);
     color: var(--text-muted);
-    padding: 6px 14px;
-    font-size: 0.8rem;
+    padding: 4px 10px;
+    font-size: 0.75rem;
 }
 
 .privy-btn-disconnect:hover {
@@ -771,8 +777,22 @@ body.privy-paid .paywall-overlay {
     nav ul { gap: 2px; }
 
     nav a {
-        padding: 7px 12px;
-        font-size: 0.875rem;
+        padding: 5px 8px;
+        font-size: 0.78rem;
+    }
+
+    #privy-auth-root {
+        margin-left: 4px;
+    }
+
+    .privy-btn-connect {
+        padding: 5px 10px;
+        font-size: 0.72rem;
+    }
+
+    .privy-btn-disconnect {
+        padding: 4px 8px;
+        font-size: 0.7rem;
     }
 
     .chatbot-container {

@@ -482,6 +482,87 @@
             color: var(--pink);
         }
 
+        /* ─── Profile Image Hint ─────────────────────────────────── */
+        .profile-image-wrapper {
+            cursor: pointer;
+        }
+
+        .profile-image-hint {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(15, 7, 32, 0.75);
+            backdrop-filter: blur(8px);
+            color: rgba(255,255,255,0.7);
+            font-size: 0.72rem;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .profile-image-wrapper:hover .profile-image-hint {
+            opacity: 1;
+        }
+
+        /* ─── Fullscreen Modal ───────────────────────────────────── */
+        .fs-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(5, 2, 15, 0.96);
+            backdrop-filter: blur(12px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fs-modal.active {
+            display: flex;
+        }
+
+        .fs-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border);
+            color: white;
+            font-size: 1.8rem;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+            z-index: 1001;
+        }
+
+        .fs-modal-close:hover {
+            background: rgba(255, 255, 255, 0.18);
+        }
+
+        .fs-modal-body {
+            max-width: 90vw;
+            max-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fs-modal-body img {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: var(--radius-md);
+            box-shadow: 0 20px 60px rgba(255, 61, 138, 0.2);
+        }
+
         /* ─── Responsive ─────────────────────────────────────────── */
         @media (max-width: 900px) {
             .profile-hero {
@@ -534,15 +615,17 @@
                 <li><a href="stats.html">Universe</a></li>
                 <li><a href="rank.html">Links</a></li>
             </ul>
+            <div id="privy-auth-root"></div>
         </div>
     </nav>
 
     <div class="container">
         <!-- Profile Hero -->
         <div class="profile-hero">
-            <div class="profile-image-wrapper">
+            <div class="profile-image-wrapper" onclick="openFullscreen()" style="cursor:pointer">
                 <img src="gallery/imagelayla (1).png" alt="Layla Virel Nova" class="profile-image">
                 <div class="profile-badge">The Pulse of Love</div>
+                <div class="profile-image-hint">Click to view fullscreen</div>
             </div>
             <div class="profile-content">
                 <div>
@@ -819,7 +902,35 @@
         </div>
     </div>
 
+    <!-- Fullscreen Modal -->
+    <div id="fullscreenModal" class="fs-modal" onclick="closeFullscreen(event)">
+        <button class="fs-modal-close" onclick="closeFullscreen()">&times;</button>
+        <div class="fs-modal-body">
+            <img id="fsModalImage" src="" alt="Layla Virel Nova">
+        </div>
+    </div>
+
+    <script src="privy-auth.bundle.js"></script>
     <script>
+        // ── Fullscreen Modal ──────────────────────────────────────
+        function openFullscreen() {
+            var modal = document.getElementById('fullscreenModal');
+            var img = document.getElementById('fsModalImage');
+            img.src = 'gallery/imagelayla (1).png';
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeFullscreen(e) {
+            if (e && e.target !== e.currentTarget && !e.target.classList.contains('fs-modal-close')) return;
+            document.getElementById('fullscreenModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeFullscreen();
+        });
+
         // ── Tabs ───────────────────────────────────────────────────
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {

@@ -364,6 +364,15 @@
                 <li><a href="stats.html">Universe</a></li>
                 <li><a href="rank.html">Links</a></li>
             </ul>
+            <div id="walletContainer">
+                <button class="wallet-btn" id="connectWalletBtn" onclick="openWalletModal()">
+                    <svg class="wallet-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/>
+                        <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>
+                    </svg>
+                    <span>Connect Wallet</span>
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -530,6 +539,63 @@
             <div class="footer-brand">&#x2728; Layla Land</div>
             <div>Unofficial fan site dedicated to Layla Virel Nova - AURALIS</div>
         </footer>
+    </div>
+
+    <!-- Wallet Modal -->
+    <div id="walletModal" class="wallet-modal">
+        <div class="wallet-modal-content">
+            <button class="wallet-modal-close" onclick="closeWalletModal()">&#x2715;</button>
+            <h2>Connect Wallet</h2>
+            <p>Choose your preferred wallet to connect. Brave Wallet is recommended for Brave browser users.</p>
+            <div class="wallet-options">
+                <div class="wallet-option" onclick="connectWallet('brave')">
+                    <div class="wallet-option-icon brave">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white">
+                            <path d="M12 2L2 7l1.5 11L12 22l8.5-4L22 7l-10-5zm0 2.18l7.13 3.57-.47 3.5-6.66-3.33-6.66 3.33-.47-3.5L12 4.18zm0 15.64l-6.13-2.87-.4-3 6.53 3.27 6.53-3.27-.4 3L12 19.82z"/>
+                        </svg>
+                    </div>
+                    <div class="wallet-option-info">
+                        <h3>Brave Wallet</h3>
+                        <span>Built into Brave browser</span>
+                    </div>
+                    <span class="wallet-option-badge" id="braveDetected" style="display:none;">Detected</span>
+                </div>
+                <div class="wallet-option" onclick="connectWallet('metamask')">
+                    <div class="wallet-option-icon metamask">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                        </svg>
+                    </div>
+                    <div class="wallet-option-info">
+                        <h3>MetaMask</h3>
+                        <span>Popular browser extension</span>
+                    </div>
+                </div>
+                <div class="wallet-option" onclick="connectWallet('coinbase')">
+                    <div class="wallet-option-icon coinbase">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6a6 6 0 100 12 6 6 0 000-12zm0 10a4 4 0 110-8 4 4 0 010 8z" fill="#0052ff"/>
+                        </svg>
+                    </div>
+                    <div class="wallet-option-info">
+                        <h3>Coinbase Wallet</h3>
+                        <span>Secure and easy to use</span>
+                    </div>
+                </div>
+                <div class="wallet-option" onclick="connectWallet('walletconnect')">
+                    <div class="wallet-option-icon walletconnect">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white">
+                            <path d="M6.09 10.55c3.26-3.19 8.56-3.19 11.82 0l.39.38a.4.4 0 010 .58l-1.34 1.31a.21.21 0 01-.3 0l-.54-.53a5.94 5.94 0 00-8.26 0l-.58.57a.21.21 0 01-.3 0L5.64 11.5a.4.4 0 010-.58l.45-.37zm14.6 2.72l1.2 1.17a.4.4 0 010 .58l-5.38 5.27a.42.42 0 01-.59 0l-3.82-3.74a.1.1 0 00-.15 0l-3.82 3.74a.42.42 0 01-.59 0L2.16 15a.4.4 0 010-.58l1.2-1.17a.42.42 0 01.59 0l3.82 3.74a.1.1 0 00.15 0l3.82-3.74a.42.42 0 01.59 0l3.82 3.74a.1.1 0 00.15 0l3.82-3.74a.42.42 0 01.59 0z"/>
+                        </svg>
+                    </div>
+                    <div class="wallet-option-info">
+                        <h3>WalletConnect</h3>
+                        <span>Connect mobile wallet</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Fullscreen Modal -->
@@ -786,6 +852,188 @@
 
         document.getElementById('chatInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') sendMessage();
+        });
+
+        // ── Wallet Connection ─────────────────────────────────────
+        let connectedWallet = null;
+        let connectedAddress = null;
+
+        // Check for Brave Wallet
+        function isBraveBrowser() {
+            return navigator.brave && navigator.brave.isBrave;
+        }
+
+        function detectWallets() {
+            // Check for Brave Wallet specifically
+            if (window.ethereum && window.ethereum.isBraveWallet) {
+                document.getElementById('braveDetected').style.display = 'block';
+            }
+        }
+
+        function openWalletModal() {
+            document.getElementById('walletModal').classList.add('active');
+            detectWallets();
+        }
+
+        function closeWalletModal() {
+            document.getElementById('walletModal').classList.remove('active');
+        }
+
+        document.getElementById('walletModal').addEventListener('click', function(e) {
+            if (e.target === this) closeWalletModal();
+        });
+
+        async function connectWallet(walletType) {
+            try {
+                let provider = null;
+                
+                // Check for injected provider (Brave, MetaMask, etc.)
+                if (window.ethereum) {
+                    // Brave Wallet detection
+                    if (walletType === 'brave') {
+                        if (window.ethereum.isBraveWallet) {
+                            provider = window.ethereum;
+                        } else if (window.ethereum.providers) {
+                            provider = window.ethereum.providers.find(p => p.isBraveWallet);
+                        }
+                        if (!provider) {
+                            alert('Brave Wallet not detected. Please make sure you are using Brave browser with Brave Wallet enabled.\n\nSettings > Wallet > Default wallet: Brave Wallet');
+                            return;
+                        }
+                    }
+                    // MetaMask detection
+                    else if (walletType === 'metamask') {
+                        if (window.ethereum.isMetaMask && !window.ethereum.isBraveWallet) {
+                            provider = window.ethereum;
+                        } else if (window.ethereum.providers) {
+                            provider = window.ethereum.providers.find(p => p.isMetaMask && !p.isBraveWallet);
+                        }
+                        if (!provider) {
+                            alert('MetaMask not detected. Please install MetaMask extension.');
+                            window.open('https://metamask.io/download/', '_blank');
+                            return;
+                        }
+                    }
+                    // Coinbase Wallet detection
+                    else if (walletType === 'coinbase') {
+                        if (window.ethereum.isCoinbaseWallet) {
+                            provider = window.ethereum;
+                        } else if (window.ethereum.providers) {
+                            provider = window.ethereum.providers.find(p => p.isCoinbaseWallet);
+                        }
+                        if (!provider) {
+                            alert('Coinbase Wallet not detected. Please install Coinbase Wallet extension.');
+                            window.open('https://www.coinbase.com/wallet', '_blank');
+                            return;
+                        }
+                    }
+                    // WalletConnect - for now just show info
+                    else if (walletType === 'walletconnect') {
+                        alert('WalletConnect integration requires additional setup. Please use Brave Wallet, MetaMask, or Coinbase Wallet for now.');
+                        return;
+                    }
+                    // Default to available provider
+                    else {
+                        provider = window.ethereum;
+                    }
+
+                    // Request account access
+                    const accounts = await provider.request({ method: 'eth_requestAccounts' });
+                    
+                    if (accounts && accounts.length > 0) {
+                        connectedAddress = accounts[0];
+                        connectedWallet = walletType;
+                        updateWalletUI();
+                        closeWalletModal();
+                        
+                        // Listen for account changes
+                        provider.on('accountsChanged', handleAccountsChanged);
+                        provider.on('disconnect', handleDisconnect);
+                    }
+                } else {
+                    alert('No Web3 wallet detected. Please install Brave Browser with Brave Wallet, or MetaMask extension.');
+                }
+            } catch (error) {
+                console.error('Wallet connection error:', error);
+                if (error.code === 4001) {
+                    alert('Connection request was rejected. Please try again.');
+                } else {
+                    alert('Failed to connect wallet: ' + error.message);
+                }
+            }
+        }
+
+        function handleAccountsChanged(accounts) {
+            if (accounts.length === 0) {
+                disconnectWallet();
+            } else {
+                connectedAddress = accounts[0];
+                updateWalletUI();
+            }
+        }
+
+        function handleDisconnect() {
+            disconnectWallet();
+        }
+
+        function disconnectWallet() {
+            connectedWallet = null;
+            connectedAddress = null;
+            updateWalletUI();
+        }
+
+        function updateWalletUI() {
+            const container = document.getElementById('walletContainer');
+            
+            if (connectedAddress) {
+                const shortAddress = connectedAddress.slice(0, 6) + '...' + connectedAddress.slice(-4);
+                const walletName = connectedWallet === 'brave' ? 'Brave' : 
+                                   connectedWallet === 'metamask' ? 'MetaMask' : 
+                                   connectedWallet === 'coinbase' ? 'Coinbase' : 'Wallet';
+                
+                container.innerHTML = `
+                    <div class="wallet-address">
+                        <span class="wallet-address-text">${shortAddress}</span>
+                        <span class="wallet-address-badge">${walletName}</span>
+                        <button class="wallet-disconnect" onclick="disconnectWallet()" title="Disconnect">&#x2715;</button>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <button class="wallet-btn" id="connectWalletBtn" onclick="openWalletModal()">
+                        <svg class="wallet-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/>
+                            <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>
+                        </svg>
+                        <span>Connect Wallet</span>
+                    </button>
+                `;
+            }
+        }
+
+        // Check for existing connection on page load
+        document.addEventListener('DOMContentLoaded', async function() {
+            if (window.ethereum) {
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+                    if (accounts && accounts.length > 0) {
+                        connectedAddress = accounts[0];
+                        // Detect which wallet
+                        if (window.ethereum.isBraveWallet) {
+                            connectedWallet = 'brave';
+                        } else if (window.ethereum.isMetaMask) {
+                            connectedWallet = 'metamask';
+                        } else if (window.ethereum.isCoinbaseWallet) {
+                            connectedWallet = 'coinbase';
+                        } else {
+                            connectedWallet = 'unknown';
+                        }
+                        updateWalletUI();
+                    }
+                } catch (error) {
+                    console.log('No existing wallet connection');
+                }
+            }
         });
     </script>
 </body>

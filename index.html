@@ -382,13 +382,46 @@
             <h1>Layla Virel Nova</h1>
             <p>The Pulse of Love - AURALISの輝く心臓部、コズミックエネルギーを司る存在</p>
             <div id="privy-hero-cta">
-                <button class="hero-cta-btn" id="hero-cta-fallback">Connect Wallet</button>
+                <button class="hero-cta-btn" id="hero-cta-fallback" onclick="openWalletModal()">Connect Wallet</button>
             </div>
         </div>
 
         <div class="gallery-section paywall-protected">
             <h2 class="section-title">Illustrations</h2>
-            <div id="privy-paywall-root"></div>
+            <div class="paywall-overlay" id="paywallOverlay">
+                <div class="paywall-content paywall-payment">
+                    <!-- State 1: not connected -->
+                    <div id="paywallStateConnect">
+                        <div class="paywall-icon">&#x1F512;</div>
+                        <div class="paywall-title">Gallery Locked</div>
+                        <div class="paywall-desc">ウォレットを接続してLaylaのイラストをご覧ください。</div>
+                        <button class="privy-btn privy-btn-unlock" onclick="openWalletModal()">Connect Wallet</button>
+                    </div>
+                    <!-- State 2: connected, not paid -->
+                    <div id="paywallStatePay" style="display:none">
+                        <div class="paywall-icon">&#x2728;</div>
+                        <div class="paywall-title">Unlock Gallery</div>
+                        <div class="paywall-desc">9 USDC でLaylaのすべてのイラストにアクセスできます。</div>
+                        <div class="paywall-price">9 USDC</div>
+                        <div class="paywall-chain-label">支払いチェーンを選択:</div>
+                        <div class="chain-grid">
+                            <button class="chain-btn" onclick="payWithUSDC('ethereum')">
+                                <span class="chain-icon">&#x27E0;</span><span class="chain-name">Ethereum</span>
+                            </button>
+                            <button class="chain-btn" onclick="payWithUSDC('base')">
+                                <span class="chain-icon">&#x1F535;</span><span class="chain-name">Base</span>
+                            </button>
+                            <button class="chain-btn" onclick="payWithUSDC('polygon')">
+                                <span class="chain-icon">&#x1F7E3;</span><span class="chain-name">Polygon</span>
+                            </button>
+                            <button class="chain-btn" onclick="payWithUSDC('arbitrum')">
+                                <span class="chain-icon">&#x1F537;</span><span class="chain-name">Arbitrum</span>
+                            </button>
+                        </div>
+                        <div id="paymentStatus" style="display:none" class="payment-status"></div>
+                    </div>
+                </div>
+            </div>
             <div class="gallery">
                 <div class="gallery-item">
                     <img src="gallery/imagelayla (1).png" alt="Layla Artwork 1" loading="lazy">
@@ -1015,6 +1048,7 @@
                     </button>
                 `;
             }
+            updatePaywallUI();
         }
 
         // Check for existing connection on page load
@@ -1040,7 +1074,90 @@
                     console.log('No existing wallet connection');
                 }
             }
+            updatePaywallUI();
         });
+
+        // ── Paywall / USDC unlock ──────────────────────────────────
+        const USDC_CONTRACTS = {
+            '0x1':    '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', // Ethereum
+            '0x2105': '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', // Base
+            '0x89':   '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', // Polygon
+            '0xa4b1': '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8', // Arbitrum
+        };
+        const CHAIN_IDS_MAP = { ethereum: '0x1', base: '0x2105', polygon: '0x89', arbitrum: '0xa4b1' };
+        // TODO: replace with your receiving wallet address
+        const PAYMENT_RECIPIENT = '0x0000000000000000000000000000000000000000';
+        const USDC_AMOUNT_HEX = '895440'; // 9 USDC (9 × 10^6, 6 decimals)
+
+        function updatePaywallUI() {
+            if (window.__privyPaid) return;
+            const overlay = document.getElementById('paywallOverlay');
+            const stateConnect = document.getElementById('paywallStateConnect');
+            const statePay = document.getElementById('paywallStatePay');
+            if (!overlay) return;
+            if (connectedAddress) {
+                stateConnect.style.display = 'none';
+                statePay.style.display = 'block';
+            } else {
+                stateConnect.style.display = 'block';
+                statePay.style.display = 'none';
+            }
+        }
+
+        async function payWithUSDC(chainName) {
+            if (!connectedAddress) { openWalletModal(); return; }
+            const chainId = CHAIN_IDS_MAP[chainName];
+            const usdcAddress = USDC_CONTRACTS[chainId];
+            const statusEl = document.getElementById('paymentStatus');
+            const spinner = '<span class="payment-spinner"></span>';
+            const setStatus = (html) => { statusEl.style.display = 'flex'; statusEl.innerHTML = html; };
+
+            try {
+                setStatus(spinner + '&nbsp;ネットワーク切替中...');
+                try {
+                    await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId }] });
+                } catch (e) {
+                    if (e.code === 4902) {
+                        setStatus('<span class="payment-error">このネットワークはウォレットに追加されていません。</span>');
+                        return;
+                    }
+                    throw e;
+                }
+
+                // Encode ERC-20 transfer(address,uint256)
+                const recipient = PAYMENT_RECIPIENT.slice(2).toLowerCase().padStart(64, '0');
+                const amount = USDC_AMOUNT_HEX.padStart(64, '0');
+                const data = '0xa9059cbb' + recipient + amount;
+
+                setStatus(spinner + '&nbsp;ウォレットで確認してください...');
+                const txHash = await window.ethereum.request({
+                    method: 'eth_sendTransaction',
+                    params: [{ from: connectedAddress, to: usdcAddress, data, gas: '0x186A0' }],
+                });
+
+                setStatus(spinner + '&nbsp;トランザクション確認中...');
+                for (let i = 0; i < 30; i++) {
+                    const receipt = await window.ethereum.request({ method: 'eth_getTransactionReceipt', params: [txHash] });
+                    if (receipt) {
+                        if (receipt.status === '0x1') {
+                            window.__privyPaid = true;
+                            document.body.classList.add('privy-paid');
+                        } else {
+                            setStatus('<span class="payment-error">トランザクション失敗。再度お試しください。</span>');
+                        }
+                        return;
+                    }
+                    await new Promise(r => setTimeout(r, 2000));
+                }
+                setStatus('<span class="payment-error">タイムアウト。TX: ' + txHash.slice(0, 12) + '...</span>');
+            } catch (error) {
+                if (error.code === 4001) {
+                    setStatus('<span class="payment-error">キャンセルされました。</span>');
+                } else {
+                    setStatus('<span class="payment-error">' + (error.message || 'エラーが発生しました') + '</span>');
+                }
+            }
+        }
     </script>
 </body>
 </html>

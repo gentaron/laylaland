@@ -21,8 +21,8 @@
 
         .profile-image {
             width: 100%;
-            aspect-ratio: 3/4;
-            object-fit: cover;
+            height: auto;
+            object-fit: contain;
             border-radius: var(--radius-lg);
             border: 2px solid var(--border);
             box-shadow: 0 20px 60px rgba(255, 61, 138, 0.2);
@@ -422,6 +422,116 @@
         .quiz-restart:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(255, 61, 138, 0.4);
+        }
+
+        /* ─── EDU Super Banner ──────────────────────────────────── */
+        .edu-super-banner {
+            position: relative;
+        }
+
+        .edu-super-link {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            background: linear-gradient(135deg, rgba(0, 230, 255, 0.08) 0%, rgba(196, 113, 237, 0.08) 50%, rgba(255, 61, 138, 0.08) 100%);
+            border: 2px solid rgba(0, 230, 255, 0.35);
+            border-radius: var(--radius-lg);
+            padding: 40px 48px;
+            text-decoration: none;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .edu-super-link:hover {
+            border-color: rgba(0, 230, 255, 0.6);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0, 230, 255, 0.15), 0 0 40px rgba(196, 113, 237, 0.1);
+        }
+
+        .edu-super-glow {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(0, 230, 255, 0.06), transparent, rgba(196, 113, 237, 0.06), transparent);
+            animation: eduRotate 8s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes eduRotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .edu-super-icon {
+            font-size: 4rem;
+            flex-shrink: 0;
+            filter: drop-shadow(0 0 20px rgba(0, 230, 255, 0.4));
+            z-index: 1;
+        }
+
+        .edu-super-text {
+            flex: 1;
+            z-index: 1;
+        }
+
+        .edu-super-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--cyan);
+            margin-bottom: 8px;
+        }
+
+        .edu-super-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, var(--cyan), var(--purple), var(--pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .edu-super-desc {
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .edu-super-arrow {
+            font-size: 2.5rem;
+            color: var(--cyan);
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+            z-index: 1;
+        }
+
+        .edu-super-link:hover .edu-super-arrow {
+            transform: translateX(8px);
+        }
+
+        @media (max-width: 900px) {
+            .edu-super-link {
+                flex-direction: column;
+                text-align: center;
+                padding: 32px 28px;
+                gap: 20px;
+            }
+
+            .edu-super-arrow {
+                transform: rotate(-90deg);
+            }
+
+            .edu-super-link:hover .edu-super-arrow {
+                transform: rotate(-90deg) translateX(8px);
+            }
         }
 
         /* ─── External Links ─────────────────────────────────────── */
@@ -963,6 +1073,20 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- EDU Super Link -->
+        <div class="edu-super-banner" style="margin-top: 56px;">
+            <a href="https://edu-super.netlify.app/" target="_blank" rel="noopener noreferrer" class="edu-super-link">
+                <div class="edu-super-glow"></div>
+                <div class="edu-super-icon">&#x1F30C;</div>
+                <div class="edu-super-text">
+                    <div class="edu-super-label">Eternal Dominion Universe</div>
+                    <div class="edu-super-title">EDU 統合時空構造書 v3.0</div>
+                    <div class="edu-super-desc">E16連星系から地球AD2026へ — AURALIS 地球2026交信プロジェクト設定書 v2.0</div>
+                </div>
+                <div class="edu-super-arrow">&#x2192;</div>
+            </a>
         </div>
 
         <!-- External Links -->

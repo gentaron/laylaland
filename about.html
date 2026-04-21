@@ -1120,24 +1120,6 @@
         </footer>
     </div>
 
-    <!-- Chatbot -->
-    <button class="chatbot-toggle" onclick="toggleChatbot()" aria-label="Open chat">&#x1F4AC;</button>
-    <div id="chatbot" class="chatbot-container">
-        <div class="chatbot-header">
-            <span>&#x2728;</span>
-            <span>Layla AI Chat</span>
-        </div>
-        <div class="chatbot-messages" id="chatMessages">
-            <div class="message ai">Hi! I'm an AI assistant with knowledge about Layla Virel Nova from AURALIS. Ask me anything!</div>
-        </div>
-        <div class="typing-indicator" id="typingIndicator">
-            <span>Layla AI is typing</span>
-            <div class="typing-dots"><span></span><span></span><span></span></div>
-        </div>
-        <div class="chatbot-input">
-            <input type="text" id="chatInput" placeholder="Ask about Layla..." maxlength="500">
-            <button onclick="sendMessage()">&#x27A4;</button>
-        </div>
     </div>
 
     <!-- Fullscreen Modal -->
@@ -1167,8 +1149,7 @@
 
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeFullscreen();
-        });
-
+    
         // ── Tabs ───────────────────────────────────────────────────
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -1180,9 +1161,7 @@
                 if (btn.dataset.tab === 'quiz' && !quizStarted) {
                     startQuiz();
                 }
-            });
-        });
-
+            
         // ── Quiz ───────────────────────────────────────────────────
         const quizData = [
             {
@@ -1275,8 +1254,7 @@
                 opt.classList.add('disabled');
                 if (i === q.correct) opt.classList.add('correct');
                 else if (i === index && i !== q.correct) opt.classList.add('incorrect');
-            });
-
+        
             if (index === q.correct) {
                 score++;
                 dot.classList.add('correct');
@@ -1347,8 +1325,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message }),
-                });
-                const data = await res.json();
+                            const data = await res.json();
                 hideTypingIndicator();
                 addMessage(res.ok ? data.response : 'Sorry, I encountered an error. Please try again later.');
             } catch {
@@ -1357,10 +1334,7 @@
             }
         }
 
-        document.getElementById('chatInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') sendMessage();
-        });
-
+            
         // ── Fade In Animation ──────────────────────────────────────
         document.addEventListener('DOMContentLoaded', function() {
             const observer = new IntersectionObserver((entries) => {
@@ -1370,17 +1344,14 @@
                         entry.target.style.transform = 'translateY(0)';
                         observer.unobserve(entry.target);
                     }
-                });
-            }, { threshold: 0.08 });
+                        }, { threshold: 0.08 });
 
             document.querySelectorAll('.info-block, .profile-hero, .external-link').forEach(el => {
                 el.style.opacity = '0';
                 el.style.transform = 'translateY(20px)';
                 el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
                 observer.observe(el);
-            });
-        });
-
+            
         // ── Wallet Connection ─────────────────────────────────────
         let connectedWallet = null;
         let connectedAddress = null;
@@ -1402,8 +1373,7 @@
 
         document.getElementById('walletModal').addEventListener('click', function(e) {
             if (e.target === this) closeWalletModal();
-        });
-
+    
         async function connectWallet(walletType) {
             try {
                 let provider = null;

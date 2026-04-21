@@ -653,24 +653,6 @@
         </div>
     </div>
 
-    <!-- Chatbot -->
-    <button class="chatbot-toggle" onclick="toggleChatbot()" aria-label="Open chat">&#x1F4AC;</button>
-    <div id="chatbot" class="chatbot-container">
-        <div class="chatbot-header">
-            <span>&#x2728;</span>
-            <span>Layla AI Chat</span>
-        </div>
-        <div class="chatbot-messages" id="chatMessages">
-            <div class="message ai">Hi! I'm an AI assistant with knowledge about Layla Virel Nova from AURALIS. Ask me about her character, Stellar Obsessions, or anything else!</div>
-        </div>
-        <div class="typing-indicator" id="typingIndicator">
-            <span>Layla AI is typing</span>
-            <div class="typing-dots"><span></span><span></span><span></span></div>
-        </div>
-        <div class="chatbot-input">
-            <input type="text" id="chatInput" placeholder="Ask about Layla's adventures…" maxlength="500">
-            <button onclick="sendMessage()">➤</button>
-        </div>
     </div>
 
     <script src="privy-auth.bundle.js"></script>
@@ -693,12 +675,10 @@
 
         document.getElementById('artModal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
-        });
-
+    
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeModal();
-        });
-
+    
         // ── Zoom ──────────────────────────────────────────────────
         let currentZoom = 1;
         let isDragging = false;
@@ -787,9 +767,7 @@
                     if (!window.__privyPaid) return;
                     const img = item.querySelector('img');
                     if (img) openModal(img.src, img.alt);
-                });
-            });
-
+                    
             // Modal zoom events
             const container = document.getElementById('imageContainer');
             const modalImg = document.getElementById('modalImage');
@@ -803,13 +781,11 @@
             container.addEventListener('wheel', function(e) {
                 e.preventDefault();
                 e.deltaY < 0 ? zoomIn() : zoomOut();
-            });
-            modalImg.addEventListener('dblclick', function(e) {
+                    modalImg.addEventListener('dblclick', function(e) {
                 e.preventDefault();
                 currentZoom === 1 ? (currentZoom = 2) : resetZoom();
                 updateZoom();
-            });
-
+        
             // Fade-in observer
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -818,17 +794,14 @@
                         entry.target.style.transform = 'translateY(0)';
                         observer.unobserve(entry.target);
                     }
-                });
-            }, { threshold: 0.08 });
+                        }, { threshold: 0.08 });
 
             document.querySelectorAll('.gallery-item, .feature-card, .quotes-section').forEach(el => {
                 el.style.opacity = '0';
                 el.style.transform = 'translateY(20px)';
                 el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
                 observer.observe(el);
-            });
-        });
-
+            
         // ── Quotes ─────────────────────────────────────────────────
         let currentQuote = 0;
         const quotes = document.querySelectorAll('.quote-item');
@@ -881,8 +854,7 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message }),
-                });
-                const data = await res.json();
+                            const data = await res.json();
                 hideTypingIndicator();
                 addMessage(res.ok ? data.response : 'Sorry, I encountered an error. Please try again later.');
             } catch {
@@ -891,10 +863,7 @@
             }
         }
 
-        document.getElementById('chatInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') sendMessage();
-        });
-
+            
         // ── Wallet Connection ─────────────────────────────────────
         let connectedWallet = null;
         let connectedAddress = null;
@@ -922,8 +891,7 @@
 
         document.getElementById('walletModal').addEventListener('click', function(e) {
             if (e.target === this) closeWalletModal();
-        });
-
+    
         async function connectWallet(walletType) {
             try {
                 let provider = null;
@@ -1077,8 +1045,7 @@
                 }
             }
             updatePaywallUI();
-        });
-
+    
         // ── Paywall / USDC unlock ──────────────────────────────────
         const USDC_CONTRACTS = {
             '0x1':    '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', // Ethereum
@@ -1135,8 +1102,7 @@
                 const txHash = await window.ethereum.request({
                     method: 'eth_sendTransaction',
                     params: [{ from: connectedAddress, to: usdcAddress, data, gas: '0x186A0' }],
-                });
-
+            
                 setStatus(spinner + '&nbsp;トランザクション確認中...');
                 for (let i = 0; i < 30; i++) {
                     const receipt = await window.ethereum.request({ method: 'eth_getTransactionReceipt', params: [txHash] });

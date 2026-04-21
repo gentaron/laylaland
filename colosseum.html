@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Colosseum - Layla Virel Nova | AURALIS</title>
-    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="style.css?v=3">
     <style>
         /* ─── Colosseum Layout ─────────────────────────────────────── */
         .colosseum-wrapper {
@@ -267,11 +267,78 @@
         }
 
         /* ─── Move Buttons ────────────────────────────────────────── */
+        /* ─── Status Effects ───────────────────────────────────────── */
+        .status-effects {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            min-height: 32px;
+        }
+
+        .status-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            animation: statusPulse 1.5s ease-in-out infinite;
+        }
+
+        .status-badge.poison {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.4);
+        }
+
+        .status-badge.bind {
+            background: rgba(139, 92, 246, 0.15);
+            color: #a78bfa;
+            border: 1px solid rgba(139, 92, 246, 0.4);
+        }
+
+        .status-badge.psychic {
+            background: rgba(236, 72, 153, 0.15);
+            color: #f472b6;
+            border: 1px solid rgba(236, 72, 153, 0.4);
+        }
+
+        .status-badge.defend {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.4);
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
         .move-buttons {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             margin-bottom: 20px;
+        }
+
+        .move-btn.defense-btn {
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+        .move-btn.defense-btn:hover:not(:disabled) {
+            background: rgba(59, 130, 246, 0.12);
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);
+        }
+
+        .move-btn.dodge-btn {
+            border-color: rgba(168, 85, 247, 0.3);
+        }
+        .move-btn.dodge-btn:hover:not(:disabled) {
+            background: rgba(168, 85, 247, 0.12);
+            border-color: rgba(168, 85, 247, 0.5);
+            box-shadow: 0 4px 16px rgba(168, 85, 247, 0.15);
         }
 
         .move-btn {
@@ -677,12 +744,14 @@
                 <h2>Pink Voltage Endurance</h2>
                 <p>レイラ・ヴィレル・ノヴァとして20連続バトルに挑戦。回復なし、真の耐久戦。</p>
                 <div class="start-rules">
-                    <h3>Battle Rules</h3>
+                    <h3>バトルルール</h3>
                     <ul>
-                        <li>開始HP: 100（バトル間で回復なし）</li>
-                        <li>対戦相手: 戦績データからランダム選出（20戦）</li>
-                        <li>難易度: バトルごとに上昇</li>
-                        <li>Undercity系の敵は特殊効果を持つ</li>
+                        <li>開始HP: 150（バトル間で回復なし）</li>
+                        <li>対戦相手: 物語に登場する敵から選出（20戦）</li>
+                        <li>行動: 攻撃6種 / 防御 / 回避 / 必殺技</li>
+                        <li>敵の攻撃: 状態異常（毒・拘束・精神攻撃）あり</li>
+                        <li>防御: 次ターン被ダメージ半減</li>
+                        <li>回避: 70%の確率で敵の攻撃を完全回避</li>
                         <li>全20戦制覇で真の勝利</li>
                     </ul>
                 </div>
@@ -734,36 +803,53 @@
 
                 <div class="battle-log" id="battleLog"></div>
 
+                <div class="status-effects" id="statusEffects"></div>
+
                 <div class="move-buttons" id="moveButtons">
-                    <button class="move-btn" onclick="laylaAttack('electrified-punch')" id="move-ep">
+                    <button class="move-btn" onclick="laylaAction('electrified-punch')" id="move-ep">
                         <span class="move-icon">&#x26A1;</span>
-                        Electrified Punch
+                        電撃パンチ
                         <span class="move-dmg">18-26 DMG</span>
                     </button>
-                    <button class="move-btn" onclick="laylaAttack('shockwave-blast')" id="move-sb">
+                    <button class="move-btn" onclick="laylaAction('shockwave-blast')" id="move-sb">
                         <span class="move-icon">&#x1F4A5;</span>
-                        Shockwave Blast
+                        衝撃波ブラスト
                         <span class="move-dmg">15-24 DMG</span>
                     </button>
-                    <button class="move-btn" onclick="laylaAttack('lightning-strike')" id="move-ls">
+                    <button class="move-btn" onclick="laylaAction('lightning-strike')" id="move-ls">
                         <span class="move-icon">&#x26C8;&#xFE0F;</span>
-                        Lightning Strike
+                        ライトニングストライク
                         <span class="move-dmg">20-30 DMG</span>
                     </button>
-                    <button class="move-btn" onclick="laylaAttack('nanofiber-kick')" id="move-nk">
+                    <button class="move-btn" onclick="laylaAction('nanofiber-kick')" id="move-nk">
                         <span class="move-icon">&#x1FA97;</span>
-                        Nanofiber Kick
+                        ナノファイバーキック
                         <span class="move-dmg">16-25 DMG</span>
                     </button>
-                    <button class="move-btn" onclick="laylaAttack('jet-spin')" id="move-js">
+                    <button class="move-btn" onclick="laylaAction('jet-spin')" id="move-js">
                         <span class="move-icon">&#x1F300;</span>
-                        Jet-Powered Spin
+                        ジェットスピン
                         <span class="move-dmg">15-22 DMG</span>
                     </button>
-                    <button class="move-btn" onclick="laylaAttack('cyber-grapple')" id="move-cg">
+                    <button class="move-btn" onclick="laylaAction('cyber-grapple')" id="move-cg">
                         <span class="move-icon">&#x1F916;</span>
-                        Cybernetic Grapple
+                        サイバー graple
                         <span class="move-dmg">17-27 DMG</span>
+                    </button>
+                    <button class="move-btn defense-btn" onclick="laylaAction('defend')" id="move-def">
+                        <span class="move-icon">&#x1F6E1;&#xFE0F;</span>
+                        防御
+                        <span class="move-dmg">被ダメージ半減</span>
+                    </button>
+                    <button class="move-btn dodge-btn" onclick="laylaAction('dodge')" id="move-dodge">
+                        <span class="move-icon">&#x1F3C3;</span>
+                        回避
+                        <span class="move-dmg">70%回避率</span>
+                    </button>
+                    <button class="move-btn" onclick="laylaAction('voltage-burst')" id="move-vb" style="border-color: rgba(255,171,0,0.3);">
+                        <span class="move-icon">&#x2728;</span>
+                        ボルテージバースト
+                        <span class="move-dmg">25-40 DMG</span>
                     </button>
                 </div>
             </div>
@@ -784,84 +870,61 @@
         </footer>
     </div>
 
-    <!-- Chatbot -->
-    <button class="chatbot-toggle" onclick="toggleChatbot()" aria-label="Open chat">&#x1F4AC;</button>
-    <div id="chatbot" class="chatbot-container">
-        <div class="chatbot-header">
-            <span>&#x2728;</span>
-            <span>Layla AI Chat</span>
-        </div>
-        <div class="chatbot-messages" id="chatMessages">
-            <div class="message ai">コウセイ！コロシアムへようこそ。Pink Voltageの戦いを見守ろうか。</div>
-        </div>
-        <div class="typing-indicator" id="typingIndicator">
-            <span>Layla AI is typing</span>
-            <div class="typing-dots"><span></span><span></span><span></span></div>
-        </div>
-        <div class="chatbot-input">
-            <input type="text" id="chatInput" placeholder="Ask about Layla..." maxlength="500">
-            <button onclick="sendMessage()">&#x27A4;</button>
-        </div>
-    </div>
-
     <script>
-    // ─── Battle Data ───────────────────────────────────────────────────
+    // ─── Battle Data (Story-based enemies) ────────────────────────────────
     const BATTLE_OPPONENTS = [
-        {name:"Plasma Wraith",type:"Energy",emoji:"👻",location:"Energy Plant",method:"Lightning Strike"},
-        {name:"Cyber Fang",type:"Undercity",emoji:"🐺",location:"Undercity Slums",method:"Electrified Punch"},
-        {name:"Neon Viper",type:"Arena",emoji:"🐍",location:"Neon Plaza",method:"Nanofiber Kick"},
-        {name:"Shadow Drone",type:"Arena",emoji:"🤖",location:"Industrial District",method:"Shockwave Blast"},
-        {name:"Steel Marauder",type:"Arena",emoji:"🦾",location:"Warehouse Zone",method:"Cybernetic Grapple"},
-        {name:"Glint Reaver",type:"Arena",emoji:"🦅",location:"Colosseum",method:"Lightning Strike"},
-        {name:"Flux Siren",type:"Undercity",emoji:"🧜‍♀️",location:"Undercity Sewers",method:"Psychic Overload"},
-        {name:"Blaze Warden",type:"Arena",emoji:"🔥",location:"Spire Arena",method:"Jet-Powered Spin"},
-        {name:"Star Vindicator",type:"Arena",emoji:"⭐",location:"Orbital Port",method:"Electrified Punch"},
-        {name:"Chroma Blade",type:"Arena",emoji:"⚔️",location:"Neon Market",method:"Nanofiber Kick"},
-        {name:"Slime Fragment",type:"Undercity",emoji:"🟢",location:"Undercity Depths",method:"Shockwave Blast"},
-        {name:"Iron Vortex",type:"Arena",emoji:"🌪️",location:"Factory Ruins",method:"Lightning Strike"},
-        {name:"Lunar Fang",type:"Arena",emoji:"🌙",location:"Colosseum",method:"Cybernetic Grapple"},
-        {name:"Thundercoil",type:"Arena",emoji:"⚡",location:"Power Grid",method:"Electrified Punch"},
-        {name:"Prism Wraith",type:"Arena",emoji:"🌈",location:"Neon Plaza",method:"Jet-Powered Spin"},
-        {name:"Slime Swarm",type:"Undercity",emoji:"🟢",location:"Industrial District",method:"Lightning Strike"},
-        {name:"Cipher Blaze",type:"Arena",emoji:"🔥",location:"Warehouse Zone",method:"Nanofiber Kick"},
-        {name:"Nova Wisp",type:"Arena",emoji:"✨",location:"Spire Arena",method:"Electrified Punch"},
-        {name:"Shade Pulse",type:"Arena",emoji:"🌑",location:"Neon Market",method:"Jet-Powered Spin"},
-        {name:"Starcoil",type:"Arena",emoji:"⭐",location:"Colosseum",method:"Shockwave Blast"},
-        {name:"Obsidian Spark",type:"Arena",emoji:"🖤",location:"Undercity Sewers",method:"Lightning Strike"},
-        {name:"Neon Fang",type:"Arena",emoji:"💜",location:"Power Grid",method:"Cybernetic Grapple"},
-        {name:"Iron Ember",type:"Arena",emoji:"⚒️",location:"Industrial District",method:"Electrified Punch"},
-        {name:"Aurora Wraith",type:"Arena",emoji:"🌌",location:"Colosseum",method:"Jet-Powered Spin"},
-        {name:"Storm Vindicator",type:"Arena",emoji:"🌪️",location:"Neon Market",method:"Electrified Punch"},
-        {name:"Celestine Claw",type:"Arena",emoji:"💎",location:"Colosseum",method:"Electrified Punch"},
-        {name:"Storm Wraith",type:"Arena",emoji:"🌪️",location:"Spire Arena",method:"Lightning Strike"},
-        {name:"Mirage",type:"Arena",emoji:"🪞",location:"Colosseum",method:"Shockwave Blast"},
-        {name:"Void Stalker",type:"Arena",emoji:"🕳️",location:"Colosseum",method:"Lightning Strike"},
-        {name:"Eclipse Raider",type:"Arena",emoji:"🌑",location:"Neon Plaza",method:"Lightning Strike"},
-        {name:"Astral Flow",type:"Arena",emoji:"🌠",location:"Warehouse Zone",method:"Shockwave Blast"},
-        {name:"Storm Claw",type:"Arena",emoji:"🌩️",location:"Spire Arena",method:"Electrified Punch"},
-        {name:"Celestine Reaver",type:"Arena",emoji:"💎",location:"Neon Market",method:"Nanofiber Kick"},
-        {name:"Iron Wraith",type:"Arena",emoji:"⚒️",location:"Neon Market",method:"Electrified Punch"},
-        {name:"Storm Siren",type:"Arena",emoji:"🌪️",location:"Spire Arena",method:"Nanofiber Kick"},
-        {name:"Blaze Fang",type:"Arena",emoji:"🐉",location:"Colosseum",method:"Cybernetic Grapple"},
-        {name:"Storm Fang",type:"Arena",emoji:"🌩️",location:"Colosseum",method:"Electrified Punch"},
-        {name:"Iron Fang",type:"Arena",emoji:"⚒️",location:"Colosseum",method:"Jet-Powered Spin"},
+        // Undercity/Story enemies (special attacks & status effects)
+        {name:"スライムフラグメント",type:"Slime",emoji:"🟢",location:"地下街深部",attacks:["粘液トラップ","触手拘束","溶解液"],statusType:"poison"},
+        {name:"スライムスウォーム",type:"Slime",emoji:"🟢",location:"工業地区",attacks:["群れの包囲","粘液トラップ","溶解液"],statusType:"bind"},
+        {name:"スライムガイ",type:"Slime",emoji:"👾",location:"地下街下水道",attacks:["触手拘束","頭部スライム","溶解液","舌鋸"],statusType:"bind"},
+        {name:"スライムコア",type:"Slime",emoji:"🟢",location:"地下街炉心",attacks:["触手拘束","精神同化","分裂再生"],statusType:"bind"},
+        {name:"フラックスサイレン",type:"Psychic",emoji:"🧜‍♀️",location:"地下街下水道",attacks:["Psychic Overload","精神波","魅了の歌"],statusType:"psychic"},
+        {name:"ストームウィスプ",type:"Psychic",emoji:"🌪️",location:"スパイアリアリーナ",attacks:["Psychic Overload","念動波","幻覚"],statusType:"psychic"},
+        {name:"シャドウストーカー",type:"Undercity",emoji:"🕳️",location:"地下街スラム",attacks:["暗殺の一撃","毒の短剣","影移動"],statusType:"poison"},
+        {name:"ポイズナスハイドラ",type:"Slime",emoji:"🐍",location:"泥沼地帯",attacks:["毒液噴射","多頭拘束","腐蝕ガス"],statusType:"poison"},
+        {name:"サキュバス",type:"Demon",emoji:"😈",location:"泥沼地帯",attacks:["舌鋸","魅了の尾鞭","闇の刻印","爪撃"],statusType:"psychic"},
+        {name:"傷跡の殺人鬼",type:"Human",emoji:"🗡️",location:"地下街路地",attacks:["血塗れの刃","ナイフ乱打","憎悪の一撃"],statusType:null},
+        {name:"ミラージュ",type:"Psychic",emoji:"🪞",location:"コロシアム",attacks:["幻影分身","精神干渉","混乱の光"],statusType:"psychic"},
+        {name:"ヴォイドストーカー",type:"Undercity",emoji:"🕳️",location:"コロシアム",attacks:["闇の一撃","影縛り","虚無の視線"],statusType:"bind"},
+        // Arena/Colosseum enemies
+        {name:"プラズマレイス",type:"Energy",emoji:"👻",location:"エネルギープラント",attacks:["プラズマボルト","幽体離脱"],statusType:null},
+        {name:"ネオンヴァイパー",type:"Arena",emoji:"🐍",location:"ネオンプラザ",attacks:["毒牙噛みつき","高速突進"],statusType:"poison"},
+        {name:"シャドウドローン",type:"Arena",emoji:"🤖",location:"工業地区",attacks:["レーザービーム","衝撃波"],statusType:null},
+        {name:"スティールマローダー",type:"Arena",emoji:"🦾",location:"倉庫エリア",attacks:["鋼鉄の拳","装甲突進"],statusType:null},
+        {name:"ブレイズウォーデン",type:"Arena",emoji:"🔥",location:"スパイアリアリーナ",attacks:["炎の旋風","火炎弾"],statusType:null},
+        {name:"アイアンヴォルテックス",type:"Arena",emoji:"🌪️",location:"工場廃墟",attacks:["回転斬り","磁力ストーム"],statusType:null},
+        {name:"セレスティンクロウ",type:"Arena",emoji:"💎",location:"コロシアム",attacks:["クリスタルナイフ","反射光"],statusType:null},
+        {name:"ブラゼファング",type:"Arena",emoji:"🐉",location:"コロシアム",attacks:["ドラゴンクロー","炎の息吹"],statusType:null},
+        {name:"ケン(憑依状態)",type:"Possessed",emoji:"💀",location:"コロシアム",attacks:["超自然拘束","精神支配","闇の波動"],statusType:"bind"},
+        {name:"オベリスクスパーク",type:"Undercity",emoji:"🖤",location:"地下街下水道",attacks:["暗黒光線","クリティカルストライク"],statusType:null},
+        {name:"シバーブレイド",type:"Arena",emoji:"⚔️",location:"ネオンマーケット",attacks:["連撃","剣気"],statusType:null},
+        {name:"ルナーファング",type:"Arena",emoji:"🌙",location:"コロシアム",attacks:["月影斬り","暗視攻撃"],statusType:null},
+        {name:"ノヴァウィスプ",type:"Arena",emoji:"✨",location:"スパイアリアリーナ",attacks:["光線攻撃","爆発"],statusType:null},
+        {name:"ストームクラウ",type:"Arena",emoji:"🌩️",location:"スパイアリアリーナ",attacks:["稲妻アタック","嵐の爪"],statusType:null},
+        {name:"アイアンエンバー",type:"Arena",emoji:"⚒️",location:"工業地区",attacks:["焼き付けハンマー","熱波"],statusType:null},
+        {name:"オーロラレイス",type:"Arena",emoji:"🌌",location:"コロシアム",attacks:["極光ビーム","幻影の舞"],statusType:null},
+        {name:"エクリプスレイダー",type:"Arena",emoji:"🌑",location:"ネオンプラザ",attacks:["闇の一撃","新月斬り"],statusType:null},
+        {name:"アストラルフロウ",type:"Arena",emoji:"🌠",location:"倉庫エリア",attacks:["星屑の弾丸","流星アタック"],statusType:null},
     ];
 
     const LAYLA_MOVES = {
-        'electrified-punch': { name: 'Electrified Punch', min: 18, max: 26, icon: '⚡' },
-        'shockwave-blast':   { name: 'Shockwave Blast',  min: 15, max: 24, icon: '💥' },
-        'lightning-strike':  { name: 'Lightning Strike',  min: 20, max: 30, icon: '⛈️' },
-        'nanofiber-kick':    { name: 'Nanofiber Kick',    min: 16, max: 25, icon: '🦵' },
-        'jet-spin':          { name: 'Jet-Powered Spin',  min: 15, max: 22, icon: '🌀' },
-        'cyber-grapple':     { name: 'Cybernetic Grapple', min: 17, max: 27, icon: '🦾' },
+        'electrified-punch': { name: '電撃パンチ', min: 18, max: 26, icon: '⚡', type: 'attack' },
+        'shockwave-blast':   { name: '衝撃波ブラスト',  min: 15, max: 24, icon: '💥', type: 'attack' },
+        'lightning-strike':  { name: 'ライトニングストライク',  min: 20, max: 30, icon: '⛈️', type: 'attack' },
+        'nanofiber-kick':    { name: 'ナノファイバーキック',    min: 16, max: 25, icon: '🦵', type: 'attack' },
+        'jet-spin':          { name: 'ジェットスピン',  min: 15, max: 22, icon: '🌀', type: 'attack' },
+        'cyber-grapple':     { name: 'サイバーグラップル', min: 17, max: 27, icon: '🦾', type: 'attack' },
+        'defend':            { name: '防御', min: 0, max: 0, icon: '🛡️', type: 'defend' },
+        'dodge':             { name: '回避', min: 0, max: 0, icon: '🏃', type: 'dodge' },
+        'voltage-burst':     { name: 'ボルテージバースト', min: 25, max: 40, icon: '✨', type: 'attack' },
     };
 
     const TOTAL_BATTLES = 20;
 
     // ─── Game State ────────────────────────────────────────────────────
     let gameState = {
-        laylaHp: 100,
-        laylaMaxHp: 100,
+        laylaHp: 150,
+        laylaMaxHp: 150,
         currentBattle: 0,
         enemyHp: 0,
         enemyMaxHp: 0,
@@ -874,6 +937,15 @@
         isBattling: false,
         isGameOver: false,
         battleResults: [],
+        isDefending: false,
+        isDodging: false,
+        isBound: false,
+        isPoisoned: false,
+        isPsychic: false,
+        bindTurns: 0,
+        poisonTurns: 0,
+        psychicTurns: 0,
+        voltageBurstCooldown: 0,
     };
 
     // ─── Utility ──────────────────────────────────────────────────────
@@ -929,6 +1001,35 @@
         }
     }
 
+    function updateStatusEffects() {
+        const container = document.getElementById('statusEffects');
+        container.innerHTML = '';
+        if (gameState.isDefending) {
+            const badge = document.createElement('span');
+            badge.className = 'status-badge defend';
+            badge.textContent = '🛡️ 防御中';
+            container.appendChild(badge);
+        }
+        if (gameState.isBound) {
+            const badge = document.createElement('span');
+            badge.className = 'status-badge bind';
+            badge.textContent = `🔗 拘束 (残り${gameState.bindTurns}T)`;
+            container.appendChild(badge);
+        }
+        if (gameState.isPoisoned) {
+            const badge = document.createElement('span');
+            badge.className = 'status-badge poison';
+            badge.textContent = `☠️ 毒 (残り${gameState.poisonTurns}T)`;
+            container.appendChild(badge);
+        }
+        if (gameState.isPsychic) {
+            const badge = document.createElement('span');
+            badge.className = 'status-badge psychic';
+            badge.textContent = `🌀 精神異常 (残り${gameState.psychicTurns}T)`;
+            container.appendChild(badge);
+        }
+    }
+
     function addLog(text, cls = '') {
         const log = document.getElementById('battleLog');
         const entry = document.createElement('div');
@@ -969,20 +1070,24 @@
 
     // ─── Difficulty ───────────────────────────────────────────────────
     function getDifficulty(battleNum) {
-        if (battleNum < 5) return { label: 'Easy', cls: 'diff-easy', hpMult: 1.0, dmgMin: 5, dmgMax: 12 };
-        if (battleNum < 10) return { label: 'Medium', cls: 'diff-medium', hpMult: 1.3, dmgMin: 8, dmgMax: 16 };
-        if (battleNum < 15) return { label: 'Hard', cls: 'diff-hard', hpMult: 1.6, dmgMin: 12, dmgMax: 22 };
-        return { label: 'Boss', cls: 'diff-boss', hpMult: 2.0, dmgMin: 15, dmgMax: 28 };
+        if (battleNum < 5) return { label: 'EASY', cls: 'diff-easy', hpMult: 1.0, dmgMin: 5, dmgMax: 12 };
+        if (battleNum < 10) return { label: 'MEDIUM', cls: 'diff-medium', hpMult: 1.3, dmgMin: 8, dmgMax: 18 };
+        if (battleNum < 15) return { label: 'HARD', cls: 'diff-hard', hpMult: 1.6, dmgMin: 12, dmgMax: 24 };
+        return { label: 'BOSS', cls: 'diff-boss', hpMult: 2.0, dmgMin: 16, dmgMax: 30 };
     }
 
     // ─── Game Flow ────────────────────────────────────────────────────
     function startGame() {
         gameState = {
-            laylaHp: 100, laylaMaxHp: 100,
+            laylaHp: 150, laylaMaxHp: 150,
             currentBattle: 0, enemyHp: 0, enemyMaxHp: 0,
             opponent: null, battlesWon: 0, totalDamageDealt: 0,
             totalDamageTaken: 0, totalTurns: 0, movesUsed: {},
             isBattling: false, isGameOver: false, battleResults: [],
+            isDefending: false, isDodging: false,
+            isBound: false, isPoisoned: false, isPsychic: false,
+            bindTurns: 0, poisonTurns: 0, psychicTurns: 0,
+            voltageBurstCooldown: 0,
         };
 
         document.getElementById('startScreen').style.display = 'none';
@@ -996,81 +1101,245 @@
     function startBattle() {
         const diff = getDifficulty(gameState.currentBattle);
 
-        // Pick random opponent
-        const pool = shuffle(BATTLE_OPPONENTS);
+        // Pick random opponent, prefer story enemies in later battles
+        let pool;
+        if (gameState.currentBattle >= 8) {
+            const storyEnemies = BATTLE_OPPONENTS.filter(o => o.type === 'Slime' || o.type === 'Psychic' || o.type === 'Demon' || o.type === 'Human' || o.type === 'Possessed');
+            pool = shuffle([...storyEnemies, ...shuffle(BATTLE_OPPONENTS)]);
+        } else {
+            pool = shuffle(BATTLE_OPPONENTS);
+        }
         gameState.opponent = pool[gameState.currentBattle % pool.length];
 
         // Set enemy HP
-        const baseHp = rand(30, 50);
+        const baseHp = rand(35, 55);
         gameState.enemyMaxHp = Math.round(baseHp * diff.hpMult);
         gameState.enemyHp = gameState.enemyMaxHp;
 
         // Update UI
-        document.getElementById('battleCounter').textContent = `Battle ${gameState.currentBattle + 1} / ${TOTAL_BATTLES}`;
+        document.getElementById('battleCounter').textContent = `第${gameState.currentBattle + 1}戦 / ${TOTAL_BATTLES}`;
         const badge = document.getElementById('diffBadge');
         badge.textContent = diff.label;
         badge.className = 'battle-difficulty ' + diff.cls;
 
         document.getElementById('enemyEmoji').textContent = gameState.opponent.emoji;
         document.getElementById('enemyName').textContent = gameState.opponent.name;
-        document.getElementById('enemyType').textContent = gameState.opponent.location;
+        document.getElementById('enemyType').textContent = `${gameState.opponent.location} / ${gameState.opponent.type}`;
 
         const enemyCard = document.getElementById('enemyCard');
         enemyCard.className = 'fighter-card enemy';
-        if (gameState.opponent.type === 'Undercity') {
+        if (gameState.opponent.type === 'Slime' || gameState.opponent.type === 'Psychic' || gameState.opponent.type === 'Demon' || gameState.opponent.type === 'Undercity' || gameState.opponent.type === 'Possessed') {
             enemyCard.classList.add('undercity');
         }
 
         updateLaylaHp();
         updateEnemyHp();
         updateProgress();
+        updateStatusEffects();
 
         // Battle log intro
-        addLog(`━━━ Battle ${gameState.currentBattle + 1} ━━━`, 'info');
-        addLog(`${gameState.opponent.name} が現れた！(${gameState.opponent.location})`, 'enemy-action');
-        if (gameState.opponent.type === 'Undercity') {
-            addLog('⚠ Undercity系の敵 — 特殊効果に注意！', 'critical');
+        addLog(`━━━ 第${gameState.currentBattle + 1}戦 ━━━`, 'info');
+        addLog(`${gameState.opponent.emoji} ${gameState.opponent.name} が現れた！(${gameState.opponent.location})`, 'enemy-action');
+        if (gameState.opponent.statusType) {
+            const statusNames = { poison: '猛毒', bind: '拘束攻撃', psychic: '精神攻撃' };
+            addLog(`⚠ ${statusNames[gameState.opponent.statusType]}の危険あり！`, 'critical');
         }
 
         gameState.isBattling = true;
         setMovesEnabled(true);
     }
 
-    async function laylaAttack(moveKey) {
+    async function laylaAction(actionKey) {
         if (!gameState.isBattling) return;
         setMovesEnabled(false);
         gameState.totalTurns++;
 
-        const move = LAYLA_MOVES[moveKey];
-        gameState.movesUsed[moveKey] = (gameState.movesUsed[moveKey] || 0) + 1;
+        const action = LAYLA_MOVES[actionKey];
+        gameState.movesUsed[actionKey] = (gameState.movesUsed[actionKey] || 0) + 1;
 
-        // Layla attacks
-        const isCrit = Math.random() < 0.15;
-        let dmg = rand(move.min, move.max);
-        if (isCrit) dmg = Math.round(dmg * 1.5);
+        // --- Process status effects at start of turn ---
+        await processStatusEffects();
 
-        animateAttack('laylaCard', 'enemyCard');
-
-        await delay(200);
-        showDamagePopup('enemyCard', dmg, isCrit);
-        addLog(`${move.icon} ${move.name}！${gameState.opponent.name}に ${dmg} ダメージ！${isCrit ? ' CRITICAL!' : ''}`, 'layla-action');
-
-        gameState.enemyHp -= dmg;
-        gameState.totalDamageDealt += dmg;
-        updateEnemyHp();
-
-        await delay(400);
-
-        if (gameState.enemyHp <= 0) {
-            gameState.enemyHp = 0;
-            updateEnemyHp();
-            await battleWon();
+        if (gameState.laylaHp <= 0) {
+            gameState.laylaHp = 0;
+            updateLaylaHp();
+            await gameDefeated();
             return;
         }
 
-        // Enemy attacks
-        await delay(300);
-        await enemyAttack();
+        // --- Handle bound state ---
+        if (gameState.isBound) {
+            addLog(`🔗 拘束されている！攻撃力が半減...`, 'critical');
+        }
+
+        // --- Handle psychic state ---
+        if (gameState.isPsychic && action.type === 'attack' && Math.random() < 0.25) {
+            addLog(`🌀 精神混乱で自爆！レイラに 5 ダメージ！`, 'critical');
+            gameState.laylaHp -= 5;
+            gameState.totalDamageTaken += 5;
+            updateLaylaHp();
+            await delay(300);
+            if (gameState.laylaHp <= 0) {
+                gameState.laylaHp = 0;
+                updateLaylaHp();
+                await gameDefeated();
+                return;
+            }
+        }
+
+        // Reset defending/dodging flags
+        gameState.isDefending = false;
+        gameState.isDodging = false;
+
+        if (action.type === 'defend') {
+            // --- DEFEND ---
+            gameState.isDefending = true;
+            addLog(`🛡️ レイラは防御姿勢をとった！次ターン被ダメージ半減！`, 'layla-action');
+            updateStatusEffects();
+            await delay(500);
+
+            // Enemy still attacks but damage halved
+            await enemyAttack();
+
+        } else if (action.type === 'dodge') {
+            // --- DODGE ---
+            gameState.isDodging = true;
+            const dodgeChance = gameState.isBound ? 0.40 : 0.70;
+            const dodged = Math.random() < dodgeChance;
+            
+            addLog(`🏃 レイラは回避行動！(${Math.round(dodgeChance * 100)}%回避率)`, 'layla-action');
+            await delay(500);
+
+            if (dodged) {
+                const opp = gameState.opponent;
+                const enemyAtk = opp.attacks[rand(0, opp.attacks.length - 1)];
+                addLog(`${opp.emoji} ${opp.name}の${enemyAtk}！→ レイラは回避した！`, 'info');
+            } else {
+                addLog(`回避失敗！`, 'critical');
+                await enemyAttack();
+            }
+
+        } else if (actionKey === 'voltage-burst') {
+            // --- VOLTAGE BURST (special) ---
+            if (gameState.voltageBurstCooldown > 0) {
+                addLog(`✨ ボルテージバーストはクールダウン中！(残り${gameState.voltageBurstCooldown}T)`, 'critical');
+                setMovesEnabled(true);
+                return;
+            }
+            gameState.voltageBurstCooldown = 4;
+
+            const isCrit = Math.random() < 0.25;
+            let dmg = rand(action.min, action.max);
+            if (isCrit) dmg = Math.round(dmg * 1.6);
+            if (gameState.isBound) dmg = Math.round(dmg * 0.5);
+
+            animateAttack('laylaCard', 'enemyCard');
+            await delay(200);
+            showDamagePopup('enemyCard', dmg, isCrit);
+            addLog(`✨ ${action.name}！${gameState.opponent.name}に ${dmg} ダメージ！${isCrit ? ' CRITICAL!' : ''}`, 'layla-action');
+
+            gameState.enemyHp -= dmg;
+            gameState.totalDamageDealt += dmg;
+            updateEnemyHp();
+
+            // Voltage Burst clears bind
+            if (gameState.isBound) {
+                gameState.isBound = false;
+                gameState.bindTurns = 0;
+                addLog(`✓ 拘束が解除された！`, 'victory');
+            }
+
+            await delay(400);
+
+            if (gameState.enemyHp <= 0) {
+                gameState.enemyHp = 0;
+                updateEnemyHp();
+                await battleWon();
+                return;
+            }
+
+            await delay(300);
+            await enemyAttack();
+
+        } else {
+            // --- NORMAL ATTACK ---
+            const isCrit = Math.random() < 0.15;
+            let dmg = rand(action.min, action.max);
+            if (isCrit) dmg = Math.round(dmg * 1.5);
+            if (gameState.isBound) dmg = Math.round(dmg * 0.5);
+
+            animateAttack('laylaCard', 'enemyCard');
+
+            await delay(200);
+            showDamagePopup('enemyCard', dmg, isCrit);
+            addLog(`${action.icon} ${action.name}！${gameState.opponent.name}に ${dmg} ダメージ！${isCrit ? ' CRITICAL!' : ''}`, 'layla-action');
+
+            gameState.enemyHp -= dmg;
+            gameState.totalDamageDealt += dmg;
+            updateEnemyHp();
+
+            await delay(400);
+
+            if (gameState.enemyHp <= 0) {
+                gameState.enemyHp = 0;
+                updateEnemyHp();
+                await battleWon();
+                return;
+            }
+
+            // Enemy attacks
+            await delay(300);
+            await enemyAttack();
+        }
+    }
+
+    async function processStatusEffects() {
+        // Poison damage
+        if (gameState.isPoisoned) {
+            const poisonDmg = rand(3, 6);
+            gameState.laylaHp -= poisonDmg;
+            gameState.totalDamageTaken += poisonDmg;
+            addLog(`☠️ 毒のダメージ！レイラに ${poisonDmg} ダメージ！`, 'critical');
+            updateLaylaHp();
+            gameState.poisonTurns--;
+            if (gameState.poisonTurns <= 0) {
+                gameState.isPoisoned = false;
+                addLog(`✓ 毒が消えた！`, 'victory');
+            }
+            await delay(300);
+        }
+
+        // Bind damage (small) and chance to escape
+        if (gameState.isBound) {
+            if (Math.random() < 0.30) {
+                gameState.isBound = false;
+                gameState.bindTurns = 0;
+                addLog(`✓ 拘束から脱出した！`, 'victory');
+            } else {
+                const bindDmg = rand(2, 4);
+                gameState.laylaHp -= bindDmg;
+                gameState.totalDamageTaken += bindDmg;
+                addLog(`🔗 拘束のダメージ！レイラに ${bindDmg} ダメージ！`, 'critical');
+                gameState.bindTurns--;
+                updateLaylaHp();
+                if (gameState.bindTurns <= 0) {
+                    gameState.isBound = false;
+                    addLog(`✓ 拘束が解けた！`, 'victory');
+                }
+            }
+            await delay(300);
+        }
+
+        // Psychic effect (chance to lose turn)
+        if (gameState.isPsychic) {
+            gameState.psychicTurns--;
+            if (gameState.psychicTurns <= 0) {
+                gameState.isPsychic = false;
+                addLog(`✓ 精神異常から回復！`, 'victory');
+            }
+        }
+
+        updateStatusEffects();
     }
 
     async function enemyAttack() {
@@ -1078,29 +1347,50 @@
         const opp = gameState.opponent;
 
         let dmg = rand(diff.dmgMin, diff.dmgMax);
-        let specialMsg = '';
+        let statusApplied = '';
 
-        // Undercity bonus
-        if (opp.type === 'Undercity') {
-            const specialRoll = Math.random();
-            if (specialRoll < 0.25) {
-                dmg = Math.round(dmg * 1.4);
-                specialMsg = '（精神攻撃！）';
-            } else if (specialRoll < 0.4) {
+        // Pick a random enemy attack
+        const enemyAtk = opp.attacks[rand(0, opp.attacks.length - 1)];
+
+        // Apply status effects based on enemy type
+        if (opp.statusType && Math.random() < 0.30) {
+            if (opp.statusType === 'poison' && !gameState.isPoisoned) {
+                gameState.isPoisoned = true;
+                gameState.poisonTurns = rand(2, 4);
+                statusApplied = '（猛毒状態！）';
+                dmg = Math.round(dmg * 1.2);
+            } else if (opp.statusType === 'bind' && !gameState.isBound) {
+                gameState.isBound = true;
+                gameState.bindTurns = rand(1, 3);
+                statusApplied = '（拘束状態！）';
+                dmg = Math.round(dmg * 1.1);
+            } else if (opp.statusType === 'psychic' && !gameState.isPsychic) {
+                gameState.isPsychic = true;
+                gameState.psychicTurns = rand(1, 3);
+                statusApplied = '（精神異常！）';
                 dmg = Math.round(dmg * 1.3);
-                specialMsg = '（粘液トラップ！）';
             }
+        }
+
+        // Defending reduces damage by 50%
+        if (gameState.isDefending) {
+            dmg = Math.round(dmg * 0.5);
+            addLog(`🛡️ 防御効果発動！`, 'info');
         }
 
         animateAttack('enemyCard', 'laylaCard');
 
         await delay(200);
         showDamagePopup('laylaCard', dmg, false);
-        addLog(`${opp.emoji} ${opp.name}の攻撃！レイラに ${dmg} ダメージ！${specialMsg}`, 'enemy-action');
+        addLog(`${opp.emoji} ${opp.name}の${enemyAtk}！レイラに ${dmg} ダメージ！${statusApplied}`, 'enemy-action');
 
         gameState.laylaHp -= dmg;
         gameState.totalDamageTaken += dmg;
         updateLaylaHp();
+        updateStatusEffects();
+
+        // Decrease cooldowns
+        if (gameState.voltageBurstCooldown > 0) gameState.voltageBurstCooldown--;
 
         await delay(400);
 
@@ -1119,6 +1409,12 @@
         gameState.battlesWon++;
         gameState.battleResults.push(true);
         updateProgress();
+
+        // Small HP recovery on victory
+        const recoverHp = rand(3, 8);
+        gameState.laylaHp = Math.min(gameState.laylaMaxHp, gameState.laylaHp + recoverHp);
+        addLog(`💚 戦闘勝利で ${recoverHp} HP回復！`, 'info');
+        updateLaylaHp();
 
         await delay(800);
 
@@ -1147,23 +1443,23 @@
         const screen = document.getElementById('resultScreen');
         screen.className = 'result-screen active defeat';
         document.getElementById('resultEmoji').textContent = '💀';
-        document.getElementById('resultTitle').textContent = 'Defeated...';
+        document.getElementById('resultTitle').textContent = '敗北...';
 
         const winRate = Math.round((gameState.battlesWon / TOTAL_BATTLES) * 100);
         const avgDmg = gameState.totalTurns > 0 ? Math.round(gameState.totalDamageDealt / gameState.totalTurns) : 0;
-        const bestMove = Object.entries(gameState.movesUsed).sort((a,b) => b[1] - a[1])[0];
 
         document.getElementById('resultStats').innerHTML = `
-            <div class="result-stat"><span class="result-stat-value">${gameState.battlesWon}/${TOTAL_BATTLES}</span><span class="result-stat-label">Battles Won</span></div>
-            <div class="result-stat"><span class="result-stat-value pink">${winRate}%</span><span class="result-stat-label">Win Rate</span></div>
-            <div class="result-stat"><span class="result-stat-value">${gameState.totalDamageDealt}</span><span class="result-stat-label">Total Damage</span></div>
-            <div class="result-stat"><span class="result-stat-value">${avgDmg}</span><span class="result-stat-label">Avg Damage/Turn</span></div>
+            <div class="result-stat"><span class="result-stat-value">${gameState.battlesWon}/${TOTAL_BATTLES}</span><span class="result-stat-label">勝利数</span></div>
+            <div class="result-stat"><span class="result-stat-value pink">${winRate}%</span><span class="result-stat-label">勝率</span></div>
+            <div class="result-stat"><span class="result-stat-value">${gameState.totalDamageDealt}</span><span class="result-stat-label">与ダメージ</span></div>
+            <div class="result-stat"><span class="result-stat-value">${avgDmg}</span><span class="result-stat-label">平均ダメージ</span></div>
         `;
 
         const defeatMsgs = [
-            'Undercityの闇に飲まれた...しかしPink Voltageの闘志は消えない。',
+            '地下街の闇に飲まれた...しかしPink Voltageの闘志は消えない。',
             '力尽きたが、次こそ20戦全勝を!',
             '敗北は経験。レイラはより強くなって帰ってくる。',
+            '防御と回避を使いこなせば勝てるはず…！',
         ];
         document.getElementById('resultMessage').textContent = defeatMsgs[rand(0, defeatMsgs.length - 1)];
     }
@@ -1184,16 +1480,15 @@
         const screen = document.getElementById('resultScreen');
         screen.className = 'result-screen active victory';
         document.getElementById('resultEmoji').textContent = '🏆';
-        document.getElementById('resultTitle').textContent = 'Perfect Victory!';
+        document.getElementById('resultTitle').textContent = '完勝！';
 
         const avgDmg = gameState.totalTurns > 0 ? Math.round(gameState.totalDamageDealt / gameState.totalTurns) : 0;
-        const bestMove = Object.entries(gameState.movesUsed).sort((a,b) => b[1] - a[1])[0];
 
         document.getElementById('resultStats').innerHTML = `
-            <div class="result-stat"><span class="result-stat-value green">${gameState.battlesWon}/${TOTAL_BATTLES}</span><span class="result-stat-label">Battles Won</span></div>
-            <div class="result-stat"><span class="result-stat-value">${gameState.laylaHp}/${gameState.laylaMaxHp}</span><span class="result-stat-label">Remaining HP</span></div>
-            <div class="result-stat"><span class="result-stat-value pink">${gameState.totalDamageDealt}</span><span class="result-stat-label">Total Damage</span></div>
-            <div class="result-stat"><span class="result-stat-value">${avgDmg}</span><span class="result-stat-label">Avg Damage/Turn</span></div>
+            <div class="result-stat"><span class="result-stat-value green">${gameState.battlesWon}/${TOTAL_BATTLES}</span><span class="result-stat-label">勝利数</span></div>
+            <div class="result-stat"><span class="result-stat-value">${gameState.laylaHp}/${gameState.laylaMaxHp}</span><span class="result-stat-label">残りHP</span></div>
+            <div class="result-stat"><span class="result-stat-value pink">${gameState.totalDamageDealt}</span><span class="result-stat-label">与ダメージ</span></div>
+            <div class="result-stat"><span class="result-stat-value">${avgDmg}</span><span class="result-stat-label">平均ダメージ</span></div>
         `;
 
         const victoryMsgs = [
@@ -1210,56 +1505,6 @@
     }
 
     function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-    // ─── Chatbot ──────────────────────────────────────────────────────
-    function toggleChatbot() {
-        const chatbot = document.getElementById('chatbot');
-        chatbot.style.display = chatbot.style.display === 'flex' ? 'none' : 'flex';
-    }
-
-    function addMessage(content, isUser = false) {
-        const container = document.getElementById('chatMessages');
-        const msg = document.createElement('div');
-        msg.className = `message ${isUser ? 'user' : 'ai'}`;
-        msg.textContent = content;
-        container.appendChild(msg);
-        container.scrollTop = container.scrollHeight;
-    }
-
-    function showTypingIndicator() {
-        document.getElementById('typingIndicator').style.display = 'flex';
-        document.getElementById('chatMessages').scrollTop = 99999;
-    }
-
-    function hideTypingIndicator() {
-        document.getElementById('typingIndicator').style.display = 'none';
-    }
-
-    async function sendMessage() {
-        const input = document.getElementById('chatInput');
-        const message = input.value.trim();
-        if (!message) return;
-        addMessage(message, true);
-        input.value = '';
-        showTypingIndicator();
-        try {
-            const res = await fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message }),
-            });
-            const data = await res.json();
-            hideTypingIndicator();
-            addMessage(res.ok ? data.response : 'Sorry, I encountered an error.');
-        } catch {
-            hideTypingIndicator();
-            addMessage('Sorry, could not connect. Please try again.');
-        }
-    }
-
-    document.getElementById('chatInput').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') sendMessage();
-    });
 
     // ─── Wallet ───────────────────────────────────────────────────────
     let connectedWallet = null;

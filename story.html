@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Story - Layla Virel Nova | AURALIS</title>
-    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="style.css?v=3">
     <style>
         /* ─── Reading Progress Bar ─────────────────────────────────── */
         .reading-progress-bar {
@@ -231,6 +231,8 @@
         .story-text p {
             margin-bottom: 1.2em;
             text-align: justify;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
 
         .story-text p:first-child::first-letter {
@@ -529,28 +531,19 @@
         const lines = text.split('\n');
         const chapters = [];
         let currentTitle = null;
-        let currentContent = [];
-        let firstSection = true;
 
-        // Patterns that indicate chapter/scene breaks
         const headingPatterns = [
-            /^(#{1,6}\s+)/,                           // Markdown headings
-            /^(Chapter\s+\d+|CHAPTER\s+\d+)/i,        // "Chapter X"
-            /^(Scene\s+\d+|SCENE\s+\d+)/i,            // "Scene X"
-            /^(Part\s+\d+|PART\s+\d+)/i,              // "Part X"
-            /^(Act\s+\d+|ACT\s+\d+)/i,                // "Act X"
-            /^(===+|---+|\*\*\*+)\s*$/,                // Horizontal rules
+            /^(#{1,6}\s+)/,
+            /^(Chapter\s+\d+|CHAPTER\s+\d+)/i,
+            /^(Scene\s+\d+|SCENE\s+\d+)/i,
+            /^(Part\s+\d+|PART\s+\d+)/i,
+            /^(Act\s+\d+|ACT\s+\d+)/i,
         ];
 
-        // Location/time markers
-        const locationPattern = /^\[.*\]|\(.*\)|^—|^—/;
-        const timeSkipPattern = /^(Later|Meanwhile|After|Before|Meanwhile|Hours later|Days later|Weeks later|Months later|Years later)/i;
-
-        // Name repetition pattern (character name at start of paragraph)
-        const namePatterns = /^(Layla|Jen|Ayaka|Kate|Selina|Alpha Kane|Slime|Celia|Chiral|Gigapolis|Undercity|Selinopolis)/i;
-
-        // Group paragraphs
-        let buffer = [];
+        // Scene transition markers
+        const sceneStartPatterns = /^In the /i;
+        const timePatterns = /^(Meanwhile|Later|Now|Suddenly|Then|Soon|Just|After|Before)\b/i;
+        const namePatterns = /^(Layla|Jen|Ayaka|Kate|Selina|Alpha Kane|Celia|The |A |An )/i;
 
         function pushSection(title, content) {
             if (content.length > 0) {
@@ -561,20 +554,20 @@
             }
         }
 
+        function extractTitle(paragraphs) {
+            const first = paragraphs[0]?.split('\n')[0]?.trim() || '';
+            if (first.length > 3 && first.length <= 80) return first;
+            return null;
+        }
+
+        // First pass: split by explicit heading/separator markers
+        let buffer = [];
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i].trim();
             if (line === '') continue;
 
-            const isHeading = headingPatterns.some(p => p.test(line));
-            const isLocation = i < 3 ? false : locationPattern.test(line) && line.length < 100;
-            const isTimeSkip = timeSkipPattern.test(line) && line.length < 100;
-            const isNameRepetition = namePatterns.test(line) && line.length < 80 && buffer.length >= 3;
             const isSeparator = /^(===+|---+|\*\*\*+)\s*$/.test(line);
-
-            // Check if this looks like a section break: blank line before + short line + different topic
-            const prevBlank = i > 0 && lines[i - 1].trim() === '';
-            const isShortLine = line.length < 80 && line.length > 3;
-            const looksLikeBreak = prevBlank && isShortLine && buffer.length >= 4 && !line.startsWith('"');
+            const isHeading = headingPatterns.some(p => p.test(line));
 
             if (isSeparator) {
                 pushSection(null, buffer);
@@ -583,67 +576,103 @@
                 continue;
             }
 
-            if (isHeading || (looksLikeBreak && (isLocation || isTimeSkip || isNameRepetition))) {
+            if (isHeading) {
                 pushSection(currentTitle, buffer);
                 buffer = [];
-                // Extract title
-                if (isHeading && !isSeparator) {
-                    currentTitle = line.replace(/^(#+)\s*/, '').replace(/^(===+|---+|\*\*\*+)\s*$/, '');
-                } else {
-                    currentTitle = line;
-                }
+                currentTitle = line.replace(/^(#+)\s*/, '').replace(/^(===+|---+|\*\*\*+)\s*$/, '');
                 continue;
             }
 
             buffer.push(line);
         }
-
-        // Push remaining content
         pushSection(currentTitle, buffer);
 
-        // If no chapters detected, split into reasonable sections
-        if (chapters.length === 0) {
-            const allText = text.trim();
-            const paragraphs = allText.split(/\n\s*\n/).filter(p => p.trim().length > 0);
-            const chunkSize = Math.max(3, Math.ceil(paragraphs.length / Math.min(8, Math.max(1, Math.ceil(allText.length / 2000)))));
-            
-            for (let i = 0; i < paragraphs.length; i += chunkSize) {
-                const chunk = paragraphs.slice(i, i + chunkSize).join('\n\n');
-                const sectionNum = Math.floor(i / chunkSize) + 1;
-                // Try to extract a title from the first line
-                const firstLine = paragraphs[i]?.trim() || '';
-                let title = firstLine.length > 60 ? firstLine.substring(0, 60) + '...' : firstLine;
-                if (title.length < 3) title = `Section ${sectionNum}`;
-                chapters.push({ title, content: chunk });
+        // Second pass: refine - split long chapters by scene markers
+        const MAX_CHARS = 2500;
+        const TARGET = Math.max(10, Math.min(25, Math.ceil(text.length / 2000)));
+        const refined = [];
+
+        for (const ch of chapters) {
+            if (ch.content.length <= MAX_CHARS && ch.title) {
+                refined.push(ch);
+                continue;
+            }
+            // Split by paragraphs
+            const paras = ch.content.split(/\n\s*\n/).filter(p => p.trim().length > 0);
+            let sub = [];
+            let subTitle = ch.title;
+            for (let j = 0; j < paras.length; j++) {
+                const p = paras[j].trim();
+                const firstLine = p.split('\n')[0].trim();
+                const isScene = sceneStartPatterns.test(firstLine) && sub.length >= 2;
+                const isTime = timePatterns.test(firstLine) && sub.length >= 2;
+                const isName = namePatterns.test(firstLine) && sub.length >= 3;
+                const tooLong = sub.join('\n\n').length > MAX_CHARS && sub.length > 0;
+
+                if ((isScene || isTime || isName || tooLong) && sub.length > 0) {
+                    refined.push({
+                        title: subTitle || extractTitle(sub),
+                        content: sub.join('\n\n').trim()
+                    });
+                    sub = [];
+                    subTitle = (isScene || isTime || isName) ? firstLine.substring(0, 60) : null;
+                }
+                sub.push(p);
+            }
+            if (sub.length > 0) {
+                refined.push({
+                    title: subTitle || extractTitle(sub),
+                    content: sub.join('\n\n').trim()
+                });
             }
         }
 
-        return chapters.length > 0 ? chapters : [{ title: 'Story', content: text }];
+        // Final fallback: if still too few, split evenly
+        if (refined.length < 5) {
+            refined.length = 0;
+            const paragraphs = text.trim().split(/\n\s*\n/).filter(p => p.trim().length > 0);
+            const chunkSize = Math.max(2, Math.ceil(paragraphs.length / TARGET));
+            for (let i = 0; i < paragraphs.length; i += chunkSize) {
+                const chunk = paragraphs.slice(i, i + chunkSize).join('\n\n');
+                const num = Math.floor(i / chunkSize) + 1;
+                const firstLine = paragraphs[i]?.split('\n')[0]?.trim() || '';
+                let title = firstLine.length > 50 ? firstLine.substring(0, 50) + '...' : firstLine;
+                if (title.length < 3) title = '\u7B2C' + num + '\u7AE0';
+                refined.push({ title, content: chunk });
+            }
+        }
+
+        return refined.length > 0 ? refined : [{ title: 'Story', content: text }];
     }
 
     function formatParagraphs(text) {
-        const blocks = text.split(/\n\s*\n/).filter(p => p.trim().length > 0);
+        // First join lines within the same paragraph (separated by single newlines)
+        const rawParagraphs = text.split(/\n\s*\n/).filter(p => p.trim().length > 0);
         let html = '';
 
-        blocks.forEach(block => {
+        rawParagraphs.forEach(block => {
             const trimmed = block.trim();
-
-            // Skip if it looks like a heading
             if (/^(#{1,6}\s+)/.test(trimmed)) return;
             if (/^(===+|---+|\*\*\*+)\s*$/.test(trimmed)) return;
 
-            // Format: detect dialogue lines (starting with quotes or dashes)
-            let content = escapeHtml(trimmed);
+            // Escape HTML
+            let content = trimmed
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
 
-            // Highlight dialogue
-            content = content.replace(/([""].*?[""])/g, '<span class="story-dialogue">$1</span>');
-            content = content.replace(/(["\u300C].*?["\u300D])/g, '<span class="story-dialogue">$1</span>');
+            // Join single-newline lines within a block with <br>
+            content = content.replace(/\n(?!\n)/g, '<br>\n');
 
-            // Highlight emphasis (words in ALL CAPS or between * *)
+            // Highlight English dialogue
+            content = content.replace(/(&#34;[^&#34;]*&#34;|"[^"]*")/g, '<span class="story-dialogue">$1</span>');
+            // Highlight Japanese dialogue
+            content = content.replace(/([\u300C][^\u300D]*[\u300D])/g, '<span class="story-dialogue">$1</span>');
+
+            // Highlight *emphasis*
             content = content.replace(/\*([^*]+)\*/g, '<span class="story-emphasis">$1</span>');
-            content = content.replace(/\b([A-Z]{3,})\b/g, '<span class="story-emphasis">$1</span>');
 
-            html += `<p>${content}</p>`;
+            html += '<p>' + content + '</p>';
         });
 
         return html;

@@ -38,13 +38,6 @@
             line-height: 1.7;
         }
 
-        .colosseum-intro .warning-text {
-            color: #ff6b6b;
-            font-weight: 600;
-            font-size: 0.85rem;
-            margin-top: 12px;
-        }
-
         /* ─── Battle Arena ────────────────────────────────────────── */
         .battle-arena {
             display: none;
@@ -96,7 +89,7 @@
             display: grid;
             grid-template-columns: 1fr auto 1fr;
             gap: 20px;
-            align-items: center;
+            align-items: start;
             margin-bottom: 24px;
         }
 
@@ -192,10 +185,88 @@
             background: linear-gradient(90deg, #ff0040, #ff3d6b);
             animation: hpPulse 0.6s ease-in-out infinite;
         }
+        .hp-bar-fill.destroyed {
+            background: linear-gradient(90deg, #333, #555);
+        }
 
         @keyframes hpPulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.6; }
+        }
+
+        /* ─── Body Part HP ─────────────────────────────────────────── */
+        .total-hp-section {
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+        }
+
+        .total-hp-section .hp-bar {
+            height: 16px;
+        }
+
+        .body-parts-container {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .body-part-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .body-part-icon {
+            font-size: 0.9rem;
+            width: 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .body-part-name {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            width: 36px;
+            flex-shrink: 0;
+            text-align: right;
+        }
+
+        .body-part-bar {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 999px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .body-part-fill {
+            height: 100%;
+            border-radius: 999px;
+            transition: width 0.5s ease, background 0.3s ease;
+        }
+
+        .body-part-fill.high { background: linear-gradient(90deg, #22c55e, #4ade80); }
+        .body-part-fill.medium { background: linear-gradient(90deg, #ffab00, #fbbf24); }
+        .body-part-fill.low { background: linear-gradient(90deg, #ff3d3d, #ff6b6b); }
+        .body-part-fill.destroyed { background: linear-gradient(90deg, #444, #666); }
+
+        .body-part-hp-text {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            width: 44px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .body-part-row.destroyed .body-part-name,
+        .body-part-row.destroyed .body-part-hp-text {
+            color: #ff3d3d;
+            text-decoration: line-through;
         }
 
         .vs-badge {
@@ -205,6 +276,7 @@
             color: var(--text);
             text-shadow: 0 0 20px rgba(255, 61, 138, 0.5);
             flex-shrink: 0;
+            align-self: center;
         }
 
         /* ─── Battle Log ──────────────────────────────────────────── */
@@ -239,6 +311,7 @@
         .log-entry.victory { color: #22c55e; font-weight: 700; }
         .log-entry.defeat { color: #ff3d3d; font-weight: 700; }
         .log-entry.info { color: var(--purple); }
+        .log-entry.heal { color: #4ade80; }
 
         @keyframes logFade {
             from { opacity: 0; transform: translateX(-8px); }
@@ -259,6 +332,7 @@
         .damage-popup.layla-dmg { color: var(--pink); text-shadow: 0 0 10px rgba(255,61,138,0.6); }
         .damage-popup.enemy-dmg { color: var(--cyan); text-shadow: 0 0 10px rgba(0,230,255,0.6); }
         .damage-popup.crit { font-size: 1.8rem; color: #ffab00; text-shadow: 0 0 15px rgba(255,171,0,0.8); }
+        .damage-popup.heal-popup { color: #4ade80; text-shadow: 0 0 10px rgba(74,222,128,0.6); }
 
         @keyframes damageFloat {
             0% { opacity: 1; transform: translateY(0) scale(1.2); }
@@ -266,7 +340,6 @@
             100% { opacity: 0; transform: translateY(-50px) scale(0.8); }
         }
 
-        /* ─── Move Buttons ────────────────────────────────────────── */
         /* ─── Status Effects ───────────────────────────────────────── */
         .status-effects {
             display: flex;
@@ -316,6 +389,7 @@
             50% { opacity: 0.6; }
         }
 
+        /* ─── Move Buttons ────────────────────────────────────────── */
         .move-buttons {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -339,6 +413,33 @@
             background: rgba(168, 85, 247, 0.12);
             border-color: rgba(168, 85, 247, 0.5);
             box-shadow: 0 4px 16px rgba(168, 85, 247, 0.15);
+        }
+
+        .move-btn.heal-btn {
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+        .move-btn.heal-btn:hover:not(:disabled) {
+            background: rgba(34, 197, 94, 0.12);
+            border-color: rgba(34, 197, 94, 0.5);
+            box-shadow: 0 4px 16px rgba(34, 197, 94, 0.15);
+        }
+
+        .move-btn.heal-btn-full {
+            border-color: rgba(74, 222, 128, 0.3);
+        }
+        .move-btn.heal-btn-full:hover:not(:disabled) {
+            background: rgba(74, 222, 128, 0.12);
+            border-color: rgba(74, 222, 128, 0.5);
+            box-shadow: 0 4px 16px rgba(74, 222, 128, 0.15);
+        }
+
+        .move-btn.heal-btn-part {
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+        .move-btn.heal-btn-part:hover:not(:disabled) {
+            background: rgba(56, 189, 248, 0.12);
+            border-color: rgba(56, 189, 248, 0.5);
+            box-shadow: 0 4px 16px rgba(56, 189, 248, 0.15);
         }
 
         .move-btn {
@@ -382,6 +483,26 @@
             color: var(--text-muted);
             margin-top: 2px;
             display: block;
+        }
+
+        .move-btn.destroyed-btn {
+            opacity: 0.2;
+            cursor: not-allowed;
+            position: relative;
+        }
+        .move-btn.destroyed-btn::after {
+            content: '部位破壊';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.6rem;
+            color: #ff3d3d;
+            font-weight: 700;
+            background: rgba(0,0,0,0.7);
+            padding: 2px 6px;
+            border-radius: 4px;
+            white-space: nowrap;
         }
 
         /* ─── Attack Animation ────────────────────────────────────── */
@@ -742,16 +863,17 @@
             <div id="startScreen" class="start-screen">
                 <span class="start-emoji">&#x2694;&#xFE0F;</span>
                 <h2>Pink Voltage Endurance</h2>
-                <p>レイラ・ヴィレル・ノヴァとして20連続バトルに挑戦。回復なし、真の耐久戦。</p>
+                <p>レイラ・ヴィレル・ノヴァとして20連続バトルに挑戦。部位HPシステム搭載の新バトル！</p>
                 <div class="start-rules">
                     <h3>バトルルール</h3>
                     <ul>
-                        <li>開始HP: 150（バトル間で回復なし）</li>
-                        <li>対戦相手: 物語に登場する敵から選出（20戦）</li>
-                        <li>行動: 攻撃6種 / 防御 / 回避 / 必殺技</li>
+                        <li>部位HP: 頭部30 / 腕部40 / 脚部40 / 胴体40（総合150）</li>
+                        <li>部位HPがゼロになると対応する攻撃が使用不能に</li>
+                        <li>総合HPがゼロになると敗北</li>
+                        <li>攻撃6種 / 防御 / 回避 / 必殺技 / 回復3種</li>
+                        <li>回復: 軽回復 / 部位修復 / 全体修復（CTあり）</li>
                         <li>敵の攻撃: 状態異常（毒・拘束・精神攻撃）あり</li>
-                        <li>防御: 次ターン被ダメージ半減</li>
-                        <li>回避: 70%の確率で敵の攻撃を完全回避</li>
+                        <li>防御: 次ターン被ダメージ半減 / 回避: 70%回避率</li>
                         <li>全20戦制覇で真の勝利</li>
                     </ul>
                 </div>
@@ -772,13 +894,41 @@
                         <img src="https://raw.githubusercontent.com/gentaron/image/main/LaylaVirelNova.png" alt="Layla" class="fighter-img">
                         <div class="fighter-name">Layla V.N.</div>
                         <div class="fighter-type">Pink Voltage</div>
-                        <div class="hp-bar-container">
+                        <!-- Total HP -->
+                        <div class="hp-bar-container total-hp-section">
                             <div class="hp-bar-label">
-                                <span>HP</span>
-                                <span id="laylaHpText">100 / 100</span>
+                                <span>TOTAL HP</span>
+                                <span id="laylaHpText">150 / 150</span>
                             </div>
                             <div class="hp-bar">
                                 <div class="hp-bar-fill high" id="laylaHpBar" style="width:100%"></div>
+                            </div>
+                        </div>
+                        <!-- Body Parts -->
+                        <div class="body-parts-container" id="bodyPartsContainer">
+                            <div class="body-part-row" id="bp-head">
+                                <span class="body-part-icon">🧠</span>
+                                <span class="body-part-name">頭部</span>
+                                <div class="body-part-bar"><div class="body-part-fill high" id="bpHeadBar" style="width:100%"></div></div>
+                                <span class="body-part-hp-text" id="bpHeadText">30/30</span>
+                            </div>
+                            <div class="body-part-row" id="bp-arms">
+                                <span class="body-part-icon">💪</span>
+                                <span class="body-part-name">腕部</span>
+                                <div class="body-part-bar"><div class="body-part-fill high" id="bpArmsBar" style="width:100%"></div></div>
+                                <span class="body-part-hp-text" id="bpArmsText">40/40</span>
+                            </div>
+                            <div class="body-part-row" id="bp-legs">
+                                <span class="body-part-icon">🦵</span>
+                                <span class="body-part-name">脚部</span>
+                                <div class="body-part-bar"><div class="body-part-fill high" id="bpLegsBar" style="width:100%"></div></div>
+                                <span class="body-part-hp-text" id="bpLegsText">40/40</span>
+                            </div>
+                            <div class="body-part-row" id="bp-torso">
+                                <span class="body-part-icon">🫁</span>
+                                <span class="body-part-name">胴体</span>
+                                <div class="body-part-bar"><div class="body-part-fill high" id="bpTorsoBar" style="width:100%"></div></div>
+                                <span class="body-part-hp-text" id="bpTorsoText">40/40</span>
                             </div>
                         </div>
                     </div>
@@ -806,36 +956,38 @@
                 <div class="status-effects" id="statusEffects"></div>
 
                 <div class="move-buttons" id="moveButtons">
-                    <button class="move-btn" onclick="laylaAction('electrified-punch')" id="move-ep">
+                    <!-- Attacks -->
+                    <button class="move-btn" onclick="laylaAction('electrified-punch')" id="move-ep" data-parts="arms">
                         <span class="move-icon">&#x26A1;</span>
                         電撃パンチ
                         <span class="move-dmg">18-26 DMG</span>
                     </button>
-                    <button class="move-btn" onclick="laylaAction('shockwave-blast')" id="move-sb">
+                    <button class="move-btn" onclick="laylaAction('shockwave-blast')" id="move-sb" data-parts="arms">
                         <span class="move-icon">&#x1F4A5;</span>
                         衝撃波ブラスト
                         <span class="move-dmg">15-24 DMG</span>
                     </button>
-                    <button class="move-btn" onclick="laylaAction('lightning-strike')" id="move-ls">
+                    <button class="move-btn" onclick="laylaAction('lightning-strike')" id="move-ls" data-parts="head">
                         <span class="move-icon">&#x26C8;&#xFE0F;</span>
                         ライトニングストライク
                         <span class="move-dmg">20-30 DMG</span>
                     </button>
-                    <button class="move-btn" onclick="laylaAction('nanofiber-kick')" id="move-nk">
+                    <button class="move-btn" onclick="laylaAction('nanofiber-kick')" id="move-nk" data-parts="legs">
                         <span class="move-icon">&#x1FA97;</span>
                         ナノファイバーキック
                         <span class="move-dmg">16-25 DMG</span>
                     </button>
-                    <button class="move-btn" onclick="laylaAction('jet-spin')" id="move-js">
+                    <button class="move-btn" onclick="laylaAction('jet-spin')" id="move-js" data-parts="legs">
                         <span class="move-icon">&#x1F300;</span>
                         ジェットスピン
                         <span class="move-dmg">15-22 DMG</span>
                     </button>
-                    <button class="move-btn" onclick="laylaAction('cyber-grapple')" id="move-cg">
+                    <button class="move-btn" onclick="laylaAction('cyber-grapple')" id="move-cg" data-parts="torso">
                         <span class="move-icon">&#x1F916;</span>
-                        サイバー graple
+                        サイバーグラップル
                         <span class="move-dmg">17-27 DMG</span>
                     </button>
+                    <!-- Defense / Dodge -->
                     <button class="move-btn defense-btn" onclick="laylaAction('defend')" id="move-def">
                         <span class="move-icon">&#x1F6E1;&#xFE0F;</span>
                         防御
@@ -846,10 +998,27 @@
                         回避
                         <span class="move-dmg">70%回避率</span>
                     </button>
-                    <button class="move-btn" onclick="laylaAction('voltage-burst')" id="move-vb" style="border-color: rgba(255,171,0,0.3);">
+                    <!-- Special -->
+                    <button class="move-btn" onclick="laylaAction('voltage-burst')" id="move-vb" data-parts="head" style="border-color: rgba(255,171,0,0.3);">
                         <span class="move-icon">&#x2728;</span>
                         ボルテージバースト
                         <span class="move-dmg">25-40 DMG</span>
+                    </button>
+                    <!-- Recovery -->
+                    <button class="move-btn heal-btn" onclick="laylaAction('heal-light')" id="move-hl">
+                        <span class="move-icon">&#x1F48A;</span>
+                        軽回復
+                        <span class="move-dmg">HP+10~18</span>
+                    </button>
+                    <button class="move-btn heal-btn-part" onclick="laylaAction('heal-part')" id="move-hp">
+                        <span class="move-icon">&#x1FA79;</span>
+                        部位修復
+                        <span class="move-dmg">部位HP+20~30</span>
+                    </button>
+                    <button class="move-btn heal-btn-full" onclick="laylaAction('heal-full')" id="move-hf">
+                        <span class="move-icon">&#x2764;&#xFE0F;</span>
+                        全体修復
+                        <span class="move-dmg">全部位HP+8~14</span>
                     </button>
                 </div>
             </div>
@@ -873,7 +1042,6 @@
     <script>
     // ─── Battle Data (Story-based enemies) ────────────────────────────────
     const BATTLE_OPPONENTS = [
-        // Undercity/Story enemies (special attacks & status effects)
         {name:"スライムフラグメント",type:"Slime",emoji:"🟢",location:"地下街深部",attacks:["粘液トラップ","触手拘束","溶解液"],statusType:"poison"},
         {name:"スライムスウォーム",type:"Slime",emoji:"🟢",location:"工業地区",attacks:["群れの包囲","粘液トラップ","溶解液"],statusType:"bind"},
         {name:"スライムガイ",type:"Slime",emoji:"👾",location:"地下街下水道",attacks:["触手拘束","頭部スライム","溶解液","舌鋸"],statusType:"bind"},
@@ -886,7 +1054,6 @@
         {name:"傷跡の殺人鬼",type:"Human",emoji:"🗡️",location:"地下街路地",attacks:["血塗れの刃","ナイフ乱打","憎悪の一撃"],statusType:null},
         {name:"ミラージュ",type:"Psychic",emoji:"🪞",location:"コロシアム",attacks:["幻影分身","精神干渉","混乱の光"],statusType:"psychic"},
         {name:"ヴォイドストーカー",type:"Undercity",emoji:"🕳️",location:"コロシアム",attacks:["闇の一撃","影縛り","虚無の視線"],statusType:"bind"},
-        // Arena/Colosseum enemies
         {name:"プラズマレイス",type:"Energy",emoji:"👻",location:"エネルギープラント",attacks:["プラズマボルト","幽体離脱"],statusType:null},
         {name:"ネオンヴァイパー",type:"Arena",emoji:"🐍",location:"ネオンプラザ",attacks:["毒牙噛みつき","高速突進"],statusType:"poison"},
         {name:"シャドウドローン",type:"Arena",emoji:"🤖",location:"工業地区",attacks:["レーザービーム","衝撃波"],statusType:null},
@@ -908,45 +1075,72 @@
     ];
 
     const LAYLA_MOVES = {
-        'electrified-punch': { name: '電撃パンチ', min: 18, max: 26, icon: '⚡', type: 'attack' },
-        'shockwave-blast':   { name: '衝撃波ブラスト',  min: 15, max: 24, icon: '💥', type: 'attack' },
-        'lightning-strike':  { name: 'ライトニングストライク',  min: 20, max: 30, icon: '⛈️', type: 'attack' },
-        'nanofiber-kick':    { name: 'ナノファイバーキック',    min: 16, max: 25, icon: '🦵', type: 'attack' },
-        'jet-spin':          { name: 'ジェットスピン',  min: 15, max: 22, icon: '🌀', type: 'attack' },
-        'cyber-grapple':     { name: 'サイバーグラップル', min: 17, max: 27, icon: '🦾', type: 'attack' },
+        'electrified-punch': { name: '電撃パンチ', min: 18, max: 26, icon: '⚡', type: 'attack', part: 'arms' },
+        'shockwave-blast':   { name: '衝撃波ブラスト',  min: 15, max: 24, icon: '💥', type: 'attack', part: 'arms' },
+        'lightning-strike':  { name: 'ライトニングストライク',  min: 20, max: 30, icon: '⛈️', type: 'attack', part: 'head' },
+        'nanofiber-kick':    { name: 'ナノファイバーキック',    min: 16, max: 25, icon: '🦵', type: 'attack', part: 'legs' },
+        'jet-spin':          { name: 'ジェットスピン',  min: 15, max: 22, icon: '🌀', type: 'attack', part: 'legs' },
+        'cyber-grapple':     { name: 'サイバーグラップル', min: 17, max: 27, icon: '🦾', type: 'attack', part: 'torso' },
         'defend':            { name: '防御', min: 0, max: 0, icon: '🛡️', type: 'defend' },
         'dodge':             { name: '回避', min: 0, max: 0, icon: '🏃', type: 'dodge' },
-        'voltage-burst':     { name: 'ボルテージバースト', min: 25, max: 40, icon: '✨', type: 'attack' },
+        'voltage-burst':     { name: 'ボルテージバースト', min: 25, max: 40, icon: '✨', type: 'attack', part: 'head' },
+        'heal-light':        { name: '軽回復', min: 10, max: 18, icon: '💊', type: 'heal', healType: 'light' },
+        'heal-part':         { name: '部位修復', min: 20, max: 30, icon: '🔧', type: 'heal', healType: 'part' },
+        'heal-full':         { name: '全体修復', min: 8, max: 14, icon: '❤️', type: 'heal', healType: 'full' },
+    };
+
+    // Body part definitions: each attack maps to a body part
+    const BODY_PARTS = {
+        head:  { name: '頭部', maxHp: 30, icon: '🧠' },
+        arms:  { name: '腕部', maxHp: 40, icon: '💪' },
+        legs:  { name: '脚部', maxHp: 40, icon: '🦵' },
+        torso: { name: '胴体', maxHp: 40, icon: '🫁' },
     };
 
     const TOTAL_BATTLES = 20;
 
     // ─── Game State ────────────────────────────────────────────────────
-    let gameState = {
-        laylaHp: 150,
-        laylaMaxHp: 150,
-        currentBattle: 0,
-        enemyHp: 0,
-        enemyMaxHp: 0,
-        opponent: null,
-        battlesWon: 0,
-        totalDamageDealt: 0,
-        totalDamageTaken: 0,
-        totalTurns: 0,
-        movesUsed: {},
-        isBattling: false,
-        isGameOver: false,
-        battleResults: [],
-        isDefending: false,
-        isDodging: false,
-        isBound: false,
-        isPoisoned: false,
-        isPsychic: false,
-        bindTurns: 0,
-        poisonTurns: 0,
-        psychicTurns: 0,
-        voltageBurstCooldown: 0,
-    };
+    let gameState = {};
+
+    function createInitialState() {
+        return {
+            bodyParts: {
+                head:  { hp: 30, maxHp: 30 },
+                arms:  { hp: 40, maxHp: 40 },
+                legs:  { hp: 40, maxHp: 40 },
+                torso: { hp: 40, maxHp: 40 },
+            },
+            get laylaHp() {
+                return Object.values(this.bodyParts).reduce((s, p) => s + Math.max(0, p.hp), 0);
+            },
+            get laylaMaxHp() {
+                return Object.values(this.bodyParts).reduce((s, p) => s + p.maxHp, 0);
+            },
+            currentBattle: 0,
+            enemyHp: 0,
+            enemyMaxHp: 0,
+            opponent: null,
+            battlesWon: 0,
+            totalDamageDealt: 0,
+            totalDamageTaken: 0,
+            totalTurns: 0,
+            movesUsed: {},
+            isBattling: false,
+            isGameOver: false,
+            battleResults: [],
+            isDefending: false,
+            isDodging: false,
+            isBound: false,
+            isPoisoned: false,
+            isPsychic: false,
+            bindTurns: 0,
+            poisonTurns: 0,
+            psychicTurns: 0,
+            voltageBurstCooldown: 0,
+            healPartCooldown: 0,
+            healFullCooldown: 0,
+        };
+    }
 
     // ─── Utility ──────────────────────────────────────────────────────
     function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
@@ -969,16 +1163,39 @@
 
     // ─── UI Updates ───────────────────────────────────────────────────
     function updateLaylaHp() {
-        const ratio = gameState.laylaHp / gameState.laylaMaxHp;
+        const totalHp = gameState.laylaHp;
+        const totalMax = gameState.laylaMaxHp;
+        const ratio = totalMax > 0 ? totalHp / totalMax : 0;
+
         const bar = document.getElementById('laylaHpBar');
         const text = document.getElementById('laylaHpText');
         bar.style.width = Math.max(0, ratio * 100) + '%';
-        bar.className = 'hp-bar-fill ' + getHpClass(ratio);
-        text.textContent = `${Math.max(0, gameState.laylaHp)} / ${gameState.laylaMaxHp}`;
+        bar.className = 'hp-bar-fill ' + (totalHp <= 0 ? 'destroyed' : getHpClass(ratio));
+        text.textContent = `${Math.max(0, totalHp)} / ${totalMax}`;
+
+        // Update body parts
+        for (const [key, part] of Object.entries(gameState.bodyParts)) {
+            const capKey = key.charAt(0).toUpperCase() + key.slice(1);
+            const partBar = document.getElementById(`bp${capKey}Bar`);
+            const partText = document.getElementById(`bp${capKey}Text`);
+            const partRow = document.getElementById(`bp-${key}`);
+            const pRatio = part.maxHp > 0 ? Math.max(0, part.hp) / part.maxHp : 0;
+
+            if (partBar) {
+                partBar.style.width = (pRatio * 100) + '%';
+                partBar.className = 'body-part-fill ' + (part.hp <= 0 ? 'destroyed' : getHpClass(pRatio));
+            }
+            if (partText) {
+                partText.textContent = `${Math.max(0, part.hp)}/${part.maxHp}`;
+            }
+            if (partRow) {
+                partRow.classList.toggle('destroyed', part.hp <= 0);
+            }
+        }
     }
 
     function updateEnemyHp() {
-        const ratio = gameState.enemyHp / gameState.enemyMaxHp;
+        const ratio = gameState.enemyMaxHp > 0 ? gameState.enemyHp / gameState.enemyMaxHp : 0;
         const bar = document.getElementById('enemyHpBar');
         const text = document.getElementById('enemyHpText');
         bar.style.width = Math.max(0, ratio * 100) + '%';
@@ -1039,11 +1256,12 @@
         log.scrollTop = log.scrollHeight;
     }
 
-    function showDamagePopup(target, amount, isCrit) {
+    function showDamagePopup(target, amount, isCrit, type) {
         const card = document.getElementById(target);
         const popup = document.createElement('div');
-        popup.className = 'damage-popup ' + (target === 'laylaCard' ? 'enemy-dmg' : 'layla-dmg') + (isCrit ? ' crit' : '');
-        popup.textContent = (isCrit ? 'CRIT! ' : '-') + amount;
+        const typeClass = type === 'heal' ? 'heal-popup' : (target === 'laylaCard' ? 'enemy-dmg' : 'layla-dmg');
+        popup.className = 'damage-popup ' + typeClass + (isCrit ? ' crit' : '');
+        popup.textContent = (type === 'heal' ? '+' : (isCrit ? 'CRIT! ' : '-')) + amount;
         popup.style.left = '50%';
         popup.style.top = '30%';
         popup.style.transform = 'translateX(-50%)';
@@ -1052,7 +1270,62 @@
     }
 
     function setMovesEnabled(enabled) {
-        document.querySelectorAll('.move-btn').forEach(btn => btn.disabled = !enabled);
+        document.querySelectorAll('.move-btn').forEach(btn => {
+            const actionKey = btn.getAttribute('onclick')?.match(/laylaAction\('(.+?)'\)/)?.[1];
+            if (!actionKey) { btn.disabled = !enabled; return; }
+            const move = LAYLA_MOVES[actionKey];
+            if (!move) { btn.disabled = !enabled; return; }
+
+            // Check body part availability for attacks
+            if (move.part && gameState.bodyParts[move.part]) {
+                const part = gameState.bodyParts[move.part];
+                if (part.hp <= 0) {
+                    btn.disabled = true;
+                    btn.classList.add('destroyed-btn');
+                } else if (enabled) {
+                    btn.disabled = false;
+                    btn.classList.remove('destroyed-btn');
+                } else {
+                    btn.disabled = true;
+                    btn.classList.remove('destroyed-btn');
+                }
+            } else {
+                btn.disabled = !enabled;
+                btn.classList.remove('destroyed-btn');
+            }
+        });
+
+        // Update cooldown text for recovery moves
+        const hlBtn = document.getElementById('move-hl');
+        const hpBtn = document.getElementById('move-hp');
+        const hfBtn = document.getElementById('move-hf');
+
+        if (hpBtn) {
+            const cd = gameState.healPartCooldown;
+            const dmgSpan = hpBtn.querySelector('.move-dmg');
+            dmgSpan.textContent = cd > 0 ? `CT: 残り${cd}T` : '部位HP+20~30';
+            if (cd > 0 && enabled) {
+                hpBtn.disabled = true;
+            }
+        }
+        if (hfBtn) {
+            const cd = gameState.healFullCooldown;
+            const dmgSpan = hfBtn.querySelector('.move-dmg');
+            dmgSpan.textContent = cd > 0 ? `CT: 残り${cd}T` : '全部位HP+8~14';
+            if (cd > 0 && enabled) {
+                hfBtn.disabled = true;
+            }
+        }
+        // Voltage burst cooldown text
+        const vbBtn = document.getElementById('move-vb');
+        if (vbBtn) {
+            const cd = gameState.voltageBurstCooldown;
+            const dmgSpan = vbBtn.querySelector('.move-dmg');
+            dmgSpan.textContent = cd > 0 ? `CT: 残り${cd}T` : '25-40 DMG';
+            if (cd > 0 && enabled) {
+                vbBtn.disabled = true;
+            }
+        }
     }
 
     function animateAttack(attackerId, targetId) {
@@ -1068,6 +1341,39 @@
         }, 200);
     }
 
+    // ─── Damage to body part ──────────────────────────────────────────
+    function applyDamageToLayla(dmg) {
+        // Damage goes to a random body part (weighted by current HP, prefer parts with more HP)
+        const aliveParts = Object.entries(gameState.bodyParts).filter(([k, p]) => p.hp > 0);
+        if (aliveParts.length === 0) return;
+
+        // Weight by remaining HP so damage is distributed more naturally
+        const weights = aliveParts.map(([k, p]) => p.hp);
+        const totalWeight = weights.reduce((s, w) => s + w, 0);
+        let r = Math.random() * totalWeight;
+        let chosen = aliveParts[0];
+        for (let i = 0; i < aliveParts.length; i++) {
+            r -= weights[i];
+            if (r <= 0) { chosen = aliveParts[i]; break; }
+        }
+
+        const [partKey, part] = chosen;
+        const partName = BODY_PARTS[partKey]?.name || partKey;
+        const wasAlive = part.hp > 0;
+        part.hp = Math.max(0, part.hp - dmg);
+
+        gameState.totalDamageTaken += dmg;
+
+        if (wasAlive && part.hp <= 0) {
+            addLog(`💀 ${partName}が破壊された！対応する攻撃が使用不能に！`, 'critical');
+            // Log which attacks are lost
+            const lostMoves = Object.entries(LAYLA_MOVES).filter(([k, m]) => m.part === partKey);
+            lostMoves.forEach(([k, m]) => addLog(`  ✗ ${m.name} が使用不能`, 'defeat'));
+        }
+
+        updateLaylaHp();
+    }
+
     // ─── Difficulty ───────────────────────────────────────────────────
     function getDifficulty(battleNum) {
         if (battleNum < 5) return { label: 'EASY', cls: 'diff-easy', hpMult: 1.0, dmgMin: 5, dmgMax: 12 };
@@ -1078,17 +1384,7 @@
 
     // ─── Game Flow ────────────────────────────────────────────────────
     function startGame() {
-        gameState = {
-            laylaHp: 150, laylaMaxHp: 150,
-            currentBattle: 0, enemyHp: 0, enemyMaxHp: 0,
-            opponent: null, battlesWon: 0, totalDamageDealt: 0,
-            totalDamageTaken: 0, totalTurns: 0, movesUsed: {},
-            isBattling: false, isGameOver: false, battleResults: [],
-            isDefending: false, isDodging: false,
-            isBound: false, isPoisoned: false, isPsychic: false,
-            bindTurns: 0, poisonTurns: 0, psychicTurns: 0,
-            voltageBurstCooldown: 0,
-        };
+        gameState = createInitialState();
 
         document.getElementById('startScreen').style.display = 'none';
         document.getElementById('resultScreen').classList.remove('active');
@@ -1101,7 +1397,6 @@
     function startBattle() {
         const diff = getDifficulty(gameState.currentBattle);
 
-        // Pick random opponent, prefer story enemies in later battles
         let pool;
         if (gameState.currentBattle >= 8) {
             const storyEnemies = BATTLE_OPPONENTS.filter(o => o.type === 'Slime' || o.type === 'Psychic' || o.type === 'Demon' || o.type === 'Human' || o.type === 'Possessed');
@@ -1111,12 +1406,10 @@
         }
         gameState.opponent = pool[gameState.currentBattle % pool.length];
 
-        // Set enemy HP
         const baseHp = rand(35, 55);
         gameState.enemyMaxHp = Math.round(baseHp * diff.hpMult);
         gameState.enemyHp = gameState.enemyMaxHp;
 
-        // Update UI
         document.getElementById('battleCounter').textContent = `第${gameState.currentBattle + 1}戦 / ${TOTAL_BATTLES}`;
         const badge = document.getElementById('diffBadge');
         badge.textContent = diff.label;
@@ -1137,7 +1430,6 @@
         updateProgress();
         updateStatusEffects();
 
-        // Battle log intro
         addLog(`━━━ 第${gameState.currentBattle + 1}戦 ━━━`, 'info');
         addLog(`${gameState.opponent.emoji} ${gameState.opponent.name} が現れた！(${gameState.opponent.location})`, 'enemy-action');
         if (gameState.opponent.statusType) {
@@ -1147,6 +1439,12 @@
 
         gameState.isBattling = true;
         setMovesEnabled(true);
+    }
+
+    function decreaseCooldowns() {
+        if (gameState.voltageBurstCooldown > 0) gameState.voltageBurstCooldown--;
+        if (gameState.healPartCooldown > 0) gameState.healPartCooldown--;
+        if (gameState.healFullCooldown > 0) gameState.healFullCooldown--;
     }
 
     async function laylaAction(actionKey) {
@@ -1161,8 +1459,6 @@
         await processStatusEffects();
 
         if (gameState.laylaHp <= 0) {
-            gameState.laylaHp = 0;
-            updateLaylaHp();
             await gameDefeated();
             return;
         }
@@ -1174,14 +1470,10 @@
 
         // --- Handle psychic state ---
         if (gameState.isPsychic && action.type === 'attack' && Math.random() < 0.25) {
-            addLog(`🌀 精神混乱で自爆！レイラに 5 ダメージ！`, 'critical');
-            gameState.laylaHp -= 5;
-            gameState.totalDamageTaken += 5;
-            updateLaylaHp();
+            addLog(`🌀 精神混乱で自爆！5ダメージ！`, 'critical');
+            applyDamageToLayla(5);
             await delay(300);
             if (gameState.laylaHp <= 0) {
-                gameState.laylaHp = 0;
-                updateLaylaHp();
                 await gameDefeated();
                 return;
             }
@@ -1197,16 +1489,14 @@
             addLog(`🛡️ レイラは防御姿勢をとった！次ターン被ダメージ半減！`, 'layla-action');
             updateStatusEffects();
             await delay(500);
-
-            // Enemy still attacks but damage halved
             await enemyAttack();
 
         } else if (action.type === 'dodge') {
-            // --- DODGE ---
+            // --- DODGE (BUG FIX: always re-enable buttons after dodge) ---
             gameState.isDodging = true;
             const dodgeChance = gameState.isBound ? 0.40 : 0.70;
             const dodged = Math.random() < dodgeChance;
-            
+
             addLog(`🏃 レイラは回避行動！(${Math.round(dodgeChance * 100)}%回避率)`, 'layla-action');
             await delay(500);
 
@@ -1214,10 +1504,117 @@
                 const opp = gameState.opponent;
                 const enemyAtk = opp.attacks[rand(0, opp.attacks.length - 1)];
                 addLog(`${opp.emoji} ${opp.name}の${enemyAtk}！→ レイラは回避した！`, 'info');
+                // Decrease cooldowns and re-enable moves
+                decreaseCooldowns();
+                gameState.isDodging = false;
+                setMovesEnabled(true);
             } else {
                 addLog(`回避失敗！`, 'critical');
                 await enemyAttack();
             }
+
+        } else if (action.type === 'heal') {
+            // --- HEAL ---
+            if (action.healType === 'light') {
+                // Light heal: recover 10-18 HP to one random damaged body part
+                const damagedParts = Object.entries(gameState.bodyParts).filter(([k, p]) => p.hp < p.maxHp && p.hp > 0);
+                if (damagedParts.length > 0) {
+                    const [partKey, part] = damagedParts[rand(0, damagedParts.length - 1)];
+                    const healAmt = rand(action.min, action.max);
+                    const actual = Math.min(healAmt, part.maxHp - part.hp);
+                    part.hp = Math.min(part.maxHp, part.hp + healAmt);
+                    const partName = BODY_PARTS[partKey]?.name || partKey;
+                    addLog(`💊 軽回復！${partName}に ${actual} HP回復！`, 'heal');
+                    showDamagePopup('laylaCard', actual, false, 'heal');
+                } else {
+                    // All parts full or destroyed - try to revive a destroyed part with half heal
+                    const destroyedParts = Object.entries(gameState.bodyParts).filter(([k, p]) => p.hp <= 0);
+                    if (destroyedParts.length > 0) {
+                        const [partKey, part] = destroyedParts[rand(0, destroyedParts.length - 1)];
+                        const reviveAmt = rand(5, 10);
+                        part.hp = reviveAmt;
+                        const partName = BODY_PARTS[partKey]?.name || partKey;
+                        addLog(`💊 軽回復！${partName}が ${reviveAmt} HPで復活！`, 'heal');
+                        showDamagePopup('laylaCard', reviveAmt, false, 'heal');
+                    } else {
+                        addLog(`💊 軽回復！しかし回復する箇所がない...`, 'info');
+                    }
+                }
+                updateLaylaHp();
+                await delay(500);
+
+            } else if (action.healType === 'part') {
+                // Part heal: recover 20-30 HP to most damaged alive part
+                if (gameState.healPartCooldown > 0) {
+                    addLog(`🔧 部位修復はクールダウン中！(残り${gameState.healPartCooldown}T)`, 'critical');
+                    setMovesEnabled(true);
+                    return;
+                }
+                gameState.healPartCooldown = 4;
+
+                const damagedParts = Object.entries(gameState.bodyParts).filter(([k, p]) => p.hp > 0 && p.hp < p.maxHp);
+                if (damagedParts.length > 0) {
+                    // Sort by damage ratio (most damaged first)
+                    damagedParts.sort((a, b) => {
+                        const ratioA = a[1].hp / a[1].maxHp;
+                        const ratioB = b[1].hp / b[1].maxHp;
+                        return ratioA - ratioB;
+                    });
+                    const [partKey, part] = damagedParts[0];
+                    const healAmt = rand(action.min, action.max);
+                    const actual = Math.min(healAmt, part.maxHp - part.hp);
+                    part.hp = Math.min(part.maxHp, part.hp + healAmt);
+                    const partName = BODY_PARTS[partKey]?.name || partKey;
+                    addLog(`🔧 部位修復！${partName}に ${actual} HP回復！`, 'heal');
+                    showDamagePopup('laylaCard', actual, false, 'heal');
+                } else {
+                    const destroyedParts = Object.entries(gameState.bodyParts).filter(([k, p]) => p.hp <= 0);
+                    if (destroyedParts.length > 0) {
+                        const [partKey, part] = destroyedParts[0];
+                        const reviveAmt = rand(10, 15);
+                        part.hp = reviveAmt;
+                        const partName = BODY_PARTS[partKey]?.name || partKey;
+                        addLog(`🔧 部位修復！${partName}が ${reviveAmt} HPで復活！`, 'heal');
+                        showDamagePopup('laylaCard', reviveAmt, false, 'heal');
+                    } else {
+                        addLog(`🔧 部位修復！しかし回復する箇所がない...`, 'info');
+                    }
+                }
+                updateLaylaHp();
+                await delay(500);
+
+            } else if (action.healType === 'full') {
+                // Full heal: recover 8-14 HP to ALL body parts
+                if (gameState.healFullCooldown > 0) {
+                    addLog(`❤️ 全体修復はクールダウン中！(残り${gameState.healFullCooldown}T)`, 'critical');
+                    setMovesEnabled(true);
+                    return;
+                }
+                gameState.healFullCooldown = 5;
+
+                let totalHealed = 0;
+                for (const [key, part] of Object.entries(gameState.bodyParts)) {
+                    if (part.hp > 0) {
+                        const healAmt = rand(action.min, action.max);
+                        const actual = Math.min(healAmt, part.maxHp - part.hp);
+                        part.hp = Math.min(part.maxHp, part.hp + healAmt);
+                        totalHealed += actual;
+                    } else {
+                        // Revive destroyed parts with minimal HP
+                        const reviveAmt = rand(5, 8);
+                        part.hp = reviveAmt;
+                        totalHealed += reviveAmt;
+                    }
+                }
+                addLog(`❤️ 全体修復！全部位に合計 ${totalHealed} HP回復！`, 'heal');
+                showDamagePopup('laylaCard', totalHealed, false, 'heal');
+                updateLaylaHp();
+                await delay(500);
+            }
+
+            // After healing, enemy still attacks
+            await delay(300);
+            await enemyAttack();
 
         } else if (actionKey === 'voltage-burst') {
             // --- VOLTAGE BURST (special) ---
@@ -1227,6 +1624,13 @@
                 return;
             }
             gameState.voltageBurstCooldown = 4;
+
+            // Check if head is destroyed
+            if (gameState.bodyParts.head.hp <= 0) {
+                addLog(`💀 頭部が破壊されているためボルテージバーストが使えない！`, 'critical');
+                setMovesEnabled(true);
+                return;
+            }
 
             const isCrit = Math.random() < 0.25;
             let dmg = rand(action.min, action.max);
@@ -1242,7 +1646,6 @@
             gameState.totalDamageDealt += dmg;
             updateEnemyHp();
 
-            // Voltage Burst clears bind
             if (gameState.isBound) {
                 gameState.isBound = false;
                 gameState.bindTurns = 0;
@@ -1263,6 +1666,14 @@
 
         } else {
             // --- NORMAL ATTACK ---
+            // Check if the required body part is destroyed
+            if (action.part && gameState.bodyParts[action.part] && gameState.bodyParts[action.part].hp <= 0) {
+                const partName = BODY_PARTS[action.part]?.name || action.part;
+                addLog(`💀 ${partName}が破壊されているため${action.name}が使えない！`, 'critical');
+                setMovesEnabled(true);
+                return;
+            }
+
             const isCrit = Math.random() < 0.15;
             let dmg = rand(action.min, action.max);
             if (isCrit) dmg = Math.round(dmg * 1.5);
@@ -1287,7 +1698,6 @@
                 return;
             }
 
-            // Enemy attacks
             await delay(300);
             await enemyAttack();
         }
@@ -1297,10 +1707,8 @@
         // Poison damage
         if (gameState.isPoisoned) {
             const poisonDmg = rand(3, 6);
-            gameState.laylaHp -= poisonDmg;
-            gameState.totalDamageTaken += poisonDmg;
+            applyDamageToLayla(poisonDmg);
             addLog(`☠️ 毒のダメージ！レイラに ${poisonDmg} ダメージ！`, 'critical');
-            updateLaylaHp();
             gameState.poisonTurns--;
             if (gameState.poisonTurns <= 0) {
                 gameState.isPoisoned = false;
@@ -1309,7 +1717,7 @@
             await delay(300);
         }
 
-        // Bind damage (small) and chance to escape
+        // Bind damage and chance to escape
         if (gameState.isBound) {
             if (Math.random() < 0.30) {
                 gameState.isBound = false;
@@ -1317,8 +1725,7 @@
                 addLog(`✓ 拘束から脱出した！`, 'victory');
             } else {
                 const bindDmg = rand(2, 4);
-                gameState.laylaHp -= bindDmg;
-                gameState.totalDamageTaken += bindDmg;
+                applyDamageToLayla(bindDmg);
                 addLog(`🔗 拘束のダメージ！レイラに ${bindDmg} ダメージ！`, 'critical');
                 gameState.bindTurns--;
                 updateLaylaHp();
@@ -1330,7 +1737,7 @@
             await delay(300);
         }
 
-        // Psychic effect (chance to lose turn)
+        // Psychic effect
         if (gameState.isPsychic) {
             gameState.psychicTurns--;
             if (gameState.psychicTurns <= 0) {
@@ -1349,10 +1756,8 @@
         let dmg = rand(diff.dmgMin, diff.dmgMax);
         let statusApplied = '';
 
-        // Pick a random enemy attack
         const enemyAtk = opp.attacks[rand(0, opp.attacks.length - 1)];
 
-        // Apply status effects based on enemy type
         if (opp.statusType && Math.random() < 0.30) {
             if (opp.statusType === 'poison' && !gameState.isPoisoned) {
                 gameState.isPoisoned = true;
@@ -1372,7 +1777,6 @@
             }
         }
 
-        // Defending reduces damage by 50%
         if (gameState.isDefending) {
             dmg = Math.round(dmg * 0.5);
             addLog(`🛡️ 防御効果発動！`, 'info');
@@ -1381,22 +1785,17 @@
         animateAttack('enemyCard', 'laylaCard');
 
         await delay(200);
-        showDamagePopup('laylaCard', dmg, false);
+        showDamagePopup('laylaCard', dmg, false, 'damage');
         addLog(`${opp.emoji} ${opp.name}の${enemyAtk}！レイラに ${dmg} ダメージ！${statusApplied}`, 'enemy-action');
 
-        gameState.laylaHp -= dmg;
-        gameState.totalDamageTaken += dmg;
-        updateLaylaHp();
+        applyDamageToLayla(dmg);
         updateStatusEffects();
 
-        // Decrease cooldowns
-        if (gameState.voltageBurstCooldown > 0) gameState.voltageBurstCooldown--;
+        decreaseCooldowns();
 
         await delay(400);
 
         if (gameState.laylaHp <= 0) {
-            gameState.laylaHp = 0;
-            updateLaylaHp();
             await gameDefeated();
             return;
         }
@@ -1410,10 +1809,19 @@
         gameState.battleResults.push(true);
         updateProgress();
 
-        // Small HP recovery on victory
-        const recoverHp = rand(3, 8);
-        gameState.laylaHp = Math.min(gameState.laylaMaxHp, gameState.laylaHp + recoverHp);
-        addLog(`💚 戦闘勝利で ${recoverHp} HP回復！`, 'info');
+        // HP recovery on victory - heal all alive parts a bit
+        let totalRecovered = 0;
+        for (const [key, part] of Object.entries(gameState.bodyParts)) {
+            if (part.hp > 0) {
+                const recover = rand(2, 6);
+                const actual = Math.min(recover, part.maxHp - part.hp);
+                part.hp = Math.min(part.maxHp, part.hp + recover);
+                totalRecovered += actual;
+            }
+        }
+        if (totalRecovered > 0) {
+            addLog(`💚 戦闘勝利で 全部位に合計 ${totalRecovered} HP回復！`, 'info');
+        }
         updateLaylaHp();
 
         await delay(800);
@@ -1459,7 +1867,7 @@
             '地下街の闇に飲まれた...しかしPink Voltageの闘志は消えない。',
             '力尽きたが、次こそ20戦全勝を!',
             '敗北は経験。レイラはより強くなって帰ってくる。',
-            '防御と回避を使いこなせば勝てるはず…！',
+            '部位を守りながら回復を使いこなせば勝てるはず…！',
         ];
         document.getElementById('resultMessage').textContent = defeatMsgs[rand(0, defeatMsgs.length - 1)];
     }

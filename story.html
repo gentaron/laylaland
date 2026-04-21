@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story - Layla Virel Nova | AURALIS</title>
+    <link rel="stylesheet" href="style.css?v=2">
+    <style>
+        /* ─── Reading Progress Bar ─────────────────────────────────── */
+        .reading-progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--pink), var(--cyan), var(--purple));
+            z-index: 999;
+            transition: width 0.1s linear;
+            border-radius: 0 2px 2px 0;
+            box-shadow: 0 0 10px rgba(255, 61, 138, 0.4);
+        }
+
+        /* ─── Story Header ─────────────────────────────────────────── */
+        .story-header {
+            text-align: center;
+            padding: 20px 0 32px;
+        }
+
+        .story-header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            background: var(--accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glowPulse 3s ease-in-out infinite;
+            margin-bottom: 8px;
+        }
+
+        .story-meta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .story-meta-item {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .story-meta-item span {
+            color: var(--cyan);
+            font-weight: 600;
+        }
+
+        /* ─── Story Layout ─────────────────────────────────────────── */
+        .story-layout {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        /* ─── Table of Contents Sidebar ────────────────────────────── */
+        .toc-sidebar {
+            position: sticky;
+            top: 100px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.1) transparent;
+        }
+
+        .toc-sidebar::-webkit-scrollbar { width: 4px; }
+        .toc-sidebar::-webkit-scrollbar-track { background: transparent; }
+        .toc-sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+        .toc-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .toc-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .toc-item {
+            display: block;
+            padding: 8px 12px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-left: 2px solid var(--border);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            line-height: 1.5;
+        }
+
+        .toc-item:hover {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.04);
+            border-left-color: var(--pink);
+        }
+
+        .toc-item.active {
+            color: var(--pink);
+            background: rgba(255, 61, 138, 0.08);
+            border-left-color: var(--pink);
+            font-weight: 600;
+        }
+
+        /* ─── Story Content ────────────────────────────────────────── */
+        .story-content {
+            max-width: 720px;
+        }
+
+        .story-loading {
+            text-align: center;
+            padding: 80px 32px;
+            color: var(--text-muted);
+        }
+
+        .story-loading .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--pink);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        .story-loading p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .story-error {
+            text-align: center;
+            padding: 60px 32px;
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 61, 61, 0.3);
+            border-radius: var(--radius-md);
+        }
+
+        .story-error h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+            color: #ff6b6b;
+            margin-bottom: 12px;
+        }
+
+        .story-error p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .story-error button {
+            background: var(--accent);
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 10px 24px;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* ─── Story Chapters ───────────────────────────────────────── */
+        .story-chapter {
+            margin-bottom: 56px;
+            scroll-margin-top: 100px;
+        }
+
+        .story-chapter-marker {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .story-chapter-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--cyan);
+            background: rgba(0, 230, 255, 0.1);
+            border: 1px solid rgba(0, 230, 255, 0.2);
+            border-radius: 999px;
+            padding: 4px 12px;
+            white-space: nowrap;
+        }
+
+        .story-chapter-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--pink);
+            line-height: 1.4;
+        }
+
+        .story-text {
+            font-size: 1.05rem;
+            line-height: 1.9;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 0.01em;
+        }
+
+        .story-text p {
+            margin-bottom: 1.2em;
+            text-align: justify;
+        }
+
+        .story-text p:first-child::first-letter {
+            font-size: 2.2em;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            color: var(--pink);
+            float: left;
+            line-height: 1;
+            margin-right: 8px;
+            margin-top: 4px;
+        }
+
+        .story-text .story-dialogue {
+            color: var(--cyan);
+            font-style: italic;
+        }
+
+        .story-text .story-emphasis {
+            color: var(--pink);
+            font-weight: 600;
+        }
+
+        .story-text .story-location {
+            color: var(--purple);
+            font-weight: 500;
+        }
+
+        /* ─── Scene Break ──────────────────────────────────────────── */
+        .scene-break {
+            text-align: center;
+            margin: 40px 0;
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            letter-spacing: 0.3em;
+            opacity: 0.5;
+        }
+
+        /* ─── Responsive ──────────────────────────────────────────── */
+        @media (max-width: 900px) {
+            .story-layout {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .toc-sidebar {
+                position: relative;
+                top: 0;
+                max-height: none;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .toc-list {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .toc-item {
+                border-left: none;
+                border-bottom: 2px solid var(--border);
+                border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+                padding: 6px 12px;
+                font-size: 0.78rem;
+                white-space: nowrap;
+            }
+
+            .toc-item.active {
+                border-bottom-color: var(--pink);
+                border-left-color: transparent;
+            }
+
+            .toc-item:hover {
+                border-left-color: transparent;
+                border-bottom-color: var(--pink);
+            }
+
+            .story-text {
+                font-size: 1rem;
+                line-height: 1.85;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .story-text {
+                font-size: 0.95rem;
+                line-height: 1.8;
+            }
+
+            .story-text p:first-child::first-letter {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="reading-progress-bar" id="readingProgress"></div>
+
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand">
+                <span class="nav-brand-icon">&#x2728;</span>
+                <span>Layla Land</span>
+            </a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="colosseum.html">Colosseum</a></li>
+                <li><a href="story.html" class="active">Story</a></li>
+                <li><a href="stats.html">Universe</a></li>
+                <li><a href="rank.html">Links</a></li>
+            </ul>
+            <div id="walletContainer">
+                <button class="wallet-btn" id="connectWalletBtn" onclick="openWalletModal()">
+                    <svg class="wallet-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/>
+                        <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>
+                    </svg>
+                    <span>Connect Wallet</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Wallet Modal -->
+    <div id="walletModal" class="wallet-modal">
+        <div class="wallet-modal-content">
+            <button class="wallet-modal-close" onclick="closeWalletModal()">&#x2715;</button>
+            <h2>Connect Wallet</h2>
+            <p>Choose your preferred wallet to connect.</p>
+            <div class="wallet-options">
+                <div class="wallet-option" onclick="connectWallet('brave')">
+                    <div class="wallet-option-icon brave">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 2L2 7l1.5 11L12 22l8.5-4L22 7l-10-5zm0 2.18l7.13 3.57-.47 3.5-6.66-3.33-6.66 3.33-.47-3.5L12 4.18zm0 15.64l-6.13-2.87-.4-3 6.53 3.27 6.53-3.27-.4 3L12 19.82z"/></svg>
+                    </div>
+                    <div class="wallet-option-info"><h3>Brave Wallet</h3><span>Built into Brave browser</span></div>
+                    <span class="wallet-option-badge" id="braveDetected" style="display:none;">Detected</span>
+                </div>
+                <div class="wallet-option" onclick="connectWallet('metamask')">
+                    <div class="wallet-option-icon metamask">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    </div>
+                    <div class="wallet-option-info"><h3>MetaMask</h3><span>Popular browser extension</span></div>
+                </div>
+                <div class="wallet-option" onclick="connectWallet('coinbase')">
+                    <div class="wallet-option-icon coinbase">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><circle cx="12" cy="12" r="10"/></svg>
+                    </div>
+                    <div class="wallet-option-info"><h3>Coinbase Wallet</h3><span>Secure and easy to use</span></div>
+                </div>
+                <div class="wallet-option" onclick="connectWallet('walletconnect')">
+                    <div class="wallet-option-icon walletconnect">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M6.09 10.55c3.26-3.19 8.56-3.19 11.82 0l.39.38a.4.4 0 010 .58l-1.34 1.31a.21.21 0 01-.3 0l-.54-.53a5.94 5.94 0 00-8.26 0l-.58.57a.21.21 0 01-.3 0L5.64 11.5a.4.4 0 010-.58l.45-.37zm14.6 2.72l1.2 1.17a.4.4 0 010 .58l-5.38 5.27a.42.42 0 01-.59 0l-3.82-3.74a.1.1 0 00-.15 0l-3.82 3.74a.42.42 0 01-.59 0L2.16 15a.4.4 0 010-.58l1.2-1.17a.42.42 0 01.59 0l3.82 3.74a.1.1 0 00.15 0l3.82-3.74a.42.42 0 01.59 0l3.82 3.74a.1.1 0 00.15 0l3.82-3.74a.42.42 0 01.59 0z"/></svg>
+                    </div>
+                    <div class="wallet-option-info"><h3>WalletConnect</h3><span>Connect mobile wallet</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="story-header">
+            <h1>Layla's Story</h1>
+            <p style="color: var(--text-muted);">Eternal Dominion Universe — レイラ・ヴィレル・ノヴァの物語</p>
+            <div class="story-meta" id="storyMeta" style="display:none">
+                <div class="story-meta-item">&#x1F4D6; 読了時間: <span id="readingTime">--</span></div>
+                <div class="story-meta-item">&#x1F4DC; 見出し: <span id="chapterCount">--</span></div>
+                <div class="story-meta-item">&#x1F4DD; 文字数: <span id="wordCount">--</span></div>
+            </div>
+        </div>
+
+        <div class="story-layout">
+            <aside class="toc-sidebar" id="tocSidebar" style="display:none">
+                <div class="toc-title">&#x1F4D1; Table of Contents</div>
+                <ul class="toc-list" id="tocList"></ul>
+            </aside>
+
+            <div class="story-content" id="storyContent">
+                <div class="story-loading">
+                    <div class="spinner"></div>
+                    <p>物語を読み込んでいます...</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="footer-brand">&#x2728; Layla Land</div>
+            <div>Unofficial fan site dedicated to Layla Virel Nova - AURALIS</div>
+        </footer>
+    </div>
+
+    <!-- Chatbot -->
+    <button class="chatbot-toggle" onclick="toggleChatbot()" aria-label="Open chat">&#x1F4AC;</button>
+    <div id="chatbot" class="chatbot-container">
+        <div class="chatbot-header">
+            <span>&#x2728;</span>
+            <span>Layla AI Chat</span>
+        </div>
+        <div class="chatbot-messages" id="chatMessages">
+            <div class="message ai">物語の世界へようこそ。レイラの冒険について質問があれば何でもどうぞ。</div>
+        </div>
+        <div class="typing-indicator" id="typingIndicator">
+            <span>Layla AI is typing</span>
+            <div class="typing-dots"><span></span><span></span><span></span></div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatInput" placeholder="物語について質問..." maxlength="500">
+            <button onclick="sendMessage()">&#x27A4;</button>
+        </div>
+    </div>
+
+    <script>
+    // ─── Story Fetch & Processing ─────────────────────────────────────
+    const STORY_URL = 'https://raw.githubusercontent.com/gentaron/edutext/main/LAYLA.txt';
+
+    async function loadStory() {
+        const container = document.getElementById('storyContent');
+
+        try {
+            const res = await fetch(STORY_URL);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const text = await res.text();
+
+            if (!text || text.trim().length < 50) {
+                throw new Error('Story text is empty or too short');
+            }
+
+            renderStory(text);
+        } catch (err) {
+            container.innerHTML = `
+                <div class="story-error">
+                    <h3>&#x274C; 読み込みエラー</h3>
+                    <p>物語の読み込みに失敗しました: ${err.message}</p>
+                    <button onclick="loadStory()">&#x1F504; 再試行</button>
+                </div>
+            `;
+        }
+    }
+
+    function renderStory(text) {
+        const container = document.getElementById('storyContent');
+        const chapters = detectChapters(text);
+
+        // Update meta
+        const totalChars = text.replace(/\s/g, '').length;
+        const readingMinutes = Math.max(1, Math.ceil(totalChars / 500));
+        document.getElementById('readingTime').textContent = `約${readingMinutes}分`;
+        document.getElementById('chapterCount').textContent = `${chapters.length}箇所`;
+        document.getElementById('wordCount').textContent = totalChars.toLocaleString() + '字';
+        document.getElementById('storyMeta').style.display = 'flex';
+
+        // Build TOC
+        const tocList = document.getElementById('tocList');
+        tocList.innerHTML = '';
+        const sidebar = document.getElementById('tocSidebar');
+        sidebar.style.display = 'flex';
+
+        let html = '';
+
+        chapters.forEach((chapter, i) => {
+            const id = `chapter-${i}`;
+            const title = chapter.title || `Section ${i + 1}`;
+
+            // TOC item
+            const tocItem = document.createElement('li');
+            tocItem.className = 'toc-item';
+            tocItem.textContent = title;
+            tocItem.onclick = () => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+            tocItem.dataset.chapter = id;
+            tocList.appendChild(tocItem);
+
+            // Chapter HTML
+            html += `<div class="story-chapter" id="${id}">`;
+            html += `<div class="story-chapter-marker">`;
+            html += `<span class="story-chapter-number">Ch.${i + 1}</span>`;
+            html += `<span class="story-chapter-title">${escapeHtml(title)}</span>`;
+            html += `</div>`;
+            html += `<div class="story-text">`;
+            html += formatParagraphs(chapter.content);
+            html += `</div></div>`;
+
+            // Add scene break between chapters
+            if (i < chapters.length - 1) {
+                html += `<div class="scene-break">✦ ✦ ✦</div>`;
+            }
+        });
+
+        container.innerHTML = html;
+
+        // Setup scroll observer
+        setupScrollObserver();
+    }
+
+    function detectChapters(text) {
+        const lines = text.split('\n');
+        const chapters = [];
+        let currentTitle = null;
+        let currentContent = [];
+        let firstSection = true;
+
+        // Patterns that indicate chapter/scene breaks
+        const headingPatterns = [
+            /^(#{1,6}\s+)/,                           // Markdown headings
+            /^(Chapter\s+\d+|CHAPTER\s+\d+)/i,        // "Chapter X"
+            /^(Scene\s+\d+|SCENE\s+\d+)/i,            // "Scene X"
+            /^(Part\s+\d+|PART\s+\d+)/i,              // "Part X"
+            /^(Act\s+\d+|ACT\s+\d+)/i,                // "Act X"
+            /^(===+|---+|\*\*\*+)\s*$/,                // Horizontal rules
+        ];
+
+        // Location/time markers
+        const locationPattern = /^\[.*\]|\(.*\)|^—|^—/;
+        const timeSkipPattern = /^(Later|Meanwhile|After|Before|Meanwhile|Hours later|Days later|Weeks later|Months later|Years later)/i;
+
+        // Name repetition pattern (character name at start of paragraph)
+        const namePatterns = /^(Layla|Jen|Ayaka|Kate|Selina|Alpha Kane|Slime|Celia|Chiral|Gigapolis|Undercity|Selinopolis)/i;
+
+        // Group paragraphs
+        let buffer = [];
+
+        function pushSection(title, content) {
+            if (content.length > 0) {
+                const combined = content.join('\n\n').trim();
+                if (combined.length > 0) {
+                    chapters.push({ title: title || null, content: combined });
+                }
+            }
+        }
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (line === '') continue;
+
+            const isHeading = headingPatterns.some(p => p.test(line));
+            const isLocation = i < 3 ? false : locationPattern.test(line) && line.length < 100;
+            const isTimeSkip = timeSkipPattern.test(line) && line.length < 100;
+            const isNameRepetition = namePatterns.test(line) && line.length < 80 && buffer.length >= 3;
+            const isSeparator = /^(===+|---+|\*\*\*+)\s*$/.test(line);
+
+            // Check if this looks like a section break: blank line before + short line + different topic
+            const prevBlank = i > 0 && lines[i - 1].trim() === '';
+            const isShortLine = line.length < 80 && line.length > 3;
+            const looksLikeBreak = prevBlank && isShortLine && buffer.length >= 4 && !line.startsWith('"');
+
+            if (isSeparator) {
+                pushSection(null, buffer);
+                buffer = [];
+                currentTitle = null;
+                continue;
+            }
+
+            if (isHeading || (looksLikeBreak && (isLocation || isTimeSkip || isNameRepetition))) {
+                pushSection(currentTitle, buffer);
+                buffer = [];
+                // Extract title
+                if (isHeading && !isSeparator) {
+                    currentTitle = line.replace(/^(#+)\s*/, '').replace(/^(===+|---+|\*\*\*+)\s*$/, '');
+                } else {
+                    currentTitle = line;
+                }
+                continue;
+            }
+
+            buffer.push(line);
+        }
+
+        // Push remaining content
+        pushSection(currentTitle, buffer);
+
+        // If no chapters detected, split into reasonable sections
+        if (chapters.length === 0) {
+            const allText = text.trim();
+            const paragraphs = allText.split(/\n\s*\n/).filter(p => p.trim().length > 0);
+            const chunkSize = Math.max(3, Math.ceil(paragraphs.length / Math.min(8, Math.max(1, Math.ceil(allText.length / 2000)))));
+            
+            for (let i = 0; i < paragraphs.length; i += chunkSize) {
+                const chunk = paragraphs.slice(i, i + chunkSize).join('\n\n');
+                const sectionNum = Math.floor(i / chunkSize) + 1;
+                // Try to extract a title from the first line
+                const firstLine = paragraphs[i]?.trim() || '';
+                let title = firstLine.length > 60 ? firstLine.substring(0, 60) + '...' : firstLine;
+                if (title.length < 3) title = `Section ${sectionNum}`;
+                chapters.push({ title, content: chunk });
+            }
+        }
+
+        return chapters.length > 0 ? chapters : [{ title: 'Story', content: text }];
+    }
+
+    function formatParagraphs(text) {
+        const blocks = text.split(/\n\s*\n/).filter(p => p.trim().length > 0);
+        let html = '';
+
+        blocks.forEach(block => {
+            const trimmed = block.trim();
+
+            // Skip if it looks like a heading
+            if (/^(#{1,6}\s+)/.test(trimmed)) return;
+            if (/^(===+|---+|\*\*\*+)\s*$/.test(trimmed)) return;
+
+            // Format: detect dialogue lines (starting with quotes or dashes)
+            let content = escapeHtml(trimmed);
+
+            // Highlight dialogue
+            content = content.replace(/([""].*?[""])/g, '<span class="story-dialogue">$1</span>');
+            content = content.replace(/(["\u300C].*?["\u300D])/g, '<span class="story-dialogue">$1</span>');
+
+            // Highlight emphasis (words in ALL CAPS or between * *)
+            content = content.replace(/\*([^*]+)\*/g, '<span class="story-emphasis">$1</span>');
+            content = content.replace(/\b([A-Z]{3,})\b/g, '<span class="story-emphasis">$1</span>');
+
+            html += `<p>${content}</p>`;
+        });
+
+        return html;
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // ─── Scroll Progress & TOC Highlight ──────────────────────────────
+    function setupScrollObserver() {
+        const chapters = document.querySelectorAll('.story-chapter');
+        const tocItems = document.querySelectorAll('.toc-item');
+
+        // IntersectionObserver for active TOC
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    tocItems.forEach(item => {
+                        item.classList.toggle('active', item.dataset.chapter === id);
+                    });
+                }
+            });
+        }, {
+            rootMargin: '-100px 0px -60% 0px',
+            threshold: 0
+        });
+
+        chapters.forEach(ch => observer.observe(ch));
+
+        // Reading progress
+        window.addEventListener('scroll', updateReadingProgress, { passive: true });
+    }
+
+    function updateReadingProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        document.getElementById('readingProgress').style.width = Math.min(100, progress) + '%';
+    }
+
+    // ─── Chatbot ──────────────────────────────────────────────────────
+    function toggleChatbot() {
+        const chatbot = document.getElementById('chatbot');
+        chatbot.style.display = chatbot.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function addMessage(content, isUser = false) {
+        const container = document.getElementById('chatMessages');
+        const msg = document.createElement('div');
+        msg.className = `message ${isUser ? 'user' : 'ai'}`;
+        msg.textContent = content;
+        container.appendChild(msg);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+        document.getElementById('typingIndicator').style.display = 'flex';
+        document.getElementById('chatMessages').scrollTop = 99999;
+    }
+
+    function hideTypingIndicator() {
+        document.getElementById('typingIndicator').style.display = 'none';
+    }
+
+    async function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const message = input.value.trim();
+        if (!message) return;
+        addMessage(message, true);
+        input.value = '';
+        showTypingIndicator();
+        try {
+            const res = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message }),
+            });
+            const data = await res.json();
+            hideTypingIndicator();
+            addMessage(res.ok ? data.response : 'Sorry, I encountered an error.');
+        } catch {
+            hideTypingIndicator();
+            addMessage('Sorry, could not connect. Please try again.');
+        }
+    }
+
+    document.getElementById('chatInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') sendMessage();
+    });
+
+    // ─── Wallet ───────────────────────────────────────────────────────
+    let connectedWallet = null;
+    let connectedAddress = null;
+
+    function detectWallets() {
+        if (window.ethereum && window.ethereum.isBraveWallet) {
+            document.getElementById('braveDetected').style.display = 'block';
+        }
+    }
+
+    function openWalletModal() {
+        document.getElementById('walletModal').classList.add('active');
+        detectWallets();
+    }
+
+    function closeWalletModal() {
+        document.getElementById('walletModal').classList.remove('active');
+    }
+
+    document.getElementById('walletModal').addEventListener('click', function(e) {
+        if (e.target === this) closeWalletModal();
+    });
+
+    async function connectWallet(walletType) {
+        try {
+            let provider = null;
+            if (window.ethereum) {
+                if (walletType === 'brave') {
+                    provider = window.ethereum.isBraveWallet ? window.ethereum :
+                        (window.ethereum.providers?.find(p => p.isBraveWallet) || null);
+                    if (!provider) { alert('Brave Wallet not detected.'); return; }
+                } else if (walletType === 'metamask') {
+                    provider = (window.ethereum.isMetaMask && !window.ethereum.isBraveWallet) ? window.ethereum :
+                        (window.ethereum.providers?.find(p => p.isMetaMask && !p.isBraveWallet) || null);
+                    if (!provider) { alert('MetaMask not detected.'); return; }
+                } else if (walletType === 'coinbase') {
+                    provider = window.ethereum.isCoinbaseWallet ? window.ethereum :
+                        (window.ethereum.providers?.find(p => p.isCoinbaseWallet) || null);
+                    if (!provider) { alert('Coinbase Wallet not detected.'); return; }
+                } else if (walletType === 'walletconnect') {
+                    alert('WalletConnect requires additional setup.'); return;
+                } else {
+                    provider = window.ethereum;
+                }
+                const accounts = await provider.request({ method: 'eth_requestAccounts' });
+                if (accounts?.length > 0) {
+                    connectedAddress = accounts[0];
+                    connectedWallet = walletType;
+                    updateWalletUI();
+                    closeWalletModal();
+                    provider.on('accountsChanged', handleAccountsChanged);
+                }
+            } else {
+                alert('No Web3 wallet detected.');
+            }
+        } catch (error) {
+            alert(error.code === 4001 ? 'Connection rejected.' : 'Failed: ' + error.message);
+        }
+    }
+
+    function handleAccountsChanged(accounts) {
+        if (accounts.length === 0) disconnectWallet();
+        else { connectedAddress = accounts[0]; updateWalletUI(); }
+    }
+
+    function disconnectWallet() {
+        connectedWallet = null;
+        connectedAddress = null;
+        updateWalletUI();
+    }
+
+    function updateWalletUI() {
+        const container = document.getElementById('walletContainer');
+        if (connectedAddress) {
+            const short = connectedAddress.slice(0, 6) + '...' + connectedAddress.slice(-4);
+            const name = { brave: 'Brave', metamask: 'MetaMask', coinbase: 'Coinbase' }[connectedWallet] || 'Wallet';
+            container.innerHTML = `<div class="wallet-address"><span class="wallet-address-text">${short}</span><span class="wallet-address-badge">${name}</span><button class="wallet-disconnect" onclick="disconnectWallet()">&#x2715;</button></div>`;
+        } else {
+            container.innerHTML = `<button class="wallet-btn" onclick="openWalletModal()"><svg class="wallet-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg><span>Connect Wallet</span></button>`;
+        }
+    }
+
+    if (window.ethereum) {
+        window.ethereum.request({ method: 'eth_accounts' }).then(accounts => {
+            if (accounts?.length > 0) {
+                connectedAddress = accounts[0];
+                connectedWallet = window.ethereum.isBraveWallet ? 'brave' : window.ethereum.isMetaMask ? 'metamask' : 'unknown';
+                updateWalletUI();
+            }
+        }).catch(() => {});
+    }
+
+    // ─── Init ─────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', loadStory);
+    </script>
+</body>
+</html>

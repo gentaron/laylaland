@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colosseum - Layla Virel Nova | AURALIS</title>
+    <link rel="stylesheet" href="style.css?v=2">
+    <style>
+        /* ─── Colosseum Layout ─────────────────────────────────────── */
+        .colosseum-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .colosseum-intro {
+            text-align: center;
+            padding: 20px 0 40px;
+        }
+
+        .colosseum-intro h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            background: var(--accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glowPulse 3s ease-in-out infinite;
+            margin-bottom: 12px;
+        }
+
+        .colosseum-intro p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        .colosseum-intro .warning-text {
+            color: #ff6b6b;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-top: 12px;
+        }
+
+        /* ─── Battle Arena ────────────────────────────────────────── */
+        .battle-arena {
+            display: none;
+        }
+
+        .battle-arena.active {
+            display: block;
+            animation: fadeUp 0.5s ease;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ─── Battle Header ───────────────────────────────────────── */
+        .battle-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .battle-counter {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--cyan);
+        }
+
+        .battle-difficulty {
+            font-size: 0.82rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 999px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .diff-easy { background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+        .diff-medium { background: rgba(255,171,0,0.15); color: #ffab00; border: 1px solid rgba(255,171,0,0.3); }
+        .diff-hard { background: rgba(255,61,61,0.15); color: #ff3d3d; border: 1px solid rgba(255,61,61,0.3); }
+        .diff-boss { background: rgba(196,113,237,0.15); color: var(--purple); border: 1px solid rgba(196,113,237,0.3); }
+
+        /* ─── Fighters ────────────────────────────────────────────── */
+        .fighters {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .fighter-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            text-align: center;
+            transition: border-color 0.3s ease;
+        }
+
+        .fighter-card.layla { border-color: rgba(255, 61, 138, 0.3); }
+        .fighter-card.enemy { border-color: rgba(0, 230, 255, 0.3); }
+        .fighter-card.enemy.undercity { border-color: rgba(139, 92, 246, 0.4); }
+
+        .fighter-name {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .fighter-card.layla .fighter-name { color: var(--pink); }
+        .fighter-card.enemy .fighter-name { color: var(--cyan); }
+        .fighter-card.enemy.undercity .fighter-name { color: #a78bfa; }
+
+        .fighter-type {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .fighter-emoji {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            display: block;
+            filter: drop-shadow(0 0 12px rgba(255, 61, 138, 0.3));
+        }
+
+        .fighter-card.enemy .fighter-emoji {
+            filter: drop-shadow(0 0 12px rgba(0, 230, 255, 0.3));
+        }
+
+        .fighter-card.enemy.undercity .fighter-emoji {
+            filter: drop-shadow(0 0 12px rgba(139, 92, 246, 0.4));
+        }
+
+        /* ─── HP Bar ──────────────────────────────────────────────── */
+        .hp-bar-container {
+            margin-top: 12px;
+        }
+
+        .hp-bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+        }
+
+        .hp-bar {
+            width: 100%;
+            height: 14px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 999px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .hp-bar-fill {
+            height: 100%;
+            border-radius: 999px;
+            transition: width 0.5s ease, background 0.3s ease;
+        }
+
+        .hp-bar-fill.high { background: linear-gradient(90deg, #22c55e, #4ade80); }
+        .hp-bar-fill.medium { background: linear-gradient(90deg, #ffab00, #fbbf24); }
+        .hp-bar-fill.low { background: linear-gradient(90deg, #ff3d3d, #ff6b6b); }
+        .hp-bar-fill.critical {
+            background: linear-gradient(90deg, #ff0040, #ff3d6b);
+            animation: hpPulse 0.6s ease-in-out infinite;
+        }
+
+        @keyframes hpPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .vs-badge {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text);
+            text-shadow: 0 0 20px rgba(255, 61, 138, 0.5);
+            flex-shrink: 0;
+        }
+
+        /* ─── Battle Log ──────────────────────────────────────────── */
+        .battle-log {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            height: 220px;
+            overflow-y: auto;
+            margin-bottom: 24px;
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.15) transparent;
+        }
+
+        .battle-log::-webkit-scrollbar { width: 6px; }
+        .battle-log::-webkit-scrollbar-track { background: transparent; }
+        .battle-log::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+
+        .log-entry {
+            font-size: 0.88rem;
+            line-height: 1.6;
+            padding: 4px 0;
+            animation: logFade 0.3s ease;
+            color: var(--text-muted);
+        }
+
+        .log-entry.layla-action { color: var(--pink); }
+        .log-entry.enemy-action { color: var(--cyan); }
+        .log-entry.critical { color: #ff3d6b; font-weight: 600; }
+        .log-entry.victory { color: #22c55e; font-weight: 700; }
+        .log-entry.defeat { color: #ff3d3d; font-weight: 700; }
+        .log-entry.info { color: var(--purple); }
+
+        @keyframes logFade {
+            from { opacity: 0; transform: translateX(-8px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* ─── Damage Popup ────────────────────────────────────────── */
+        .damage-popup {
+            position: absolute;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 800;
+            pointer-events: none;
+            animation: damageFloat 1s ease-out forwards;
+            z-index: 50;
+        }
+
+        .damage-popup.layla-dmg { color: var(--pink); text-shadow: 0 0 10px rgba(255,61,138,0.6); }
+        .damage-popup.enemy-dmg { color: var(--cyan); text-shadow: 0 0 10px rgba(0,230,255,0.6); }
+        .damage-popup.crit { font-size: 1.8rem; color: #ffab00; text-shadow: 0 0 15px rgba(255,171,0,0.8); }
+
+        @keyframes damageFloat {
+            0% { opacity: 1; transform: translateY(0) scale(1.2); }
+            60% { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-50px) scale(0.8); }
+        }
+
+        /* ─── Move Buttons ────────────────────────────────────────── */
+        .move-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .move-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 14px 12px;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-align: center;
+        }
+
+        .move-btn:hover:not(:disabled) {
+            border-color: var(--border-hover);
+            background: rgba(255, 61, 138, 0.12);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(255, 61, 138, 0.15);
+        }
+
+        .move-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .move-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .move-btn .move-icon {
+            font-size: 1.2rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .move-btn .move-dmg {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+            display: block;
+        }
+
+        /* ─── Attack Animation ────────────────────────────────────── */
+        .fighter-card.attacking {
+            animation: attackShake 0.3s ease;
+        }
+
+        .fighter-card.hit {
+            animation: hitShake 0.4s ease;
+        }
+
+        @keyframes attackShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(8px); }
+            75% { transform: translateX(-8px); }
+        }
+
+        @keyframes hitShake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-6px); }
+            40% { transform: translateX(6px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+        }
+
+        /* ─── Progress Track ──────────────────────────────────────── */
+        .progress-track {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .progress-pip {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .progress-pip.won { background: rgba(34,197,94,0.4); border-color: #22c55e; }
+        .progress-pip.lost { background: rgba(255,61,61,0.4); border-color: #ff3d3d; }
+        .progress-pip.current { background: rgba(255,171,0,0.4); border-color: #ffab00; box-shadow: 0 0 8px rgba(255,171,0,0.4); }
+
+        /* ─── Result Screen ───────────────────────────────────────── */
+        .result-screen {
+            display: none;
+            text-align: center;
+            padding: 60px 32px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            animation: fadeUp 0.6s ease;
+        }
+
+        .result-screen.active { display: block; }
+
+        .result-screen h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 24px;
+        }
+
+        .result-screen.victory h2 {
+            background: linear-gradient(135deg, #22c55e, #4ade80, #a3e635);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        .result-screen.defeat h2 {
+            background: linear-gradient(135deg, #ff3d3d, #ff6b6b, #ff3d3d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .result-emoji {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            max-width: 400px;
+            margin: 0 auto 32px;
+        }
+
+        .result-stat {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+        }
+
+        .result-stat-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--cyan);
+            display: block;
+        }
+
+        .result-stat-value.pink { color: var(--pink); }
+        .result-stat-value.green { color: #22c55e; }
+
+        .result-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .result-message {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 28px;
+            line-height: 1.7;
+        }
+
+        .restart-btn {
+            background: var(--accent);
+            border: none;
+            border-radius: 999px;
+            padding: 14px 36px;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(255, 61, 138, 0.4);
+        }
+
+        /* ─── Start Screen ────────────────────────────────────────── */
+        .start-screen {
+            text-align: center;
+            padding: 60px 32px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+        }
+
+        .start-emoji {
+            font-size: 5rem;
+            margin-bottom: 24px;
+            display: block;
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        .start-screen h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: var(--accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .start-screen p {
+            color: var(--text-muted);
+            max-width: 500px;
+            margin: 0 auto 16px;
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .start-rules {
+            text-align: left;
+            max-width: 500px;
+            margin: 20px auto 32px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 20px 24px;
+        }
+
+        .start-rules h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--pink);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .start-rules li {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 6px;
+            list-style: none;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .start-rules li::before {
+            content: '⚡';
+            position: absolute;
+            left: 0;
+            font-size: 0.8rem;
+        }
+
+        .start-btn {
+            background: var(--accent);
+            border: none;
+            border-radius: 999px;
+            padding: 16px 44px;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 6px 32px rgba(255, 61, 138, 0.35);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 48px rgba(255, 61, 138, 0.5);
+        }
+
+        /* ─── Responsive ─────────────────────────────────────────── */
+        @media (max-width: 768px) {
+            .fighters {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .vs-badge {
+                font-size: 1.4rem;
+            }
+
+            .move-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .battle-log {
+                height: 180px;
+            }
+
+            .fighter-emoji {
+                font-size: 2.2rem;
+            }
+
+            .progress-pip {
+                width: 12px;
+                height: 12px;
+            }
+
+            .result-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .move-buttons {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+
+            .move-btn {
+                padding: 10px 8px;
+                font-size: 0.78rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand">
+                <span class="nav-brand-icon">&#x2728;</span>
+                <span>Layla Land</span>
+            </a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="colosseum.html" class="active">Colosseum</a></li>
+                <li><a href="story.html">Story</a></li>
+                <li><a href="stats.html">Universe</a></li>
+                <li><a href="rank.html">Links</a></li>
+            </ul>
+            <div id="walletContainer">
+                <button class="wallet-btn" id="connectWalletBtn" onclick="openWalletModal()">
+                    <svg class="wallet-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/>
+                        <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>
+                    </svg>
+                    <span>Connect Wallet</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Wallet Modal -->
+    <div id="walletModal" class="wallet-modal">
+        <div class="wallet-modal-content">
+            <button class="wallet-modal-close" onclick="closeWalletModal()">&#x2715;</button>
+            <h2>Connect Wallet</h2>
+            <p>Choose your preferred wallet to connect.</p>
+            <div class="wallet-options">
+                <div class="wallet-option" onclick="connectWallet('brave')">
+                    <div class="wallet-option-icon brave">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 2L2 7l1.5 11L12 22l8.5-4L22 7l-10-5zm0 2.18l7.13 3.57-.47 3.5-6.66-3.33-6.66 3.33-.47-3.5L12 4.18zm0 15.64l-6.13-2.87-.4-3 6.53 3.27 6.53-3.27-.4 3L12 19.82z"/></svg>
+                    </div>
+                    <div class="wallet-option-info"><h3>Brave Wallet</h3><span>Built into Brave browser</span></div>
+                    <span class="wallet-option-badge" id="braveDetected" style="display:none;">Detected</span>
+                </div>
+                <div class="wallet-option" onclick="connectWallet('metamask')">
+                    <div class="wallet-option-icon metamask">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    </div>
+                    <div class="wallet-option-info"><h3>MetaMask</h3><span>Popular browser extension</span></div>
+                </div>
+                <div class="wallet-option" onclick="connectWallet('coinbase')">
+                    <div class="wallet-option-icon coinbase">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><circle cx="12" cy="12" r="10"/></svg>
+                    </div>
+                    <div class="wallet-option-info"><h3>Coinbase Wallet</h3><span>Secure and easy to use</span></div>
+                </div>
+                <div class="wallet-option" onclick="connectWallet('walletconnect')">
+                    <div class="wallet-option-icon walletconnect">
+                        <svg viewBox="0 0 24 24" width="24" height="24" fill="white"><path d="M6.09 10.55c3.26-3.19 8.56-3.19 11.82 0l.39.38a.4.4 0 010 .58l-1.34 1.31a.21.21 0 01-.3 0l-.54-.53a5.94 5.94 0 00-8.26 0l-.58.57a.21.21 0 01-.3 0L5.64 11.5a.4.4 0 010-.58l.45-.37zm14.6 2.72l1.2 1.17a.4.4 0 010 .58l-5.38 5.27a.42.42 0 01-.59 0l-3.82-3.74a.1.1 0 00-.15 0l-3.82 3.74a.42.42 0 01-.59 0L2.16 15a.4.4 0 010-.58l1.2-1.17a.42.42 0 01.59 0l3.82 3.74a.1.1 0 00.15 0l3.82-3.74a.42.42 0 01.59 0l3.82 3.74a.1.1 0 00.15 0l3.82-3.74a.42.42 0 01.59 0z"/></svg>
+                    </div>
+                    <div class="wallet-option-info"><h3>WalletConnect</h3><span>Connect mobile wallet</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="colosseum-wrapper">
+            <div class="colosseum-intro">
+                <h1>Colosseum Endurance Battle</h1>
+                <p>Gigapolis Colosseum & Spire Arena での連続20戦バトルシミュレーター</p>
+            </div>
+
+            <!-- Start Screen -->
+            <div id="startScreen" class="start-screen">
+                <span class="start-emoji">&#x2694;&#xFE0F;</span>
+                <h2>Pink Voltage Endurance</h2>
+                <p>レイラ・ヴィレル・ノヴァとして20連続バトルに挑戦。回復なし、真の耐久戦。</p>
+                <div class="start-rules">
+                    <h3>Battle Rules</h3>
+                    <ul>
+                        <li>開始HP: 100（バトル間で回復なし）</li>
+                        <li>対戦相手: 戦績データからランダム選出（20戦）</li>
+                        <li>難易度: バトルごとに上昇</li>
+                        <li>Undercity系の敵は特殊効果を持つ</li>
+                        <li>全20戦制覇で真の勝利</li>
+                    </ul>
+                </div>
+                <button class="start-btn" onclick="startGame()">&#x26A1; Enter the Colosseum</button>
+            </div>
+
+            <!-- Battle Arena -->
+            <div id="battleArena" class="battle-arena">
+                <div class="battle-header">
+                    <span class="battle-counter" id="battleCounter">Battle 1 / 20</span>
+                    <span class="battle-difficulty diff-easy" id="diffBadge">Easy</span>
+                </div>
+
+                <div class="progress-track" id="progressTrack"></div>
+
+                <div class="fighters">
+                    <div class="fighter-card layla" id="laylaCard" style="position:relative">
+                        <span class="fighter-emoji">&#x1F9DA;</span>
+                        <div class="fighter-name">Layla V.N.</div>
+                        <div class="fighter-type">Pink Voltage</div>
+                        <div class="hp-bar-container">
+                            <div class="hp-bar-label">
+                                <span>HP</span>
+                                <span id="laylaHpText">100 / 100</span>
+                            </div>
+                            <div class="hp-bar">
+                                <div class="hp-bar-fill high" id="laylaHpBar" style="width:100%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="vs-badge">VS</div>
+
+                    <div class="fighter-card enemy" id="enemyCard" style="position:relative">
+                        <span class="fighter-emoji" id="enemyEmoji">&#x1F480;</span>
+                        <div class="fighter-name" id="enemyName">???</div>
+                        <div class="fighter-type" id="enemyType">Unknown</div>
+                        <div class="hp-bar-container">
+                            <div class="hp-bar-label">
+                                <span>HP</span>
+                                <span id="enemyHpText">?? / ??</span>
+                            </div>
+                            <div class="hp-bar">
+                                <div class="hp-bar-fill high" id="enemyHpBar" style="width:100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="battle-log" id="battleLog"></div>
+
+                <div class="move-buttons" id="moveButtons">
+                    <button class="move-btn" onclick="laylaAttack('electrified-punch')" id="move-ep">
+                        <span class="move-icon">&#x26A1;</span>
+                        Electrified Punch
+                        <span class="move-dmg">18-26 DMG</span>
+                    </button>
+                    <button class="move-btn" onclick="laylaAttack('shockwave-blast')" id="move-sb">
+                        <span class="move-icon">&#x1F4A5;</span>
+                        Shockwave Blast
+                        <span class="move-dmg">15-24 DMG</span>
+                    </button>
+                    <button class="move-btn" onclick="laylaAttack('lightning-strike')" id="move-ls">
+                        <span class="move-icon">&#x26C8;&#xFE0F;</span>
+                        Lightning Strike
+                        <span class="move-dmg">20-30 DMG</span>
+                    </button>
+                    <button class="move-btn" onclick="laylaAttack('nanofiber-kick')" id="move-nk">
+                        <span class="move-icon">&#x1FA97;</span>
+                        Nanofiber Kick
+                        <span class="move-dmg">16-25 DMG</span>
+                    </button>
+                    <button class="move-btn" onclick="laylaAttack('jet-spin')" id="move-js">
+                        <span class="move-icon">&#x1F300;</span>
+                        Jet-Powered Spin
+                        <span class="move-dmg">15-22 DMG</span>
+                    </button>
+                    <button class="move-btn" onclick="laylaAttack('cyber-grapple')" id="move-cg">
+                        <span class="move-icon">&#x1F916;</span>
+                        Cybernetic Grapple
+                        <span class="move-dmg">17-27 DMG</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Result Screen -->
+            <div id="resultScreen" class="result-screen">
+                <span class="result-emoji" id="resultEmoji">&#x1F3C6;</span>
+                <h2 id="resultTitle">Victory!</h2>
+                <div class="result-stats" id="resultStats"></div>
+                <p class="result-message" id="resultMessage"></p>
+                <button class="restart-btn" onclick="resetGame()">&#x1F504; Fight Again</button>
+            </div>
+        </div>
+
+        <footer>
+            <div class="footer-brand">&#x2728; Layla Land</div>
+            <div>Unofficial fan site dedicated to Layla Virel Nova - AURALIS</div>
+        </footer>
+    </div>
+
+    <!-- Chatbot -->
+    <button class="chatbot-toggle" onclick="toggleChatbot()" aria-label="Open chat">&#x1F4AC;</button>
+    <div id="chatbot" class="chatbot-container">
+        <div class="chatbot-header">
+            <span>&#x2728;</span>
+            <span>Layla AI Chat</span>
+        </div>
+        <div class="chatbot-messages" id="chatMessages">
+            <div class="message ai">コウセイ！コロシアムへようこそ。Pink Voltageの戦いを見守ろうか。</div>
+        </div>
+        <div class="typing-indicator" id="typingIndicator">
+            <span>Layla AI is typing</span>
+            <div class="typing-dots"><span></span><span></span><span></span></div>
+        </div>
+        <div class="chatbot-input">
+            <input type="text" id="chatInput" placeholder="Ask about Layla..." maxlength="500">
+            <button onclick="sendMessage()">&#x27A4;</button>
+        </div>
+    </div>
+
+    <script>
+    // ─── Battle Data ───────────────────────────────────────────────────
+    const BATTLE_OPPONENTS = [
+        {name:"Plasma Wraith",type:"Energy",emoji:"👻",location:"Energy Plant",method:"Lightning Strike"},
+        {name:"Cyber Fang",type:"Undercity",emoji:"🐺",location:"Undercity Slums",method:"Electrified Punch"},
+        {name:"Neon Viper",type:"Arena",emoji:"🐍",location:"Neon Plaza",method:"Nanofiber Kick"},
+        {name:"Shadow Drone",type:"Arena",emoji:"🤖",location:"Industrial District",method:"Shockwave Blast"},
+        {name:"Steel Marauder",type:"Arena",emoji:"🦾",location:"Warehouse Zone",method:"Cybernetic Grapple"},
+        {name:"Glint Reaver",type:"Arena",emoji:"🦅",location:"Colosseum",method:"Lightning Strike"},
+        {name:"Flux Siren",type:"Undercity",emoji:"🧜‍♀️",location:"Undercity Sewers",method:"Psychic Overload"},
+        {name:"Blaze Warden",type:"Arena",emoji:"🔥",location:"Spire Arena",method:"Jet-Powered Spin"},
+        {name:"Star Vindicator",type:"Arena",emoji:"⭐",location:"Orbital Port",method:"Electrified Punch"},
+        {name:"Chroma Blade",type:"Arena",emoji:"⚔️",location:"Neon Market",method:"Nanofiber Kick"},
+        {name:"Slime Fragment",type:"Undercity",emoji:"🟢",location:"Undercity Depths",method:"Shockwave Blast"},
+        {name:"Iron Vortex",type:"Arena",emoji:"🌪️",location:"Factory Ruins",method:"Lightning Strike"},
+        {name:"Lunar Fang",type:"Arena",emoji:"🌙",location:"Colosseum",method:"Cybernetic Grapple"},
+        {name:"Thundercoil",type:"Arena",emoji:"⚡",location:"Power Grid",method:"Electrified Punch"},
+        {name:"Prism Wraith",type:"Arena",emoji:"🌈",location:"Neon Plaza",method:"Jet-Powered Spin"},
+        {name:"Slime Swarm",type:"Undercity",emoji:"🟢",location:"Industrial District",method:"Lightning Strike"},
+        {name:"Cipher Blaze",type:"Arena",emoji:"🔥",location:"Warehouse Zone",method:"Nanofiber Kick"},
+        {name:"Nova Wisp",type:"Arena",emoji:"✨",location:"Spire Arena",method:"Electrified Punch"},
+        {name:"Shade Pulse",type:"Arena",emoji:"🌑",location:"Neon Market",method:"Jet-Powered Spin"},
+        {name:"Starcoil",type:"Arena",emoji:"⭐",location:"Colosseum",method:"Shockwave Blast"},
+        {name:"Obsidian Spark",type:"Arena",emoji:"🖤",location:"Undercity Sewers",method:"Lightning Strike"},
+        {name:"Neon Fang",type:"Arena",emoji:"💜",location:"Power Grid",method:"Cybernetic Grapple"},
+        {name:"Iron Ember",type:"Arena",emoji:"⚒️",location:"Industrial District",method:"Electrified Punch"},
+        {name:"Aurora Wraith",type:"Arena",emoji:"🌌",location:"Colosseum",method:"Jet-Powered Spin"},
+        {name:"Storm Vindicator",type:"Arena",emoji:"🌪️",location:"Neon Market",method:"Electrified Punch"},
+        {name:"Celestine Claw",type:"Arena",emoji:"💎",location:"Colosseum",method:"Electrified Punch"},
+        {name:"Storm Wraith",type:"Arena",emoji:"🌪️",location:"Spire Arena",method:"Lightning Strike"},
+        {name:"Mirage",type:"Arena",emoji:"🪞",location:"Colosseum",method:"Shockwave Blast"},
+        {name:"Void Stalker",type:"Arena",emoji:"🕳️",location:"Colosseum",method:"Lightning Strike"},
+        {name:"Eclipse Raider",type:"Arena",emoji:"🌑",location:"Neon Plaza",method:"Lightning Strike"},
+        {name:"Astral Flow",type:"Arena",emoji:"🌠",location:"Warehouse Zone",method:"Shockwave Blast"},
+        {name:"Storm Claw",type:"Arena",emoji:"🌩️",location:"Spire Arena",method:"Electrified Punch"},
+        {name:"Celestine Reaver",type:"Arena",emoji:"💎",location:"Neon Market",method:"Nanofiber Kick"},
+        {name:"Iron Wraith",type:"Arena",emoji:"⚒️",location:"Neon Market",method:"Electrified Punch"},
+        {name:"Storm Siren",type:"Arena",emoji:"🌪️",location:"Spire Arena",method:"Nanofiber Kick"},
+        {name:"Blaze Fang",type:"Arena",emoji:"🐉",location:"Colosseum",method:"Cybernetic Grapple"},
+        {name:"Storm Fang",type:"Arena",emoji:"🌩️",location:"Colosseum",method:"Electrified Punch"},
+        {name:"Iron Fang",type:"Arena",emoji:"⚒️",location:"Colosseum",method:"Jet-Powered Spin"},
+    ];
+
+    const LAYLA_MOVES = {
+        'electrified-punch': { name: 'Electrified Punch', min: 18, max: 26, icon: '⚡' },
+        'shockwave-blast':   { name: 'Shockwave Blast',  min: 15, max: 24, icon: '💥' },
+        'lightning-strike':  { name: 'Lightning Strike',  min: 20, max: 30, icon: '⛈️' },
+        'nanofiber-kick':    { name: 'Nanofiber Kick',    min: 16, max: 25, icon: '🦵' },
+        'jet-spin':          { name: 'Jet-Powered Spin',  min: 15, max: 22, icon: '🌀' },
+        'cyber-grapple':     { name: 'Cybernetic Grapple', min: 17, max: 27, icon: '🦾' },
+    };
+
+    const TOTAL_BATTLES = 20;
+
+    // ─── Game State ────────────────────────────────────────────────────
+    let gameState = {
+        laylaHp: 100,
+        laylaMaxHp: 100,
+        currentBattle: 0,
+        enemyHp: 0,
+        enemyMaxHp: 0,
+        opponent: null,
+        battlesWon: 0,
+        totalDamageDealt: 0,
+        totalDamageTaken: 0,
+        totalTurns: 0,
+        movesUsed: {},
+        isBattling: false,
+        isGameOver: false,
+        battleResults: [],
+    };
+
+    // ─── Utility ──────────────────────────────────────────────────────
+    function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+    function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function getHpClass(ratio) {
+        if (ratio > 0.6) return 'high';
+        if (ratio > 0.3) return 'medium';
+        if (ratio > 0.15) return 'low';
+        return 'critical';
+    }
+
+    // ─── UI Updates ───────────────────────────────────────────────────
+    function updateLaylaHp() {
+        const ratio = gameState.laylaHp / gameState.laylaMaxHp;
+        const bar = document.getElementById('laylaHpBar');
+        const text = document.getElementById('laylaHpText');
+        bar.style.width = Math.max(0, ratio * 100) + '%';
+        bar.className = 'hp-bar-fill ' + getHpClass(ratio);
+        text.textContent = `${Math.max(0, gameState.laylaHp)} / ${gameState.laylaMaxHp}`;
+    }
+
+    function updateEnemyHp() {
+        const ratio = gameState.enemyHp / gameState.enemyMaxHp;
+        const bar = document.getElementById('enemyHpBar');
+        const text = document.getElementById('enemyHpText');
+        bar.style.width = Math.max(0, ratio * 100) + '%';
+        bar.className = 'hp-bar-fill ' + getHpClass(ratio);
+        text.textContent = `${Math.max(0, gameState.enemyHp)} / ${gameState.enemyMaxHp}`;
+    }
+
+    function updateProgress() {
+        const track = document.getElementById('progressTrack');
+        track.innerHTML = '';
+        for (let i = 0; i < TOTAL_BATTLES; i++) {
+            const pip = document.createElement('div');
+            pip.className = 'progress-pip';
+            if (i < gameState.battleResults.length) {
+                pip.classList.add(gameState.battleResults[i] ? 'won' : 'lost');
+            } else if (i === gameState.currentBattle) {
+                pip.classList.add('current');
+            }
+            track.appendChild(pip);
+        }
+    }
+
+    function addLog(text, cls = '') {
+        const log = document.getElementById('battleLog');
+        const entry = document.createElement('div');
+        entry.className = 'log-entry ' + cls;
+        entry.textContent = text;
+        log.appendChild(entry);
+        log.scrollTop = log.scrollHeight;
+    }
+
+    function showDamagePopup(target, amount, isCrit) {
+        const card = document.getElementById(target);
+        const popup = document.createElement('div');
+        popup.className = 'damage-popup ' + (target === 'laylaCard' ? 'enemy-dmg' : 'layla-dmg') + (isCrit ? ' crit' : '');
+        popup.textContent = (isCrit ? 'CRIT! ' : '-') + amount;
+        popup.style.left = '50%';
+        popup.style.top = '30%';
+        popup.style.transform = 'translateX(-50%)';
+        card.appendChild(popup);
+        setTimeout(() => popup.remove(), 1000);
+    }
+
+    function setMovesEnabled(enabled) {
+        document.querySelectorAll('.move-btn').forEach(btn => btn.disabled = !enabled);
+    }
+
+    function animateAttack(attackerId, targetId) {
+        const attacker = document.getElementById(attackerId);
+        const target = document.getElementById(targetId);
+        attacker.classList.add('attacking');
+        setTimeout(() => {
+            target.classList.add('hit');
+            setTimeout(() => {
+                attacker.classList.remove('attacking');
+                target.classList.remove('hit');
+            }, 400);
+        }, 200);
+    }
+
+    // ─── Difficulty ───────────────────────────────────────────────────
+    function getDifficulty(battleNum) {
+        if (battleNum < 5) return { label: 'Easy', cls: 'diff-easy', hpMult: 1.0, dmgMin: 5, dmgMax: 12 };
+        if (battleNum < 10) return { label: 'Medium', cls: 'diff-medium', hpMult: 1.3, dmgMin: 8, dmgMax: 16 };
+        if (battleNum < 15) return { label: 'Hard', cls: 'diff-hard', hpMult: 1.6, dmgMin: 12, dmgMax: 22 };
+        return { label: 'Boss', cls: 'diff-boss', hpMult: 2.0, dmgMin: 15, dmgMax: 28 };
+    }
+
+    // ─── Game Flow ────────────────────────────────────────────────────
+    function startGame() {
+        gameState = {
+            laylaHp: 100, laylaMaxHp: 100,
+            currentBattle: 0, enemyHp: 0, enemyMaxHp: 0,
+            opponent: null, battlesWon: 0, totalDamageDealt: 0,
+            totalDamageTaken: 0, totalTurns: 0, movesUsed: {},
+            isBattling: false, isGameOver: false, battleResults: [],
+        };
+
+        document.getElementById('startScreen').style.display = 'none';
+        document.getElementById('resultScreen').classList.remove('active');
+        document.getElementById('battleArena').classList.add('active');
+        document.getElementById('battleLog').innerHTML = '';
+
+        startBattle();
+    }
+
+    function startBattle() {
+        const diff = getDifficulty(gameState.currentBattle);
+
+        // Pick random opponent
+        const pool = shuffle(BATTLE_OPPONENTS);
+        gameState.opponent = pool[gameState.currentBattle % pool.length];
+
+        // Set enemy HP
+        const baseHp = rand(30, 50);
+        gameState.enemyMaxHp = Math.round(baseHp * diff.hpMult);
+        gameState.enemyHp = gameState.enemyMaxHp;
+
+        // Update UI
+        document.getElementById('battleCounter').textContent = `Battle ${gameState.currentBattle + 1} / ${TOTAL_BATTLES}`;
+        const badge = document.getElementById('diffBadge');
+        badge.textContent = diff.label;
+        badge.className = 'battle-difficulty ' + diff.cls;
+
+        document.getElementById('enemyEmoji').textContent = gameState.opponent.emoji;
+        document.getElementById('enemyName').textContent = gameState.opponent.name;
+        document.getElementById('enemyType').textContent = gameState.opponent.location;
+
+        const enemyCard = document.getElementById('enemyCard');
+        enemyCard.className = 'fighter-card enemy';
+        if (gameState.opponent.type === 'Undercity') {
+            enemyCard.classList.add('undercity');
+        }
+
+        updateLaylaHp();
+        updateEnemyHp();
+        updateProgress();
+
+        // Battle log intro
+        addLog(`━━━ Battle ${gameState.currentBattle + 1} ━━━`, 'info');
+        addLog(`${gameState.opponent.name} が現れた！(${gameState.opponent.location})`, 'enemy-action');
+        if (gameState.opponent.type === 'Undercity') {
+            addLog('⚠ Undercity系の敵 — 特殊効果に注意！', 'critical');
+        }
+
+        gameState.isBattling = true;
+        setMovesEnabled(true);
+    }
+
+    async function laylaAttack(moveKey) {
+        if (!gameState.isBattling) return;
+        setMovesEnabled(false);
+        gameState.totalTurns++;
+
+        const move = LAYLA_MOVES[moveKey];
+        gameState.movesUsed[moveKey] = (gameState.movesUsed[moveKey] || 0) + 1;
+
+        // Layla attacks
+        const isCrit = Math.random() < 0.15;
+        let dmg = rand(move.min, move.max);
+        if (isCrit) dmg = Math.round(dmg * 1.5);
+
+        animateAttack('laylaCard', 'enemyCard');
+
+        await delay(200);
+        showDamagePopup('enemyCard', dmg, isCrit);
+        addLog(`${move.icon} ${move.name}！${gameState.opponent.name}に ${dmg} ダメージ！${isCrit ? ' CRITICAL!' : ''}`, 'layla-action');
+
+        gameState.enemyHp -= dmg;
+        gameState.totalDamageDealt += dmg;
+        updateEnemyHp();
+
+        await delay(400);
+
+        if (gameState.enemyHp <= 0) {
+            gameState.enemyHp = 0;
+            updateEnemyHp();
+            await battleWon();
+            return;
+        }
+
+        // Enemy attacks
+        await delay(300);
+        await enemyAttack();
+    }
+
+    async function enemyAttack() {
+        const diff = getDifficulty(gameState.currentBattle);
+        const opp = gameState.opponent;
+
+        let dmg = rand(diff.dmgMin, diff.dmgMax);
+        let specialMsg = '';
+
+        // Undercity bonus
+        if (opp.type === 'Undercity') {
+            const specialRoll = Math.random();
+            if (specialRoll < 0.25) {
+                dmg = Math.round(dmg * 1.4);
+                specialMsg = '（精神攻撃！）';
+            } else if (specialRoll < 0.4) {
+                dmg = Math.round(dmg * 1.3);
+                specialMsg = '（粘液トラップ！）';
+            }
+        }
+
+        animateAttack('enemyCard', 'laylaCard');
+
+        await delay(200);
+        showDamagePopup('laylaCard', dmg, false);
+        addLog(`${opp.emoji} ${opp.name}の攻撃！レイラに ${dmg} ダメージ！${specialMsg}`, 'enemy-action');
+
+        gameState.laylaHp -= dmg;
+        gameState.totalDamageTaken += dmg;
+        updateLaylaHp();
+
+        await delay(400);
+
+        if (gameState.laylaHp <= 0) {
+            gameState.laylaHp = 0;
+            updateLaylaHp();
+            await gameDefeated();
+            return;
+        }
+
+        setMovesEnabled(true);
+    }
+
+    async function battleWon() {
+        addLog(`✓ ${gameState.opponent.name} を撃破！`, 'victory');
+        gameState.battlesWon++;
+        gameState.battleResults.push(true);
+        updateProgress();
+
+        await delay(800);
+
+        gameState.currentBattle++;
+        if (gameState.currentBattle >= TOTAL_BATTLES) {
+            await gameVictory();
+        } else {
+            addLog(`次の戦闘へ... (残りHP: ${gameState.laylaHp})`, 'info');
+            await delay(600);
+            startBattle();
+        }
+    }
+
+    async function gameDefeated() {
+        gameState.isBattling = false;
+        gameState.isGameOver = true;
+        setMovesEnabled(false);
+
+        addLog(`✗ レイラは倒された...`, 'defeat');
+        addLog(`${gameState.battlesWon}戦勝利で敗退。`, 'defeat');
+
+        await delay(1500);
+
+        document.getElementById('battleArena').classList.remove('active');
+
+        const screen = document.getElementById('resultScreen');
+        screen.className = 'result-screen active defeat';
+        document.getElementById('resultEmoji').textContent = '💀';
+        document.getElementById('resultTitle').textContent = 'Defeated...';
+
+        const winRate = Math.round((gameState.battlesWon / TOTAL_BATTLES) * 100);
+        const avgDmg = gameState.totalTurns > 0 ? Math.round(gameState.totalDamageDealt / gameState.totalTurns) : 0;
+        const bestMove = Object.entries(gameState.movesUsed).sort((a,b) => b[1] - a[1])[0];
+
+        document.getElementById('resultStats').innerHTML = `
+            <div class="result-stat"><span class="result-stat-value">${gameState.battlesWon}/${TOTAL_BATTLES}</span><span class="result-stat-label">Battles Won</span></div>
+            <div class="result-stat"><span class="result-stat-value pink">${winRate}%</span><span class="result-stat-label">Win Rate</span></div>
+            <div class="result-stat"><span class="result-stat-value">${gameState.totalDamageDealt}</span><span class="result-stat-label">Total Damage</span></div>
+            <div class="result-stat"><span class="result-stat-value">${avgDmg}</span><span class="result-stat-label">Avg Damage/Turn</span></div>
+        `;
+
+        const defeatMsgs = [
+            'Undercityの闇に飲まれた...しかしPink Voltageの闘志は消えない。',
+            '力尽きたが、次こそ20戦全勝を!',
+            '敗北は経験。レイラはより強くなって帰ってくる。',
+        ];
+        document.getElementById('resultMessage').textContent = defeatMsgs[rand(0, defeatMsgs.length - 1)];
+    }
+
+    async function gameVictory() {
+        gameState.isBattling = false;
+        gameState.isGameOver = true;
+        setMovesEnabled(false);
+
+        addLog(`═══════════════════`, 'victory');
+        addLog(`★ ★ ★  PERFECT VICTORY  ★ ★ ★`, 'victory');
+        addLog(`20戦全勝！Pink Voltageの真の力！`, 'victory');
+
+        await delay(1500);
+
+        document.getElementById('battleArena').classList.remove('active');
+
+        const screen = document.getElementById('resultScreen');
+        screen.className = 'result-screen active victory';
+        document.getElementById('resultEmoji').textContent = '🏆';
+        document.getElementById('resultTitle').textContent = 'Perfect Victory!';
+
+        const avgDmg = gameState.totalTurns > 0 ? Math.round(gameState.totalDamageDealt / gameState.totalTurns) : 0;
+        const bestMove = Object.entries(gameState.movesUsed).sort((a,b) => b[1] - a[1])[0];
+
+        document.getElementById('resultStats').innerHTML = `
+            <div class="result-stat"><span class="result-stat-value green">${gameState.battlesWon}/${TOTAL_BATTLES}</span><span class="result-stat-label">Battles Won</span></div>
+            <div class="result-stat"><span class="result-stat-value">${gameState.laylaHp}/${gameState.laylaMaxHp}</span><span class="result-stat-label">Remaining HP</span></div>
+            <div class="result-stat"><span class="result-stat-value pink">${gameState.totalDamageDealt}</span><span class="result-stat-label">Total Damage</span></div>
+            <div class="result-stat"><span class="result-stat-value">${avgDmg}</span><span class="result-stat-label">Avg Damage/Turn</span></div>
+        `;
+
+        const victoryMsgs = [
+            '20戦全勝！伝説のコロシアム制覇！Pink Voltageの名に恥じない戦いぶり！',
+            '完勝！Gigapolis Colosseumの新記録！レイラ・ヴィレル・ノヴァ、不滅の輝き！',
+        ];
+        document.getElementById('resultMessage').textContent = victoryMsgs[rand(0, victoryMsgs.length - 1)];
+    }
+
+    function resetGame() {
+        document.getElementById('resultScreen').classList.remove('active');
+        document.getElementById('battleArena').classList.remove('active');
+        document.getElementById('startScreen').style.display = 'block';
+    }
+
+    function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    // ─── Chatbot ──────────────────────────────────────────────────────
+    function toggleChatbot() {
+        const chatbot = document.getElementById('chatbot');
+        chatbot.style.display = chatbot.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function addMessage(content, isUser = false) {
+        const container = document.getElementById('chatMessages');
+        const msg = document.createElement('div');
+        msg.className = `message ${isUser ? 'user' : 'ai'}`;
+        msg.textContent = content;
+        container.appendChild(msg);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+        document.getElementById('typingIndicator').style.display = 'flex';
+        document.getElementById('chatMessages').scrollTop = 99999;
+    }
+
+    function hideTypingIndicator() {
+        document.getElementById('typingIndicator').style.display = 'none';
+    }
+
+    async function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const message = input.value.trim();
+        if (!message) return;
+        addMessage(message, true);
+        input.value = '';
+        showTypingIndicator();
+        try {
+            const res = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message }),
+            });
+            const data = await res.json();
+            hideTypingIndicator();
+            addMessage(res.ok ? data.response : 'Sorry, I encountered an error.');
+        } catch {
+            hideTypingIndicator();
+            addMessage('Sorry, could not connect. Please try again.');
+        }
+    }
+
+    document.getElementById('chatInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') sendMessage();
+    });
+
+    // ─── Wallet ───────────────────────────────────────────────────────
+    let connectedWallet = null;
+    let connectedAddress = null;
+
+    function detectWallets() {
+        if (window.ethereum && window.ethereum.isBraveWallet) {
+            document.getElementById('braveDetected').style.display = 'block';
+        }
+    }
+
+    function openWalletModal() {
+        document.getElementById('walletModal').classList.add('active');
+        detectWallets();
+    }
+
+    function closeWalletModal() {
+        document.getElementById('walletModal').classList.remove('active');
+    }
+
+    document.getElementById('walletModal').addEventListener('click', function(e) {
+        if (e.target === this) closeWalletModal();
+    });
+
+    async function connectWallet(walletType) {
+        try {
+            let provider = null;
+            if (window.ethereum) {
+                if (walletType === 'brave') {
+                    provider = window.ethereum.isBraveWallet ? window.ethereum :
+                        (window.ethereum.providers?.find(p => p.isBraveWallet) || null);
+                    if (!provider) { alert('Brave Wallet not detected.'); return; }
+                } else if (walletType === 'metamask') {
+                    provider = (window.ethereum.isMetaMask && !window.ethereum.isBraveWallet) ? window.ethereum :
+                        (window.ethereum.providers?.find(p => p.isMetaMask && !p.isBraveWallet) || null);
+                    if (!provider) { alert('MetaMask not detected.'); return; }
+                } else if (walletType === 'coinbase') {
+                    provider = window.ethereum.isCoinbaseWallet ? window.ethereum :
+                        (window.ethereum.providers?.find(p => p.isCoinbaseWallet) || null);
+                    if (!provider) { alert('Coinbase Wallet not detected.'); return; }
+                } else if (walletType === 'walletconnect') {
+                    alert('WalletConnect requires additional setup.'); return;
+                } else {
+                    provider = window.ethereum;
+                }
+                const accounts = await provider.request({ method: 'eth_requestAccounts' });
+                if (accounts?.length > 0) {
+                    connectedAddress = accounts[0];
+                    connectedWallet = walletType;
+                    updateWalletUI();
+                    closeWalletModal();
+                    provider.on('accountsChanged', handleAccountsChanged);
+                }
+            } else {
+                alert('No Web3 wallet detected.');
+            }
+        } catch (error) {
+            alert(error.code === 4001 ? 'Connection rejected.' : 'Failed: ' + error.message);
+        }
+    }
+
+    function handleAccountsChanged(accounts) {
+        if (accounts.length === 0) disconnectWallet();
+        else { connectedAddress = accounts[0]; updateWalletUI(); }
+    }
+
+    function disconnectWallet() {
+        connectedWallet = null;
+        connectedAddress = null;
+        updateWalletUI();
+    }
+
+    function updateWalletUI() {
+        const container = document.getElementById('walletContainer');
+        if (connectedAddress) {
+            const short = connectedAddress.slice(0, 6) + '...' + connectedAddress.slice(-4);
+            const name = { brave: 'Brave', metamask: 'MetaMask', coinbase: 'Coinbase' }[connectedWallet] || 'Wallet';
+            container.innerHTML = `<div class="wallet-address"><span class="wallet-address-text">${short}</span><span class="wallet-address-badge">${name}</span><button class="wallet-disconnect" onclick="disconnectWallet()">&#x2715;</button></div>`;
+        } else {
+            container.innerHTML = `<button class="wallet-btn" onclick="openWalletModal()"><svg class="wallet-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg><span>Connect Wallet</span></button>`;
+        }
+    }
+
+    if (window.ethereum) {
+        window.ethereum.request({ method: 'eth_accounts' }).then(accounts => {
+            if (accounts?.length > 0) {
+                connectedAddress = accounts[0];
+                connectedWallet = window.ethereum.isBraveWallet ? 'brave' : window.ethereum.isMetaMask ? 'metamask' : 'unknown';
+                updateWalletUI();
+            }
+        }).catch(() => {});
+    }
+    </script>
+</body>
+</html>

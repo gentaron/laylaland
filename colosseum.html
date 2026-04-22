@@ -856,6 +856,49 @@
             box-shadow: 0 10px 48px rgba(255, 61, 138, 0.5);
         }
 
+        /* ─── Battle Dialogue ─────────────────────────────────────── */
+        .dialogue-box {
+            min-height: 48px;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dialogue-line {
+            font-size: 0.92rem;
+            line-height: 1.6;
+            padding: 4px 0;
+            animation: dialogueFade 0.4s ease, dialogueFadeOut 0.5s ease 3.5s forwards;
+            font-style: italic;
+        }
+
+        .dialogue-line .speaker {
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.82rem;
+            margin-right: 6px;
+            font-style: normal;
+            letter-spacing: 0.03em;
+        }
+
+        .dialogue-line.layla-line .speaker { color: var(--pink); }
+        .dialogue-line.enemy-line .speaker { color: var(--cyan); }
+        .dialogue-line.layla-line { color: rgba(255, 255, 255, 0.85); }
+        .dialogue-line.enemy-line { color: rgba(0, 230, 255, 0.85); }
+
+        @keyframes dialogueFade {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes dialogueFadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
         /* ─── Responsive ─────────────────────────────────────────── */
         @media (max-width: 840px) {
             .battle-columns {
@@ -1087,6 +1130,9 @@
                             </div>
                         </div>
 
+                        <!-- Dialogue Box -->
+                        <div class="dialogue-box" id="dialogueBox"></div>
+
                         <!-- Battle Log -->
                         <div class="battle-log" id="battleLog"></div>
 
@@ -1235,6 +1281,274 @@
     };
 
     const TOTAL_BATTLES = 20;
+
+    // ─── Battle Dialogue System ────────────────────────────────────────
+    const LAYLA_DIALOGUES = {
+        battleStart: [
+            '「さあ、いくよ！Pink Voltageにお手並みはねえ！」',
+            '「来なさいよ、この私に触れるのを楽しみにしてて！」',
+            '「 Gigapolisの闇を掃除してあげる…そこのあなたも！」',
+            '「弱い者を守るのが私の流儀。邪魔するなら消すわよ？」',
+            '「準備はいい？私のナノファイバーは震えてるの！」',
+        ],
+        firstHit: [
+            '「ふふっ、その程度？」',
+            '「もっと頑張って！退屈させないで」',
+            '「ナイス！ さすが私のパンチ」',
+            '「痛いのはどっちだと思う？」',
+        ],
+        enemyHalfHp: [
+            '「そろそろ本気出してもらうわよ？」',
+            '「えっ、もう息切れ？可愛いところあるじゃない」',
+            '「終わりの始まりね…桜吹雪みたいに！」',
+            '「ここからが本当のショータイムよ！」',
+        ],
+        enemyLowHp: [
+            '「… Too easy.」',
+            '「最後の一撃、用意して？」',
+            '「まだ何か言い残すことはある？」',
+            '「悔いはない？…終わりよ！」',
+        ],
+        laylaHalfHp: [
+            '「…くっ、ちょっと痛いかも。でも平気よ」',
+            '「ナノファイバーが唸ってる…退屈させないでって」',
+            '「いい腕ね…でも、私の方が上よ」',
+        ],
+        laylaLowHp: [
+            '「…くっ、やるじゃない…でも、まだ終わらない！」',
+            '「これくらいでピンクボルテージが沈むとでも？」',
+            '「息をしてる余裕はないわよ…ここから逆転！」',
+        ],
+        criticalHit: [
+            '「完璧！ これがピンクボルテージの力！」',
+            '「クリティカル！ いい感じ！」',
+            '「ナイスヒット！ ビンゴ！」',
+        ],
+        dodgeSuccess: [
+            '「見えたわよ、その動き！」',
+            '「スローすぎる…もっと速くして？」',
+            '「かわして…やったっ！」',
+        ],
+        dodgeFail: [
+            '「くっ…！次は絶対かわす！」',
+        ],
+        defend: [
+            '「守りは完璧…次こそ反撃よ」',
+            '「ナノファイバーシールド、オン！」',
+        ],
+        heal: [
+            '「回復…ふぅ、また動けるわ」',
+            '「悪くない、これでまだ戦える」',
+        ],
+        partDestroyed: [
+            '「…部位がやられた…でも、戦う意志は壊せない！」',
+            '「痛い…でも、ここで終わるわけにはいかない！」',
+        ],
+        statusApplied: [
+            '「くっ…なんて卑怯な手を…！」',
+            '「状態異常…！狡猾な对手ね…」',
+        ],
+        victory: [
+            '「勝った！…too easy. でも悪かったわね」',
+            '「次の敵はどこ？この調子で20戦制覇よ！」',
+            '「Gigapolisの平和のために…また一つ闇を消した」',
+            '「ふぅ…いい運動になったわ。次行くよ！」',
+        ],
+        perfectVictory: [
+            '「20戦全勝！…完璧。これがピンクボルテージよ！」',
+            '「 Gigapolis Colosseumの新記録！伝説になったわね」',
+        ],
+        defeated: [
+            '「くっ…私の負け…次こそ…絶対に…」',
+            '「でも…Gigapolisの…人々のために…」',
+        ],
+    };
+
+    const ENEMY_DIALOGUES = {
+        Slime: {
+            start: [
+                '「にゅるるる…！ぐちゅぐちゅ…」',
+                '「にゅぅ…あつい…このおんな…！」',
+                '「ぐちゃぐちゃ…にがす…！！」',
+            ],
+            halfHp: [
+                '「にゅる…いたい…にげ…」',
+                '「ぐちゅ…おんな…つよい…」',
+            ],
+            lowHp: [
+                '「にゅるる…や…めて…」',
+                '「ぐっ…くちゃ…」',
+            ],
+        },
+        Psychic: {
+            start: [
+                '「フフフ…あなたの心、覗かせていただきましょう？」',
+                '「精神の深海へようこそ…二度と帰れなくてもいいわよ？」',
+                '「あなたの欲望…全部見えてるのよ？」',
+            ],
+            halfHp: [
+                '「意外と…鋼のような意志ね…！」',
+                '「精神が…揺らぐ…あなたは何者…」',
+            ],
+            lowHp: [
+                '「まさか…精神が折れるのは…私の方…？」',
+                '「うう…これ以上は無理…！」',
+            ],
+        },
+        Demon: {
+            start: [
+                '「フフフ…可愛いおねえさん…堕ちてみる？」',
+                '「Pink Voltage…私があなたの本質を暴いてあげる」',
+                '「あなたのエッセンス…存分に味わわせてもらうわ」',
+            ],
+            halfHp: [
+                '「なぜ…なぜそんなに強いの！？」',
+                '「ぐっ…この力…何なのよ…！」',
+            ],
+            lowHp: [
+                '「いやだ…こんな…人間ごときに…！」',
+                '「逃がして…お願い…！」',
+            ],
+        },
+        Human: {
+            start: [
+                '「Pink Voltage…か。切り刻んでやる、いい体してるくせに！」',
+                '「ふん…やってみなさいよ、この私が！」',
+                '「お前なんか…腐った街に相応しいクズだ」',
+            ],
+            halfHp: [
+                '「くそっ…なんでだ…！お前なんなんだよ！」',
+                '「ガハハ…まだまだこれからだ…！」',
+            ],
+            lowHp: [
+                '「まさか…俺が…こんな…」',
+                '「ぐあっ…殺すな…頼む…」',
+            ],
+        },
+        Possessed: {
+            start: [
+                '「…レイラ…僕の中の闇…見てみたいかい？」',
+                '「フフフ…この力…制御できない…楽しいよ…」',
+                '「僕を止めて…お願い…」',
+            ],
+            halfHp: [
+                '「ああ…あああ…！！抑制が…効かない！」',
+                '「レイラ…僕を…解放して…！」',
+            ],
+            lowHp: [
+                '「…ありがとう…レイラ…」',
+                '「くっ…暗黒の力が…消えていく…」',
+            ],
+        },
+        Undercity: {
+            start: [
+                '「この地下の闇こそ…俺の庭だ」',
+                '「光なんか…ここには要らない」',
+                '「お前も闇に染まってしまえ…」',
+            ],
+            halfHp: [
+                '「なんでだ…この光…眩しい…」',
+                '「負けない…俺は…闇そのものだ！」',
+            ],
+            lowHp: [
+                '「ぐあっ…闇が…薄れていく…」',
+                '「いやだ…光が…痛い…」',
+            ],
+        },
+        Arena: {
+            start: [
+                '「コロシアムへようこそ！覚悟はいい？」',
+                '「さあ、観客を沸かせようじゃないか！」',
+                '「20戦連続？…面白い挑戦だ」',
+            ],
+            halfHp: [
+                '「悪くない…でも、本気はまだだ」',
+                '「観客が…静かになった…！」',
+            ],
+            lowHp: [
+                '「すごい…この実力は本物だ…」',
+                '「認めるよ…お前の勝ちだ…」',
+            ],
+        },
+        Energy: {
+            start: [
+                '「ビリビリ…ジジジ…」',
+                '「エネルギー体…物理攻撃は無意味よ…」',
+                '「漂う亡霊…ただのプラズマの残骸よ…」',
+            ],
+            halfHp: [
+                '「なぜ…物理が通じたの…？」',
+                '「安定が…崩れて…いく…」',
+            ],
+            lowHp: [
+                '「消える…消えて…いく…」',
+                '「やめて…放電が…止まらない…」',
+            ],
+        },
+    };
+
+    function getDialogueCategory(enemyType) {
+        // Map enemy type to dialogue category
+        if (['Slime'].includes(enemyType)) return 'Slime';
+        if (['Psychic'].includes(enemyType)) return 'Psychic';
+        if (['Demon'].includes(enemyType)) return 'Demon';
+        if (['Human'].includes(enemyType)) return 'Human';
+        if (['Possessed'].includes(enemyType)) return 'Possessed';
+        if (['Undercity'].includes(enemyType)) return 'Undercity';
+        if (['Energy'].includes(enemyType)) return 'Energy';
+        return 'Arena'; // Default for Arena types
+    }
+
+    let dialogueCooldown = 0;
+    let lastDialogueKey = '';
+
+    function showDialogue(speaker, text, isLayla) {
+        const box = document.getElementById('dialogueBox');
+        if (!box) return;
+        
+        const line = document.createElement('div');
+        line.className = `dialogue-line ${isLayla ? 'layla-line' : 'enemy-line'}`;
+        line.innerHTML = `<span class="speaker">${speaker}</span>${text}`;
+        
+        // Keep max 2 lines visible
+        while (box.children.length >= 2) {
+            box.removeChild(box.firstChild);
+        }
+        box.appendChild(line);
+        
+        // Auto-remove after animation
+        setTimeout(() => {
+            if (line.parentNode) line.remove();
+        }, 4000);
+    }
+
+    function sayLayla(category) {
+        const now = Date.now();
+        if (now - dialogueCooldown < 3000) return; // 3s cooldown between dialogues
+        const lines = LAYLA_DIALOGUES[category];
+        if (!lines || lines.length === 0) return;
+        
+        dialogueCooldown = now;
+        const text = lines[Math.floor(Math.random() * lines.length)];
+        showDialogue('Layla', text, true);
+    }
+
+    function sayEnemy(category) {
+        const now = Date.now();
+        if (now - dialogueCooldown < 3000) return;
+        
+        const opp = gameState.opponent;
+        if (!opp) return;
+        
+        const typeKey = getDialogueCategory(opp.type);
+        const enemyLines = ENEMY_DIALOGUES[typeKey];
+        if (!enemyLines || !enemyLines[category]) return;
+        
+        const lines = enemyLines[category];
+        dialogueCooldown = now;
+        const text = lines[Math.floor(Math.random() * lines.length)];
+        showDialogue(opp.name, text, false);
+    }
 
     // ─── Game State ────────────────────────────────────────────────────
     let gameState = {};
@@ -1600,12 +1914,22 @@
 
         if (wasAlive && part.hp <= 0) {
             addLog(`💀 ${partName}が破壊された！対応する攻撃が使用不能に！`, 'critical');
+            sayLayla('partDestroyed');
             // Log which attacks are lost
             const lostMoves = Object.entries(LAYLA_MOVES).filter(([k, m]) => m.part === partKey);
             lostMoves.forEach(([k, m]) => addLog(`  ✗ ${m.name} が使用不能`, 'defeat'));
         }
 
         updateLaylaHp();
+        
+        // Layla HP threshold dialogues
+        const totalHp = gameState.laylaHp;
+        const totalMax = gameState.laylaMaxHp;
+        if (totalMax > 0) {
+            const ratio = totalHp / totalMax;
+            if (ratio < 0.2 && ratio > 0) sayLayla('laylaLowHp');
+            else if (ratio < 0.5) sayLayla('laylaHalfHp');
+        }
     }
 
     // ─── Difficulty ───────────────────────────────────────────────────
@@ -1680,6 +2004,9 @@
             addLog(`⚠ ${statusNames[gameState.opponent.statusType] || gameState.opponent.statusType}の危険あり！`, 'critical');
         }
 
+        sayEnemy('start');
+        setTimeout(() => sayLayla('battleStart'), 800);
+
         gameState.isBattling = true;
         setMovesEnabled(true);
     }
@@ -1746,11 +2073,13 @@
                 gameState.isDefending = true;
                 gameState.defendReduction = 0.25; // 75% reduction on crit
                 addLog(`🛡️ 完璧な防御！CRITICAL GUARD！次ターン被ダメージ75%軽減！`, 'critical');
+                sayLayla('defend');
                 triggerCritBurst();
             } else {
                 gameState.isDefending = true;
                 gameState.defendReduction = 0.5; // 50% reduction normally
                 addLog(`🛡️ レイラは防御姿勢をとった！次ターン被ダメージ半減！`, 'layla-action');
+                sayLayla('defend');
             }
             updateStatusEffects();
             await delay(500);
@@ -1776,12 +2105,14 @@
                 const opp = gameState.opponent;
                 const enemyAtk = opp.attacks[rand(0, opp.attacks.length - 1)];
                 addLog(`${opp.emoji} ${opp.name}の${enemyAtk}！→ レイラは回避した！`, 'info');
+                sayLayla('dodgeSuccess');
                 // Decrease cooldowns and re-enable moves
                 decreaseCooldowns();
                 gameState.isDodging = false;
                 setMovesEnabled(true);
             } else {
                 addLog(`回避失敗！`, 'critical');
+                sayLayla('dodgeFail');
                 await enemyAttack();
             }
 
@@ -1804,6 +2135,7 @@
                     part.hp = Math.min(part.maxHp, part.hp + healAmt);
                     const partName = BODY_PARTS[partKey]?.name || partKey;
                     addLog(`💊 軽回復！${partName}に ${actual} HP回復！`, 'heal');
+                    sayLayla('heal');
                     showDamagePopup('laylaCard', actual, isCrit, 'heal');
                 } else {
                     // All parts full or destroyed - try to revive a destroyed part with half heal
@@ -1814,6 +2146,7 @@
                         part.hp = reviveAmt;
                         const partName = BODY_PARTS[partKey]?.name || partKey;
                         addLog(`💊 軽回復！${partName}が ${reviveAmt} HPで復活！`, 'heal');
+                        sayLayla('heal');
                         showDamagePopup('laylaCard', reviveAmt, isCrit, 'heal');
                     } else {
                         addLog(`💊 軽回復！しかし回復する箇所がない...`, 'info');
@@ -1853,6 +2186,7 @@
                     part.hp = Math.min(part.maxHp, part.hp + healAmt);
                     const partName = BODY_PARTS[partKey]?.name || partKey;
                     addLog(`🔧 部位修復！${partName}に ${actual} HP回復！`, 'heal');
+                    sayLayla('heal');
                     showDamagePopup('laylaCard', actual, isCrit, 'heal');
                 } else {
                     const destroyedParts = Object.entries(gameState.bodyParts).filter(([k, p]) => p.hp <= 0);
@@ -1862,6 +2196,7 @@
                         part.hp = reviveAmt;
                         const partName = BODY_PARTS[partKey]?.name || partKey;
                         addLog(`🔧 部位修復！${partName}が ${reviveAmt} HPで復活！`, 'heal');
+                        sayLayla('heal');
                         showDamagePopup('laylaCard', reviveAmt, isCrit, 'heal');
                     } else {
                         addLog(`🔧 部位修復！しかし回復する箇所がない...`, 'info');
@@ -1903,6 +2238,7 @@
                     }
                 }
                 addLog(`❤️ 全体修復！全部位に合計 ${totalHealed} HP回復！`, 'heal');
+                sayLayla('heal');
                 showDamagePopup('laylaCard', totalHealed, isCrit, 'heal');
                 updateLaylaHp();
                 await delay(500);
@@ -1943,9 +2279,17 @@
             showDamagePopup('enemyCard', dmg, isCrit);
             addLog(`✨ ${action.name}！${gameState.opponent.name}に ${dmg} ダメージ！${isCrit ? ' CRITICAL!' : ''}`, 'layla-action');
 
+            if (isCrit) sayLayla('criticalHit');
+            if (gameState.enemyHp === gameState.enemyMaxHp) sayLayla('firstHit');
+
             gameState.enemyHp -= dmg;
             gameState.totalDamageDealt += dmg;
             updateEnemyHp();
+
+            // Enemy HP threshold dialogues
+            const enemyRatioBurst = gameState.enemyMaxHp > 0 ? gameState.enemyHp / gameState.enemyMaxHp : 0;
+            if (enemyRatioBurst < 0.25 && enemyRatioBurst > 0) sayEnemy('lowHp');
+            else if (enemyRatioBurst < 0.5) sayEnemy('halfHp');
 
             if (gameState.isBound) {
                 gameState.isBound = false;
@@ -1991,9 +2335,18 @@
             showDamagePopup('enemyCard', dmg, isCrit);
             addLog(`${action.icon} ${action.name}！${gameState.opponent.name}に ${dmg} ダメージ！${isCrit ? ' CRITICAL HIT!' : ''}`, 'layla-action');
 
+            if (isCrit) sayLayla('criticalHit');
+            // First hit dialogue
+            if (gameState.enemyHp === gameState.enemyMaxHp) sayLayla('firstHit');
+
             gameState.enemyHp -= dmg;
             gameState.totalDamageDealt += dmg;
             updateEnemyHp();
+
+            // Enemy HP threshold dialogues
+            const enemyRatioNorm = gameState.enemyMaxHp > 0 ? gameState.enemyHp / gameState.enemyMaxHp : 0;
+            if (enemyRatioNorm < 0.25 && enemyRatioNorm > 0) sayEnemy('lowHp');
+            else if (enemyRatioNorm < 0.5) sayEnemy('halfHp');
 
             await delay(400);
 
@@ -2167,6 +2520,10 @@
             }
         }
 
+        if (statusApplied) {
+            sayLayla('statusApplied');
+        }
+
         if (gameState.isDefending) {
             const reduction = gameState.defendReduction || 0.5;
             dmg = Math.round(dmg * reduction);
@@ -2196,6 +2553,7 @@
 
     async function battleWon() {
         addLog(`✓ ${gameState.opponent.name} を撃破！`, 'victory');
+        sayLayla('victory');
         gameState.battlesWon++;
         gameState.battleResults.push(true);
         updateProgress();
@@ -2233,6 +2591,7 @@
         setMovesEnabled(false);
 
         addLog(`✗ レイラは倒された...`, 'defeat');
+        sayLayla('defeated');
         addLog(`${gameState.battlesWon}戦勝利で敗退。`, 'defeat');
 
         await delay(1500);
@@ -2271,6 +2630,7 @@
         addLog(`═══════════════════`, 'victory');
         addLog(`★ ★ ★  PERFECT VICTORY  ★ ★ ★`, 'victory');
         addLog(`20戦全勝！Pink Voltageの真の力！`, 'victory');
+        sayLayla('perfectVictory');
 
         await delay(1500);
 

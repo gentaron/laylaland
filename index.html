@@ -653,7 +653,6 @@
         </div>
     </div>
 
-    </div>
 
     <script src="privy-auth.bundle.js"></script>
     <script>
@@ -675,10 +674,12 @@
 
         document.getElementById('artModal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
-    
+        });
+
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeModal();
-    
+        });
+
         // ── Zoom ──────────────────────────────────────────────────
         let currentZoom = 1;
         let isDragging = false;
@@ -767,7 +768,9 @@
                     if (!window.__privyPaid) return;
                     const img = item.querySelector('img');
                     if (img) openModal(img.src, img.alt);
-                    
+                });
+            });
+
             // Modal zoom events
             const container = document.getElementById('imageContainer');
             const modalImg = document.getElementById('modalImage');
@@ -781,11 +784,13 @@
             container.addEventListener('wheel', function(e) {
                 e.preventDefault();
                 e.deltaY < 0 ? zoomIn() : zoomOut();
-                    modalImg.addEventListener('dblclick', function(e) {
+            });
+            modalImg.addEventListener('dblclick', function(e) {
                 e.preventDefault();
                 currentZoom === 1 ? (currentZoom = 2) : resetZoom();
                 updateZoom();
-        
+            });
+
             // Fade-in observer
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -794,14 +799,17 @@
                         entry.target.style.transform = 'translateY(0)';
                         observer.unobserve(entry.target);
                     }
-                        }, { threshold: 0.08 });
+                });
+            }, { threshold: 0.08 });
 
             document.querySelectorAll('.gallery-item, .feature-card, .quotes-section').forEach(el => {
                 el.style.opacity = '0';
                 el.style.transform = 'translateY(20px)';
                 el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
                 observer.observe(el);
-            
+            });
+        });
+
         // ── Quotes ─────────────────────────────────────────────────
         let currentQuote = 0;
         const quotes = document.querySelectorAll('.quote-item');
@@ -854,7 +862,8 @@
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message }),
-                            const data = await res.json();
+                });
+                const data = await res.json();
                 hideTypingIndicator();
                 addMessage(res.ok ? data.response : 'Sorry, I encountered an error. Please try again later.');
             } catch {
@@ -867,11 +876,6 @@
         // ── Wallet Connection ─────────────────────────────────────
         let connectedWallet = null;
         let connectedAddress = null;
-
-        // Check for Brave Wallet
-        function isBraveBrowser() {
-            return navigator.brave && navigator.brave.isBrave;
-        }
 
         function detectWallets() {
             // Check for Brave Wallet specifically
@@ -891,7 +895,8 @@
 
         document.getElementById('walletModal').addEventListener('click', function(e) {
             if (e.target === this) closeWalletModal();
-    
+        });
+
         async function connectWallet(walletType) {
             try {
                 let provider = null;
@@ -1045,7 +1050,8 @@
                 }
             }
             updatePaywallUI();
-    
+        });
+
         // ── Paywall / USDC unlock ──────────────────────────────────
         const USDC_CONTRACTS = {
             '0x1':    '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', // Ethereum
@@ -1102,7 +1108,8 @@
                 const txHash = await window.ethereum.request({
                     method: 'eth_sendTransaction',
                     params: [{ from: connectedAddress, to: usdcAddress, data, gas: '0x186A0' }],
-            
+                });
+
                 setStatus(spinner + '&nbsp;トランザクション確認中...');
                 for (let i = 0; i < 30; i++) {
                     const receipt = await window.ethereum.request({ method: 'eth_getTransactionReceipt', params: [txHash] });

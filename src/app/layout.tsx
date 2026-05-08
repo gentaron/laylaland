@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import "./globals.css"
 import Navigation from "./navigation"
+import Footer from "@/components/Footer"
 
 export const metadata: Metadata = {
   title: "Laylaland — Pink Voltage",
@@ -13,6 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Navigation />
         {children}
+        <Footer />
       </body>
     </html>
   )

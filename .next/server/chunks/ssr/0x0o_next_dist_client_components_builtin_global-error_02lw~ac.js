@@ -1,0 +1,3 @@
+module.exports=[89142,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(90522);a.n(d("[project]/repos/laylaland/node_modules/next/dist/client/components/builtin/global-error.js <module evaluation>"))},19519,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(90522);a.n(d("[project]/repos/laylaland/node_modules/next/dist/client/components/builtin/global-error.js"))},42625,a=>{"use strict";a.i(89142);var b=a.i(19519);a.n(b)},20367,a=>{a.n(a.i(42625))}];
+
+//# sourceMappingURL=0x0o_next_dist_client_components_builtin_global-error_02lw~ac.js.map

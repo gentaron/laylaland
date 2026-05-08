@@ -1,26 +1,29 @@
 {
   "name": "laylaland",
   "version": "1.0.0",
-  "description": "Official website dedicated to Layla Virel Nova - Pink Voltage",
-  "main": "index.html",
+  "private": true,
   "scripts": {
-    "build": "esbuild src/privy-auth.jsx --bundle --outfile=privy-auth.bundle.js --format=iife --minify --target=es2020 --define:process.env.NODE_ENV=\\\"production\\\" --loader:.jsx=jsx"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
-    "@privy-io/react-auth": "^3.19.1",
-    "jose": "^6.2.2",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "next": "^16.1.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "framer-motion": "^12.26.0",
+    "lucide-react": "^0.525.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.0",
+    "tailwind-merge": "^3.4.0"
   },
-  "keywords": [
-    "layla",
-    "pink-voltage",
-    "cyberpunk",
-    "ai-chatbot"
-  ],
-  "author": "gentaron",
-  "license": "MIT",
   "devDependencies": {
-    "esbuild": "^0.28.0"
+    "@tailwindcss/postcss": "^4.1.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "tailwindcss": "^4.1.0",
+    "typescript": "^5.9.0"
   }
 }

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Layla Virel Nova | AURALIS</title>
+    <meta name="description" content="Layla Virel Nova (Pink Voltage) のイラストギャラリー。新作AIオリジナルアート＋ファンアートを無料公開。">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ─── Gallery header ─────────────────────────────────────── */
+        .gallery-header {
+            text-align: center;
+            margin: 24px 0 48px;
+        }
+        .gallery-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.2rem, 6vw, 3.4rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            background: var(--accent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+        .gallery-lede {
+            color: var(--text-muted);
+            max-width: 640px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+        .free-badge {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 6px 18px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #fff;
+            background: var(--accent);
+            box-shadow: var(--glow-pink);
+        }
+
+        /* ─── Section labels ─────────────────────────────────────── */
+        .section-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 48px 0 8px;
+        }
+        .section-label .tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 999px;
+            color: #fff;
+            background: var(--accent);
+        }
+        .section-sub {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+        }
+
+        /* ─── Art grid (PUBLIC — intentionally NOT paywall-protected) ─ */
+        .art-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 18px;
+        }
+        .art-card {
+            position: relative;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            cursor: pointer;
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .art-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--border-hover);
+            box-shadow: var(--glow-pink);
+        }
+        .art-card img {
+            display: block;
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            background: var(--bg-deep);
+        }
+        .art-card.featured img { object-fit: contain; }
+        .art-caption {
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            padding: 28px 14px 12px;
+            background: linear-gradient(to top, rgba(10,4,20,0.92), transparent);
+            font-size: 0.85rem;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+        .art-card:hover .art-caption { opacity: 1; transform: translateY(0); }
+        .new-tag {
+            position: absolute;
+            top: 10px; left: 10px;
+            z-index: 2;
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            padding: 4px 10px;
+            border-radius: 999px;
+            color: #fff;
+            background: var(--accent);
+            box-shadow: 0 4px 16px rgba(255,61,138,0.4);
+        }
+
+        /* ─── Fullscreen modal ───────────────────────────────────── */
+        .fs-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(6, 2, 14, 0.92);
+            backdrop-filter: blur(6px);
+            align-items: center;
+            justify-content: center;
+            padding: 32px;
+        }
+        .fs-modal.open { display: flex; }
+        .fs-modal img {
+            max-width: 92vw;
+            max-height: 88vh;
+            border-radius: var(--radius-md);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+        }
+        .fs-close {
+            position: absolute;
+            top: 20px; right: 28px;
+            font-size: 2.4rem;
+            line-height: 1;
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+        .fs-close:hover { opacity: 1; }
+
+        .credit-note {
+            margin-top: 48px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.8;
+            text-align: center;
+        }
+        @media (max-width: 640px) {
+            .art-card img { height: 240px; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand">
+                <span class="nav-brand-icon">&#x2728;</span>
+                <span>Layla Land</span>
+            </a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="colosseum.html">Colosseum</a></li>
+                <li><a href="story.html">Story</a></li>
+                <li><a href="stats.html">Universe</a></li>
+                <li><a href="gallery.html" class="active">Gallery</a></li>
+                <li><a href="rank.html">Links</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="gallery-header">
+            <h1 class="gallery-title">Layla Gallery</h1>
+            <p class="gallery-lede">
+                Layla Virel Nova &mdash; <em>&ldquo;Pink Voltage&rdquo;</em> のイラストコレクション。
+                新作のAIオリジナルアートと、これまでのファンアートをまとめて掲載しています。
+            </p>
+            <span class="free-badge">&#x2728; 全作品 無料公開 / FREE &mdash; No Paywall</span>
+        </header>
+
+        <!-- ===== NEW: AI original art (public, free) ===== -->
+        <div class="section-label">
+            <span class="tag">New</span> Pink Voltage &mdash; AIオリジナルアート
+        </div>
+        <p class="section-sub">
+            このサイトのために新しく描き起こした Layla のオリジナルキーアート。
+            ベクター(SVG)で制作しているので拡大しても鮮明です。
+        </p>
+        <div class="art-grid">
+            <div class="art-card featured" onclick="openFs('gallery/layla-pink-voltage.png')">
+                <span class="new-tag">NEW</span>
+                <img src="gallery/layla-pink-voltage.png" alt="Layla - Pink Voltage key art" loading="lazy">
+                <div class="art-caption">Pink Voltage &mdash; Hero Key Art</div>
+            </div>
+            <div class="art-card featured" onclick="openFs('gallery/layla-electric-blue.png')">
+                <span class="new-tag">NEW</span>
+                <img src="gallery/layla-electric-blue.png" alt="Layla - Overcharge electric blue key art" loading="lazy">
+                <div class="art-caption">Overcharge &mdash; Electric Blue</div>
+            </div>
+            <div class="art-card featured" onclick="openFs('gallery/layla-nova-storm.png')">
+                <span class="new-tag">NEW</span>
+                <img src="gallery/layla-nova-storm.png" alt="Layla - Nova Storm key art" loading="lazy">
+                <div class="art-caption">Nova Storm &mdash; Symphony of Stars</div>
+            </div>
+            <div class="art-card featured" onclick="openFs('gallery/layla-voltage-crest.png')">
+                <span class="new-tag">NEW</span>
+                <img src="gallery/layla-voltage-crest.png" alt="Pink Voltage emblem crest" loading="lazy">
+                <div class="art-caption">Pink Voltage &mdash; Emblem Crest</div>
+            </div>
+        </div>
+
+        <!-- ===== Existing fan art collection ===== -->
+        <div class="section-label">
+            <span class="tag">Collection</span> Layla Art Gallery
+        </div>
+        <p class="section-sub">Layla テーマのイラスト 25 枚。</p>
+        <div class="art-grid" id="collectionGrid"></div>
+
+        <p class="credit-note">
+            「Pink Voltage / Overcharge / Nova Storm / Emblem Crest」はこのファンサイト用に新規制作したオリジナルアートです。<br>
+            その他のイラストは Layla テーマのコレクションです。
+        </p>
+
+        <div class="disclaimer">
+            <strong>重要:</strong> レイラ・ヴィレル・ノヴァは ChiralArt 氏が DeviantArt 上で創作した架空のキャラクターです。
+            実在の人物・アイドル・アーティストではありません。すべてのコンテンツは AI 生成アートと独自の世界観設定による
+            仮想キャラクターとして楽しむものです。本サイトはファンサイトであり、公式とは無関係です。
+        </div>
+
+        <footer>
+            <div class="footer-brand">&#x2728; Layla Land</div>
+            <div>Unofficial fan site dedicated to Layla Virel Nova - AURALIS</div>
+        </footer>
+    </div>
+
+    <!-- Fullscreen modal -->
+    <div class="fs-modal" id="fsModal" onclick="closeFs(event)">
+        <button class="fs-close" onclick="closeFs()">&times;</button>
+        <img id="fsImage" src="" alt="Layla Virel Nova">
+    </div>
+
+    <script>
+        // Build the existing collection grid (imagelayla (1..25).png)
+        (function () {
+            var grid = document.getElementById('collectionGrid');
+            var frag = document.createDocumentFragment();
+            for (var i = 1; i <= 25; i++) {
+                var src = 'gallery/imagelayla (' + i + ').png';
+                var card = document.createElement('div');
+                card.className = 'art-card';
+                card.onclick = (function (s) { return function () { openFs(s); }; })(src);
+                var img = document.createElement('img');
+                img.src = src;
+                img.alt = 'Layla artwork ' + i;
+                img.loading = 'lazy';
+                var cap = document.createElement('div');
+                cap.className = 'art-caption';
+                cap.textContent = 'Layla #' + i;
+                card.appendChild(img);
+                card.appendChild(cap);
+                frag.appendChild(card);
+            }
+            grid.appendChild(frag);
+        })();
+
+        function openFs(src) {
+            document.getElementById('fsImage').src = src;
+            document.getElementById('fsModal').classList.add('open');
+        }
+        function closeFs(e) {
+            if (e && e.target && e.target.id === 'fsImage') return;
+            document.getElementById('fsModal').classList.remove('open');
+        }
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeFs();
+        });
+    </script>
+</body>
+</html>

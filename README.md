@@ -31,7 +31,7 @@ Layla Land は EDU（Eternal Dominion Universe）のキャラクター **Layla V
 | **Colosseum** | ターン制バトルシミュレーター（部位別 HP システム、20 ランド耐久モード） |
 | **Story Reader** | [edutext](https://github.com/gentaron/edutext) から Layla のストーリーを取得、目次付き多章読書、進捗バー、JA/EN 切替 |
 | **Stats & AI Chat** | ユニバース lore と Layla AI チャットボット（`/api/chat`） |
-| **Gallery** | 25 枚の Layla テーマ画像 |
+| **Gallery** | `gallery.html` — Layla イラスト集（無料公開・ペイウォール外）。新作 AI オリジナルキーアート 4 点 + コレクション 25 枚 |
 | **Wiki / Timeline** | EDU 共有 Wiki/Timeline（他サイトと同じアーキテクチャ） |
 | **Web3** | Ethereum ウォレット接続対応（Brave / MetaMask / Coinbase / WalletConnect） |
 | **多言語対応** | 日本語 / 英語 bilingual |
@@ -78,7 +78,9 @@ laylaland/
 ├── story.html            # Multi-chapter story reader
 ├── stats.html            # Universe lore + AI chatbot
 ├── rank.html             # Official links
-├── gallery/              # 25 Layla-themed images
+├── gallery.html          # Public illustration gallery (free, no paywall)
+├── gallery/              # Layla images: 25 collection + 4 new AI original key arts
+├── scripts/              # generate_layla_art.py — SVG art generator
 └── netlify.toml          # Netlify deploy config
 ```
 

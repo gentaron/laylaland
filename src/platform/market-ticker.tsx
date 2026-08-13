@@ -4,6 +4,19 @@ import { getAllAssets } from "@/lib/market-data"
 
 const ACCENT = "#ff3d8a"
 
+function sparklinePoints(closes: number[]): string {
+  if (closes.length === 0) return ""
+  const min = Math.min(...closes)
+  const max = Math.max(...closes)
+  const range = max - min + 1
+  return closes
+    .map((close, j) => {
+      const y = 16 - ((close - min) / range) * 14
+      return `${j * 2},${y}`
+    })
+    .join(" ")
+}
+
 export function MarketTicker() {
   const [assets, setAssets] = useState<ReturnType<typeof getAllAssets>>([])
 
@@ -33,7 +46,7 @@ export function MarketTicker() {
                     fill="none"
                     stroke={a.changePercent24h >= 0 ? "#34d399" : "#f87171"}
                     strokeWidth="1.2"
-                    points={a.prices.slice(-20).map((p, j) => `${j * 2},${16 - ((p.close - Math.min(...a.prices.slice(-20).map(x => x.close))) / (Math.max(...a.prices.slice(-20).map(x => x.close)) - Math.min(...a.prices.slice(-20).map(x => x.close)) + 1)) * 14)}`).join(" ")}
+                    points={sparklinePoints(a.prices.slice(-20).map((p) => p.close))}
                   />
                 </svg>
               </div>

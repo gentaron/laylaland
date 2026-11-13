@@ -44,7 +44,7 @@ module.exports = async (req, res) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'llama3-8b-8192',
+        model: process.env.GROQ_MODEL || 'llama-3.1-8b-instant', // llama3-8b-8192 は 2025-08 に廃止
         messages: [
           {
             role: 'system',

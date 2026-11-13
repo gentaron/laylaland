@@ -33,7 +33,7 @@ export function MarketTicker() {
                     fill="none"
                     stroke={a.changePercent24h >= 0 ? "#34d399" : "#f87171"}
                     strokeWidth="1.2"
-                    points={a.prices.slice(-20).map((p, j) => `${j * 2},${16 - ((p.close - Math.min(...a.prices.slice(-20).map(x => x.close))) / (Math.max(...a.prices.slice(-20).map(x => x.close)) - Math.min(...a.prices.slice(-20).map(x => x.close)) + 1)) * 14)}`).join(" ")}
+                    points={a.prices.slice(-20).map((p, j) => `${j * 2},${16 - ((p.close - Math.min(...a.prices.slice(-20).map(x => x.close))) / (Math.max(...a.prices.slice(-20).map(x => x.close)) - Math.min(...a.prices.slice(-20).map(x => x.close)) + 1)) * 14}`).join(" ")}
                   />
                 </svg>
               </div>

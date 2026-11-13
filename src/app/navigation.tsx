@@ -18,6 +18,7 @@ export default function Navigation() {
         <div className="flex items-center gap-4">
           <Link href="/timeline" className="text-xs text-white/50 hover:text-pink-400 transition-colors">Timeline</Link>
           <Link href="/wiki" className="text-xs text-white/50 hover:text-pink-400 transition-colors">Wiki</Link>
+          <Link href="/chat" className="text-xs text-white/50 hover:text-pink-400 transition-colors">Chat</Link>
           <LangToggle lang={lang} setLang={setLang} />
         </div>
       </div>
